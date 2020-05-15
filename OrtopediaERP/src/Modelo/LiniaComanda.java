@@ -24,8 +24,7 @@ public class LiniaComanda{
 	}
 
 	//---------------------------------------------------------------------------------------------GETTER AND SETTER
-	
-	
+		
 	public String getIdLiniaComanda() {
 		return idLiniaComanda;
 	}

@@ -31,7 +31,7 @@ public class Comanda{
 		this.idCliente = idCliente;
 		this.precioTotal = precioTotal;
 		this.estado = estado;
-		this.fechaInicio = sdf.format(new Date()); ;
+		this.fechaInicio = sdf.format(new Date());
 		this.fechaLimite = fechaLimite;
 		this.descripcion = descripcion;
 	}

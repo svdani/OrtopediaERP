@@ -66,6 +66,5 @@ public class Admin{
 		return "Admin [dni=" + dni + ", password=" + password + ", nombre=" + nombre + ", apellidos=" + apellidos
 				+ ", telf=" + telf + "]";
 	}
-
 	
 }

@@ -87,7 +87,9 @@ public class Cliente{
 	public void setNotas(String notas) {
 		this.notas = notas;
 	}
+	
 	//---------------------------------------------------------------------------------------------TO STRING
+	
 	@Override
 	public String toString() {
 		return "Cliente [dni=" + dni + ", nombre=" + nombre + ", apellidos=" + apellidos + ", direccion=" + direccion
