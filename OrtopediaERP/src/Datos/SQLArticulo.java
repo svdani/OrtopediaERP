@@ -7,24 +7,23 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import Modelo.Cliente;
+import Modelo.Articulo;
 
-public class SQLCliente {
+public class SQLArticulo {
 	Connection c = null;
 
 	Statement sentencia = null;
 
 	//String nombreTabla;
 
-	String dni;
+	String idArticulo;
+	String idProveedor;
 	String nombre;
-	String apellidos;
-	String direccion;
-	String email;
-	String telf;
-	String notas;	
+	double precio;
+	int stock;
+	
 
-	ArrayList<Cliente> Clientes = new ArrayList<Cliente>();
+	ArrayList<Articulo> Articulos = new ArrayList<Articulo>();
 	
 	//Conecta base dades
 	public Connection conectar() {
@@ -33,33 +32,31 @@ public class SQLCliente {
 
 			Class.forName("org.sqlite.JDBC");
 			c = DriverManager.getConnection("jdbc:sqlite:servidor/Ortopedia.db");
-			System.out.println("Exito al conectar con base de datos Cliente");
+			System.out.println("Exito al conectar con base de datos Articulo");
 
 		} catch (Exception e) {
 
-			System.out.println("Error al conectar con base de datos Cliente");
+			System.out.println("Error al conectar con base de datos Articulo");
 
 		}
 		return c;
 
 	}
 	
-	//Inserta en tabla Cliente
-	public void insertaClientes(Cliente cli) throws SQLException {
+	//Inserta en tabla Articulo
+	public void insertaArticulos(Articulo cli) throws SQLException {
 
 		
 		try {
 			conectar();
 
-			String sqlInsert = "INSERT INTO Cliente (dni, nombre, apellidos, direccion, email, telf, notas) "
+			String sqlInsert = "INSERT INTO Articulo (idArticulo, idProveedor, nombre, precio, stock) "
 
-		            	 + "VALUES (" + "\"" + cli.getDni() + "\"" + ","
-		            	 + "\"" + cli.getNombre() + "\"" + ","
-		            	 + "\"" + cli.getApellidos() + "\"" + ","
-		            	 + "\"" + cli.getDireccion() + "\"" + ","
-		            	 + "\"" + cli.getEmail() + "\"" + ","
-		            	 + "\"" + cli.getTelf() + "\"" + ","
-		            	 + "\"" + cli.getNotas() + "\"" + ");";
+		            	 + "VALUES ('" + cli.getIdArticulo() + "', '"
+		            	 + cli.getIdProveedor() + "', '"
+		            	 + cli.getNombre() + "', "
+		            	 + cli.getPrecio() + ", "
+		            	 + cli.getStock() + ");";
 			
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlInsert);
@@ -70,27 +67,25 @@ public class SQLCliente {
 
 		} catch (Exception e) {
 
-			System.out.println("Error al insertertar datos en la tabla Cliente");
+			System.out.println("Error al insertertar datos en la tabla Articulo");
 
 		}
 	}
 	
-	//Modifica taula Cliente
-	public void modificaClientes(Cliente cli) throws SQLException {
+	//Modifica taula Articulo
+	public void modificaArticulos(Articulo cli) throws SQLException {
 
 		try {
 
 			conectar();
 	
-			String sqlUpdate ="UPDATE Cliente "
+			String sqlUpdate ="UPDATE Articulo "
 							+ "SET"
-							+ " nombre='" + cli.getNombre()
-							+ "', apellidos='" + cli.getApellidos()
-							+ "', direccion='" + cli.getDireccion()
-							+ "', email='" + cli.getEmail()
-							+ "', telf='" +cli.getTelf()
-							+ "', notas='"+ cli.getNotas()
-							+ "' WHERE dni='" + cli.getDni() + "';";
+							+ " idProveedor='"+ cli.getIdProveedor()
+							+ "', nombre='" + cli.getNombre()
+							+ "', precio=" + cli.getPrecio()
+							+ ", stock=" +cli.getStock()						
+							+ " WHERE idArticulo='" + cli.getIdArticulo() + "';";
 					
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlUpdate);
@@ -101,19 +96,19 @@ public class SQLCliente {
 
 		} catch (Exception e) {
 
-				System.out.println("Error al actualizar datos en la tabla Cliente");
+				System.out.println("Error al actualizar datos en la tabla Articulo");
 
 		}
 	}
 		
-	//Elimina Cliente
-	public void deleteClientes(Cliente cli) throws SQLException {
+	//Elimina Articulo
+	public void deleteArticulos(Articulo cli) throws SQLException {
 
 		try {
 
 			conectar();
 
-			String sqlDelete = "DELETE FROM Cliente WHERE dni='"	+ cli.getDni() + "';";
+			String sqlDelete = "DELETE FROM Articulo WHERE idArticulo='" + cli.getIdArticulo() + "';";
 			
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlDelete);
@@ -124,19 +119,19 @@ public class SQLCliente {
 
 		} catch (Exception e) {
 
-			System.out.println("Error al eliminar datos en la tabla Cliente");
+			System.out.println("Error al eliminar datos en la tabla Articulo");
 
 		}
 
 	}
 	
-	//Muestra Tabla Cliente
-	public ArrayList<Cliente> consultaClientes() throws SQLException {
+	//Muestra Tabla Articulo
+	public ArrayList<Articulo> consultaArticulos() throws SQLException {
 
 		conectar();
 
 		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Cliente;";
+		String consultaSql = "SELECT * FROM Articulo;";
 		
 		try {
 
@@ -144,24 +139,21 @@ public class SQLCliente {
 			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 			while (rs.next()) {
 					
-				dni = rs.getString("dni");
+				idArticulo = rs.getString("idArticulo");
+				idProveedor = rs.getString("idProveedor");
 				nombre = rs.getString("nombre");
-				apellidos = rs.getString("apellidos");
-				direccion = rs.getString("direccion");
-				email = rs.getString("email");
-				telf = rs.getString("Telf");
-				notas = rs.getString("notas");
+				precio = rs.getDouble("precio");
+				stock = rs.getInt("stock");
+				
 
 					
-				//GUARDA EN ARRAY LIST Cliente
-				Clientes.add(new Cliente(
-						dni, 
+				//GUARDA EN ARRAY LIST Articulo
+				Articulos.add(new Articulo(
+						idArticulo,
+						idProveedor,
 						nombre, 
-						apellidos,
-						direccion, 
-						email, 
-						telf, 
-						notas));
+						precio,
+						stock));
 
 			//i++;//---------- AUMENTA CONTADOR
 			}
@@ -175,16 +167,16 @@ public class SQLCliente {
 			Talal: 	System.out.println(e.getMessage());
 
 		}
-		return Clientes;
+		return Articulos;
 	}
 	/*
-	//Muestra Deutor Tabla Cliente
-	public ArrayList<Cliente> consultaDeutorClientes() throws SQLException {
+	//Muestra Deutor Tabla Articulo
+	public ArrayList<Articulo> consultaDeutorArticulos() throws SQLException {
 
 		conectar();
 
 		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Cliente WHERE Deutor = 'true';";
+		String consultaSql = "SELECT * FROM Articulo WHERE Deutor = 'true';";
 		
 		try {
 
@@ -192,8 +184,8 @@ public class SQLCliente {
 			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 			while (rs.next()) {
 					
-				dni = rs.getString("Dni");
-				password = rs.getString("Password");
+				idArticulo = rs.getString("idArticulo");
+				idProveedor = rs.getString("idProveedor");
 				rol = rs.getString("Rol");
 				nom = rs.getString("Nom");
 				cognom = rs.getString("Cognom");
@@ -202,10 +194,10 @@ public class SQLCliente {
 				correu = rs.getString("Correu");
 				deutor = rs.getString("Deutor");
 					
-				//GUARDA EN ARRAY LIST Cliente
-				Clientes.add(new Cliente(
-						dni, 
-						password, 
+				//GUARDA EN ARRAY LIST Articulo
+				Articulos.add(new Articulo(
+						idArticulo, 
+						idProveedor, 
 						rol,
 						nom, 
 						cognom, 
@@ -226,16 +218,16 @@ public class SQLCliente {
 			Talal: 	System.out.println(e.getMessage());
 
 		}
-		return Clientes;
+		return Articulos;
 	}
 	
-	//Muestra Admins Tabla Cliente
-	public ArrayList<Cliente> consultaAdminClientes() throws SQLException {
+	//Muestra Articulos Tabla Articulo
+	public ArrayList<Articulo> consultaArticuloArticulos() throws SQLException {
 
 			conectar();
 
 			sentencia = c.createStatement();
-			String consultaSql = "SELECT * FROM Cliente WHERE Rol = 'A';";
+			String consultaSql = "SELECT * FROM Articulo WHERE Rol = 'A';";
 			
 			try {
 
@@ -243,8 +235,8 @@ public class SQLCliente {
 				//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 				while (rs.next()) {
 						
-					dni = rs.getString("Dni");
-					password = rs.getString("Password");
+					idArticulo = rs.getString("idArticulo");
+					idProveedor = rs.getString("idProveedor");
 					rol = rs.getString("Rol");
 					nom = rs.getString("Nom");
 					cognom = rs.getString("Cognom");
@@ -253,10 +245,10 @@ public class SQLCliente {
 					correu = rs.getString("Correu");
 					deutor = rs.getString("Deutor");
 						
-					//GUARDA EN ARRAY LIST Cliente
-					Clientes.add(new Cliente(
-							dni, 
-							password, 
+					//GUARDA EN ARRAY LIST Articulo
+					Articulos.add(new Articulo(
+							idArticulo, 
+							idProveedor, 
 							rol,
 							nom, 
 							cognom, 
@@ -277,25 +269,25 @@ public class SQLCliente {
 				Talal: 	System.out.println(e.getMessage());
 
 			}
-			return Clientes;
+			return Articulos;
 		}
 		
-	//Busca Cliente per Dni
-	public Cliente buscaDniClientes(Cliente cli) throws SQLException {
+	//Busca Articulo per idArticulo
+	public Articulo buscaidArticuloArticulos(Articulo cli) throws SQLException {
 
 		conectar();
 
 		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Cliente WHERE Dni = '" + cli.getDni() + "';";
-		Cliente Cliente = new Cliente(cli.getDni(),cli.getPassword());	
+		String consultaSql = "SELECT * FROM Articulo WHERE idArticulo = '" + cli.getidArticulo() + "';";
+		Articulo Articulo = new Articulo(cli.getidArticulo(),cli.getidProveedor());	
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
 			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 			while (rs.next()) {
 					
-				dni = rs.getString("Dni");
-				password = rs.getString("Password");
+				idArticulo = rs.getString("idArticulo");
+				idProveedor = rs.getString("idProveedor");
 				rol = rs.getString("Rol");
 				nom = rs.getString("Nom");
 				cognom = rs.getString("Cognom");
@@ -304,10 +296,10 @@ public class SQLCliente {
 				correu = rs.getString("Correu");
 				deutor = rs.getString("Deutor");
 					
-				//GUARDA EN ARRAY LIST Cliente
-				 Cliente = new Cliente(
-						dni, 
-						password, 
+				//GUARDA EN ARRAY LIST Articulo
+				 Articulo = new Articulo(
+						idArticulo, 
+						idProveedor, 
 						rol,
 						nom, 
 						cognom, 
@@ -327,24 +319,24 @@ public class SQLCliente {
 			Talal: 	System.out.println(e.getMessage());
 
 		}
-		return Cliente;
+		return Articulo;
 	}
 		
-	//Busca Cliente	per dni pero por letras
-	public ArrayList<Cliente> buscaClientes(Cliente cli) throws SQLException {
+	//Busca Articulo	per idArticulo pero por letras
+	public ArrayList<Articulo> buscaArticulos(Articulo cli) throws SQLException {
 		conectar();
 
 		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Cliente WHERE Dni LIKE '%" + cli.getDni() + "%';";
-		//Cliente Cliente = new Cliente(cli.getDni(),cli.getPassword());	
+		String consultaSql = "SELECT * FROM Articulo WHERE idArticulo LIKE '%" + cli.getidArticulo() + "%';";
+		//Articulo Articulo = new Articulo(cli.getidArticulo(),cli.getidProveedor());	
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
 
 			while (rs.next()) {
 					
-				dni = rs.getString("Dni");
-				password = rs.getString("Password");
+				idArticulo = rs.getString("idArticulo");
+				idProveedor = rs.getString("idProveedor");
 				rol = rs.getString("Rol");
 				nom = rs.getString("Nom");
 				cognom = rs.getString("Cognom");
@@ -353,10 +345,10 @@ public class SQLCliente {
 				correu = rs.getString("Correu");
 				deutor = rs.getString("Deutor");
 					
-				//GUARDA EN ARRAY LIST Cliente
-				Clientes.add(new Cliente(
-						dni, 
-						password, 
+				//GUARDA EN ARRAY LIST Articulo
+				Articulos.add(new Articulo(
+						idArticulo, 
+						idProveedor, 
 						rol,
 						nom, 
 						cognom, 
@@ -376,7 +368,7 @@ public class SQLCliente {
 			Talal: 	System.out.println(e.getMessage());
 
 		}
-		return Clientes;
+		return Articulos;
 	}
 	*/	
 };

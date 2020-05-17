@@ -7,28 +7,29 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+
+
+import Datos.SQLAdmin;
+import Modelo.Admin;
+
+
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
+
+import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTree;
-import javax.swing.JToggleButton;
-import javax.swing.JList;
-import javax.swing.JSeparator;
 import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class ViewLogin extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JPasswordField passwordField;
-	private JTextField textField;
+	private JTextField textUser;
+	private JComboBox comboBox;
+	SQLAdmin conector = new SQLAdmin();
 
 	/**
 	 * Launch the application.
@@ -47,12 +48,11 @@ public class ViewLogin extends JDialog {
 	 * Create the dialog.
 	 */
 	public ViewLogin() {
-		setBounds(100, 100, 329, 185);
+		setBounds(100, 100, 339, 185);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		
-	
+			
 		txtPanel();
 		titel();
 		btnPanel();
@@ -61,27 +61,28 @@ public class ViewLogin extends JDialog {
 	
 	public void txtPanel() {
 		passwordField = new JPasswordField();
-		passwordField.setBounds(92, 62, 86, 20);
+		passwordField.setBounds(98, 62, 90, 20);
 		
-		textField = new JTextField();
-		textField.setBounds(92, 31, 86, 20);
-		textField.setColumns(10);
+		textUser = new JTextField();
+		textUser.setBounds(98, 31, 90, 20);
+		textUser.setColumns(10);
 			
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(198, 28, 105, 20);
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Articulos", "Admin", "Clientes", "Comandas", "Movimientos Almacen", "Proveedores"}));
+		comboBox.setBounds(208, 28, 105, 20);
 		contentPanel.add(comboBox);
 	}
 	
 	private void titel() {
 		JLabel lblUsuario = new JLabel("usuario:");
-		lblUsuario.setBounds(24, 31, 58, 14);
+		lblUsuario.setBounds(24, 31, 74, 14);
 		contentPanel.setLayout(null);
 		
 		JLabel lblContrasea = new JLabel("contraseña:");
-		lblContrasea.setBounds(24, 62, 58, 14);
+		lblContrasea.setBounds(24, 62, 74, 14);
 		contentPanel.add(lblContrasea);
 		contentPanel.add(lblUsuario);
-		contentPanel.add(textField);
+		contentPanel.add(textUser);
 		contentPanel.add(passwordField);
 	}
 	
@@ -89,23 +90,96 @@ public class ViewLogin extends JDialog {
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
-		
-		{
-			JButton okButton = new JButton("Iniciar Sesion");
-			okButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					
+
+
+		JButton okButton = new JButton("Iniciar Sesion");
+		okButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+
+					Admin adm = new Admin(textUser.getText().toString());
+
+					adm = conector.buscaDniAdmins(adm);
+
+					// COMPRUEBA EN LA BASE DE DATOS QUE EL USUARIO Y CONTRASEÑA INTRODUCIDOS COINCIDAN
+					if(adm.getPassword().equals(passwordField.getText().toString())) {								
+
+						JOptionPane.showMessageDialog(null, "BIENVENIDO");	
+
+						// COMPRUEBA TU ELECCIÓN DE VENTANA A LA QUE DIRIGIRSE
+						switch (comboBox.getSelectedItem().toString()) {
+
+						case "Articulos":
+							ViewArticulo windowArticulo = new ViewArticulo();
+							windowArticulo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+							windowArticulo.setVisible(true);
+							dispose();
+							break;
+
+						case "Admin":
+							ViewAdmin windowAdmin = new ViewAdmin();
+							windowAdmin.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+							windowAdmin.setVisible(true);
+							dispose();
+							break;
+
+						case "Clientes":
+							ViewCliente windowCliente = new ViewCliente();
+							windowCliente.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+							windowCliente.setVisible(true);
+							dispose();
+							break;
+
+						case "Comandas":
+							ViewComanda windowComanda = new ViewComanda();
+							windowComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+							windowComanda.setVisible(true);
+							dispose();
+							break;
+
+						case "Movimientos Almacen":
+							ViewMovimientoAlmacen windowMovimientoAlmacen = new ViewMovimientoAlmacen();
+							windowMovimientoAlmacen.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+							windowMovimientoAlmacen.setVisible(true);
+							dispose();
+							break;
+
+						case "Proveedores":
+							ViewProveedor windowProveedor = new ViewProveedor();
+							windowProveedor.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+							windowProveedor.setVisible(true);
+							dispose();
+							break;
+
+						default:
+							break;
+						}
+
+					}else{
+						//SI EL USUARIO Y LA CONTRASEÑA NO COICIDEN
+						JOptionPane.showMessageDialog(null, "Ups... la contraseña es incorrecta");
+					};
+
+				} catch (Exception e2) { 
+					//SI EL USUARIO NO EXISTE
+					JOptionPane.showMessageDialog(null, "Ups... el usuario es incorrecto");
 				}
-			});
-			okButton.setActionCommand("OK");
-			buttonPane.add(okButton);
-			getRootPane().setDefaultButton(okButton);
-		}
-		{
-			JButton cancelButton = new JButton("Cancel");
-			cancelButton.setActionCommand("Cancel");
-			buttonPane.add(cancelButton);
-		}
+			}
+		});
+		okButton.setActionCommand("OK");
+		buttonPane.add(okButton);
+		getRootPane().setDefaultButton(okButton);
+
+
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		cancelButton.setActionCommand("Cancel");
+		buttonPane.add(cancelButton);
+
 	}
 	
 	

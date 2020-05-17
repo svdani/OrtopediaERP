@@ -107,7 +107,7 @@ public class Comanda{
 	public String toString() {
 		return "Comanda [idComanda=" + idComanda + ", idCliente=" + idCliente + ", precioTotal=" + precioTotal
 				+ ", estado=" + estado + ", fechaInicio=" + fechaInicio + ", fechaLimite=" + fechaLimite
-				+ ", descripcion=" + descripcion + ", sdf=" + sdf + "]";
+				+ ", descripcion=" + descripcion + "]\n";
 	}	
 	
 }

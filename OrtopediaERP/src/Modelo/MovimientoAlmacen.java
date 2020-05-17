@@ -21,10 +21,24 @@ public class MovimientoAlmacen{
 		this.idArticulo = idArticulo;
 		this.tipoMovimiento = tipoMovimiento;
 		this.ubicacion = ubicacion;
-		this.fecha = sdf.format(new Date());
+		this.fecha = fecha;
 
 	}
+	
+	public MovimientoAlmacen(String idArticulo, String tipoMovimiento, String ubicacion) {
 
+
+		this.idArticulo = idArticulo;
+		this.tipoMovimiento = tipoMovimiento;
+		this.ubicacion = ubicacion;
+		this.fecha = sdf.format(new Date());
+	}
+
+	public MovimientoAlmacen(int idMovimientoAlmacen) {
+
+		this.idMovimientoAlmacen = idMovimientoAlmacen;
+
+	}
 	//---------------------------------------------------------------------------------------------GETTER AND SETTER
 	
 	/**
@@ -117,8 +131,7 @@ public class MovimientoAlmacen{
 	@Override
 	public String toString() {
 		return "MovimientoAlmacen [idMovimientoAlmacen=" + idMovimientoAlmacen + ", idArticulo=" + idArticulo
-				+ ", tipoMovimiento=" + tipoMovimiento + ", ubicacion=" + ubicacion + ", fecha=" + fecha + ", sdf="
-				+ sdf + "]";
+				+ ", tipoMovimiento=" + tipoMovimiento + ", ubicacion=" + ubicacion + ", fecha=" + fecha +  "]\n";
 	}
 	
 

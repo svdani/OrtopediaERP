@@ -2,7 +2,7 @@ package Modelo;
 
 public class LiniaComanda{
 	
-	String idLiniaComanda;
+	int idLiniaComanda;
 	int idComanda;
 	String idArticulo;
 	String estado;
@@ -12,7 +12,7 @@ public class LiniaComanda{
 
 	//---------------------------------------------------------------------------------------------CONSTRUCTOR
 	
-	public LiniaComanda(String idLiniaComanda, int idComanda, String idArticulo, String estado, String tipo, double precio, int cantidad) {
+	public LiniaComanda(int idLiniaComanda, int idComanda, String idArticulo, String estado, String tipo, double precio, int cantidad) {
 
 		this.idLiniaComanda = idLiniaComanda;
 		this.idComanda = idComanda;
@@ -22,14 +22,29 @@ public class LiniaComanda{
 		this.precio = precio;
 		this.cantidad = cantidad;
 	}
+	
+	public LiniaComanda(int idComanda, String idArticulo, String estado, String tipo, double precio, int cantidad) {
 
+		this.idComanda = idComanda;
+		this.idArticulo = idArticulo;
+		this.estado = estado;
+		this.tipo = tipo;
+		this.precio = precio;
+		this.cantidad = cantidad;
+	}
+
+	public LiniaComanda(int idLiniaComanda) {
+
+		this.idLiniaComanda = idLiniaComanda;
+	}
+	
 	//---------------------------------------------------------------------------------------------GETTER AND SETTER
 		
-	public String getIdLiniaComanda() {
+	public int getIdLiniaComanda() {
 		return idLiniaComanda;
 	}
 
-	public void setIdLiniaComanda(String idLiniaComanda) {
+	public void setIdLiniaComanda(int idLiniaComanda) {
 		this.idLiniaComanda = idLiniaComanda;
 	}
 

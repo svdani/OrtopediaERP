@@ -7,24 +7,24 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import Modelo.Cliente;
+import Modelo.Comanda;
 
-public class SQLCliente {
+public class SQLComanda {
 	Connection c = null;
 
 	Statement sentencia = null;
 
-	//String nombreTabla;
+	//String idClienteTabla;
 
-	String dni;
-	String nombre;
-	String apellidos;
-	String direccion;
-	String email;
-	String telf;
-	String notas;	
+	int idComanda;
+	String idCliente;
+	double precioTotal;
+	String estado;
+	String fechaInicio;
+	String fechaLimite;
+	String descripcion;	
 
-	ArrayList<Cliente> Clientes = new ArrayList<Cliente>();
+	ArrayList<Comanda> Comandas = new ArrayList<Comanda>();
 	
 	//Conecta base dades
 	public Connection conectar() {
@@ -33,33 +33,33 @@ public class SQLCliente {
 
 			Class.forName("org.sqlite.JDBC");
 			c = DriverManager.getConnection("jdbc:sqlite:servidor/Ortopedia.db");
-			System.out.println("Exito al conectar con base de datos Cliente");
+			System.out.println("Exito al conectar con base de datos Comanda");
 
 		} catch (Exception e) {
 
-			System.out.println("Error al conectar con base de datos Cliente");
+			System.out.println("Error al conectar con base de datos Comanda");
 
 		}
 		return c;
 
 	}
 	
-	//Inserta en tabla Cliente
-	public void insertaClientes(Cliente cli) throws SQLException {
+	//Inserta en tabla Comanda
+	public void insertaComandas(Comanda cli) throws SQLException {
 
 		
 		try {
 			conectar();
 
-			String sqlInsert = "INSERT INTO Cliente (dni, nombre, apellidos, direccion, email, telf, notas) "
+			String sqlInsert = "INSERT INTO Comanda (idCliente, precioTotal, estado, fechaInicio, fechaLimite, descripcion) "
 
-		            	 + "VALUES (" + "\"" + cli.getDni() + "\"" + ","
-		            	 + "\"" + cli.getNombre() + "\"" + ","
-		            	 + "\"" + cli.getApellidos() + "\"" + ","
-		            	 + "\"" + cli.getDireccion() + "\"" + ","
-		            	 + "\"" + cli.getEmail() + "\"" + ","
-		            	 + "\"" + cli.getTelf() + "\"" + ","
-		            	 + "\"" + cli.getNotas() + "\"" + ");";
+		            	 + "VALUES (" 
+		            	 + "'" + cli.getIdCliente() + "',"
+		            	 + "" + cli.getPrecioTotal() + ","
+		            	 + "'" + cli.getEstado() + "',"
+		            	 + "'" + cli.getFechaInicio() + "',"
+		            	 + "'" + cli.getFechaLimite() + "',"
+		            	 + "'" + cli.getDescripcion() + "');";
 			
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlInsert);
@@ -70,27 +70,27 @@ public class SQLCliente {
 
 		} catch (Exception e) {
 
-			System.out.println("Error al insertertar datos en la tabla Cliente");
+			System.out.println("Error al insertertar datos en la tabla Comanda");
 
 		}
 	}
 	
-	//Modifica taula Cliente
-	public void modificaClientes(Cliente cli) throws SQLException {
+	//Modifica taula Comanda
+	public void modificaComandas(Comanda cli) throws SQLException {
 
 		try {
 
 			conectar();
 	
-			String sqlUpdate ="UPDATE Cliente "
+			String sqlUpdate ="UPDATE Comanda "
 							+ "SET"
-							+ " nombre='" + cli.getNombre()
-							+ "', apellidos='" + cli.getApellidos()
-							+ "', direccion='" + cli.getDireccion()
-							+ "', email='" + cli.getEmail()
-							+ "', telf='" +cli.getTelf()
-							+ "', notas='"+ cli.getNotas()
-							+ "' WHERE dni='" + cli.getDni() + "';";
+							+ " idCliente='" + cli.getIdCliente()
+							+ "', precioTotal='" + cli.getPrecioTotal()
+							+ "', estado='" + cli.getEstado()
+							+ "', fechaInicio='" + cli.getFechaInicio()
+							+ "', fechaLimite='" +cli.getFechaLimite()
+							+ "', descripcion='"+ cli.getDescripcion()
+							+ "' WHERE idComanda='" + cli.getIdComanda() + "';";
 					
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlUpdate);
@@ -101,19 +101,19 @@ public class SQLCliente {
 
 		} catch (Exception e) {
 
-				System.out.println("Error al actualizar datos en la tabla Cliente");
+				System.out.println("Error al actualizar datos en la tabla Comanda");
 
 		}
 	}
 		
-	//Elimina Cliente
-	public void deleteClientes(Cliente cli) throws SQLException {
+	//Elimina Comanda
+	public void deleteComandas(Comanda cli) throws SQLException {
 
 		try {
 
 			conectar();
 
-			String sqlDelete = "DELETE FROM Cliente WHERE dni='"	+ cli.getDni() + "';";
+			String sqlDelete = "DELETE FROM Comanda WHERE idComanda='"	+ cli.getIdComanda() + "';";
 			
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlDelete);
@@ -124,19 +124,19 @@ public class SQLCliente {
 
 		} catch (Exception e) {
 
-			System.out.println("Error al eliminar datos en la tabla Cliente");
+			System.out.println("Error al eliminar datos en la tabla Comanda");
 
 		}
 
 	}
 	
-	//Muestra Tabla Cliente
-	public ArrayList<Cliente> consultaClientes() throws SQLException {
+	//Muestra Tabla Comanda
+	public ArrayList<Comanda> consultaComandas() throws SQLException {
 
 		conectar();
 
 		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Cliente;";
+		String consultaSql = "SELECT * FROM Comanda;";
 		
 		try {
 
@@ -144,24 +144,24 @@ public class SQLCliente {
 			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 			while (rs.next()) {
 					
-				dni = rs.getString("dni");
-				nombre = rs.getString("nombre");
-				apellidos = rs.getString("apellidos");
-				direccion = rs.getString("direccion");
-				email = rs.getString("email");
-				telf = rs.getString("Telf");
-				notas = rs.getString("notas");
+				idComanda = rs.getInt("idComanda");
+				idCliente = rs.getString("idCliente");
+				precioTotal = rs.getDouble("precioTotal");
+				estado = rs.getString("estado");
+				fechaInicio = rs.getString("fechaInicio");
+				fechaLimite = rs.getString("fechaLimite");
+				descripcion = rs.getString("descripcion");
 
 					
-				//GUARDA EN ARRAY LIST Cliente
-				Clientes.add(new Cliente(
-						dni, 
-						nombre, 
-						apellidos,
-						direccion, 
-						email, 
-						telf, 
-						notas));
+				//GUARDA EN ARRAY LIST Comanda
+				Comandas.add(new Comanda(
+						idComanda, 
+						idCliente, 
+						precioTotal,
+						estado, 
+						fechaInicio, 
+						fechaLimite, 
+						descripcion));
 
 			//i++;//---------- AUMENTA CONTADOR
 			}
@@ -175,16 +175,16 @@ public class SQLCliente {
 			Talal: 	System.out.println(e.getMessage());
 
 		}
-		return Clientes;
+		return Comandas;
 	}
 	/*
-	//Muestra Deutor Tabla Cliente
-	public ArrayList<Cliente> consultaDeutorClientes() throws SQLException {
+	//Muestra Deutor Tabla Comanda
+	public ArrayList<Comanda> consultaDeutorComandas() throws SQLException {
 
 		conectar();
 
 		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Cliente WHERE Deutor = 'true';";
+		String consultaSql = "SELECT * FROM Comanda WHERE Deutor = 'true';";
 		
 		try {
 
@@ -192,25 +192,25 @@ public class SQLCliente {
 			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 			while (rs.next()) {
 					
-				dni = rs.getString("Dni");
+				idComanda = rs.getString("Dni");
 				password = rs.getString("Password");
 				rol = rs.getString("Rol");
 				nom = rs.getString("Nom");
 				cognom = rs.getString("Cognom");
 				adresa = rs.getString("adresa");
-				telf = rs.getString("Telf");
+				fechaLimite = rs.getString("Telf");
 				correu = rs.getString("Correu");
 				deutor = rs.getString("Deutor");
 					
-				//GUARDA EN ARRAY LIST Cliente
-				Clientes.add(new Cliente(
-						dni, 
+				//GUARDA EN ARRAY LIST Comanda
+				Comandas.add(new Comanda(
+						idComanda, 
 						password, 
 						rol,
 						nom, 
 						cognom, 
 						adresa, 
-						telf, 
+						fechaLimite, 
 						correu, 
 						deutor));
 
@@ -226,16 +226,16 @@ public class SQLCliente {
 			Talal: 	System.out.println(e.getMessage());
 
 		}
-		return Clientes;
+		return Comandas;
 	}
 	
-	//Muestra Admins Tabla Cliente
-	public ArrayList<Cliente> consultaAdminClientes() throws SQLException {
+	//Muestra Admins Tabla Comanda
+	public ArrayList<Comanda> consultaAdminComandas() throws SQLException {
 
 			conectar();
 
 			sentencia = c.createStatement();
-			String consultaSql = "SELECT * FROM Cliente WHERE Rol = 'A';";
+			String consultaSql = "SELECT * FROM Comanda WHERE Rol = 'A';";
 			
 			try {
 
@@ -243,25 +243,25 @@ public class SQLCliente {
 				//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 				while (rs.next()) {
 						
-					dni = rs.getString("Dni");
+					idComanda = rs.getString("Dni");
 					password = rs.getString("Password");
 					rol = rs.getString("Rol");
 					nom = rs.getString("Nom");
 					cognom = rs.getString("Cognom");
 					adresa = rs.getString("adresa");
-					telf = rs.getString("Telf");
+					fechaLimite = rs.getString("Telf");
 					correu = rs.getString("Correu");
 					deutor = rs.getString("Deutor");
 						
-					//GUARDA EN ARRAY LIST Cliente
-					Clientes.add(new Cliente(
-							dni, 
+					//GUARDA EN ARRAY LIST Comanda
+					Comandas.add(new Comanda(
+							idComanda, 
 							password, 
 							rol,
 							nom, 
 							cognom, 
 							adresa, 
-							telf, 
+							fechaLimite, 
 							correu, 
 							deutor));
 
@@ -277,42 +277,42 @@ public class SQLCliente {
 				Talal: 	System.out.println(e.getMessage());
 
 			}
-			return Clientes;
+			return Comandas;
 		}
 		
-	//Busca Cliente per Dni
-	public Cliente buscaDniClientes(Cliente cli) throws SQLException {
+	//Busca Comanda per Dni
+	public Comanda buscaDniComandas(Comanda cli) throws SQLException {
 
 		conectar();
 
 		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Cliente WHERE Dni = '" + cli.getDni() + "';";
-		Cliente Cliente = new Cliente(cli.getDni(),cli.getPassword());	
+		String consultaSql = "SELECT * FROM Comanda WHERE Dni = '" + cli.getDni() + "';";
+		Comanda Comanda = new Comanda(cli.getDni(),cli.getPassword());	
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
 			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 			while (rs.next()) {
 					
-				dni = rs.getString("Dni");
+				idComanda = rs.getString("Dni");
 				password = rs.getString("Password");
 				rol = rs.getString("Rol");
 				nom = rs.getString("Nom");
 				cognom = rs.getString("Cognom");
 				adresa = rs.getString("adresa");
-				telf = rs.getString("Telf");
+				fechaLimite = rs.getString("Telf");
 				correu = rs.getString("Correu");
 				deutor = rs.getString("Deutor");
 					
-				//GUARDA EN ARRAY LIST Cliente
-				 Cliente = new Cliente(
-						dni, 
+				//GUARDA EN ARRAY LIST Comanda
+				 Comanda = new Comanda(
+						idComanda, 
 						password, 
 						rol,
 						nom, 
 						cognom, 
 						adresa, 
-						telf, 
+						fechaLimite, 
 						correu, 
 						deutor);
 
@@ -327,41 +327,41 @@ public class SQLCliente {
 			Talal: 	System.out.println(e.getMessage());
 
 		}
-		return Cliente;
+		return Comanda;
 	}
 		
-	//Busca Cliente	per dni pero por letras
-	public ArrayList<Cliente> buscaClientes(Cliente cli) throws SQLException {
+	//Busca Comanda	per idComanda pero por letras
+	public ArrayList<Comanda> buscaComandas(Comanda cli) throws SQLException {
 		conectar();
 
 		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Cliente WHERE Dni LIKE '%" + cli.getDni() + "%';";
-		//Cliente Cliente = new Cliente(cli.getDni(),cli.getPassword());	
+		String consultaSql = "SELECT * FROM Comanda WHERE Dni LIKE '%" + cli.getDni() + "%';";
+		//Comanda Comanda = new Comanda(cli.getDni(),cli.getPassword());	
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
 
 			while (rs.next()) {
 					
-				dni = rs.getString("Dni");
+				idComanda = rs.getString("Dni");
 				password = rs.getString("Password");
 				rol = rs.getString("Rol");
 				nom = rs.getString("Nom");
 				cognom = rs.getString("Cognom");
 				adresa = rs.getString("adresa");
-				telf = rs.getString("Telf");
+				fechaLimite = rs.getString("Telf");
 				correu = rs.getString("Correu");
 				deutor = rs.getString("Deutor");
 					
-				//GUARDA EN ARRAY LIST Cliente
-				Clientes.add(new Cliente(
-						dni, 
+				//GUARDA EN ARRAY LIST Comanda
+				Comandas.add(new Comanda(
+						idComanda, 
 						password, 
 						rol,
 						nom, 
 						cognom, 
 						adresa, 
-						telf, 
+						fechaLimite, 
 						correu, 
 						deutor));
 				
@@ -376,7 +376,7 @@ public class SQLCliente {
 			Talal: 	System.out.println(e.getMessage());
 
 		}
-		return Clientes;
+		return Comandas;
 	}
 	*/	
 };

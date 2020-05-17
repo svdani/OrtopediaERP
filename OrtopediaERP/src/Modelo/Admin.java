@@ -17,6 +17,15 @@ public class Admin{
 		this.telf = telf;
 	}
 	
+	public Admin(String dni, String password) {
+		this.dni = dni;
+		this.password = password;
+	}
+	
+	public Admin(String dni) {
+		this.dni = dni;	
+	}
+	
 	//---------------------------------------------------------------------------------------------GETTER AND SETTER
 	
 	public String getDni() {
