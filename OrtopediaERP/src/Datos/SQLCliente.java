@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import Modelo.Admin;
 import Modelo.Cliente;
 
 public class SQLCliente {
@@ -177,6 +178,52 @@ public class SQLCliente {
 		}
 		return Clientes;
 	}
+	
+	//Busca Clientes por Dni, Nombre, Apellidos pero por letras
+	public  ArrayList<Cliente>  buscaClientes(String registro, String filtro) throws SQLException {
+		conectar();
+
+		sentencia = c.createStatement();
+		String consultaSql = "SELECT * FROM Cliente WHERE "+ filtro +" LIKE '%" + registro + "%';";
+		//Admin Admin = new Admin(adm.getDni(),adm.getPassword());	
+		try {
+
+			ResultSet rs = sentencia.executeQuery(consultaSql);
+
+			while (rs.next()) {
+				
+				dni = rs.getString("dni");
+				nombre = rs.getString("nombre");
+				apellidos = rs.getString("apellidos");
+				direccion = rs.getString("direccion");
+				email = rs.getString("email");
+				telf = rs.getString("Telf");
+				notas = rs.getString("notas");
+					
+				//GUARDA EN ARRAY LIST Cliente
+				Clientes.add(new Cliente(
+						dni, 
+						nombre, 
+						apellidos,
+						direccion, 
+						email, 
+						telf, 
+						notas));
+
+			}
+
+			rs.close();
+			sentencia.close();
+			c.close();
+			
+		} catch (Exception e) {
+			System.out.println("fALLO AL BUSCAR ");
+			Talal: 	System.out.println(e.getMessage());
+
+		}
+		return Clientes;
+	}
+	
 	/*
 	//Muestra Deutor Tabla Cliente
 	public ArrayList<Cliente> consultaDeutorClientes() throws SQLException {

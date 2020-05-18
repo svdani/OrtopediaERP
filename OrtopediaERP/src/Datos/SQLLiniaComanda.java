@@ -45,7 +45,7 @@ public class SQLLiniaComanda {
 	}
 	
 	//Inserta en tabla LiniaComanda
-	public void insertaLiniaComandas(LiniaComanda cli) throws SQLException {
+	public void insertaLiniaComandas(LiniaComanda lin) throws SQLException {
 
 		
 		try {
@@ -54,12 +54,12 @@ public class SQLLiniaComanda {
 			String sqlInsert = "INSERT INTO LiniaComanda (idComanda, idArticulo, estado, tipo, precio, cantidad) "
 
 		            	 + "VALUES (" 
-		            	 + "" + cli.getIdComanda() + ","
-		            	 + "'" + cli.getIdArticulo() + "',"
-		            	 + "'" + cli.getEstado() + "',"
-		            	 + "'" + cli.getTipo()+ "',"
-		            	 + "" + cli.getPrecio() + ","
-		            	 + "'" + cli.getCantidad() + "');";
+		            	 + "" + lin.getIdComanda() + ","
+		            	 + "'" + lin.getIdArticulo() + "',"
+		            	 + "'" + lin.getEstado() + "',"
+		            	 + "'" + lin.getTipo()+ "',"
+		            	 + "" + lin.getPrecio() + ","
+		            	 + "'" + lin.getCantidad() + "');";
 			
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlInsert);
@@ -76,7 +76,7 @@ public class SQLLiniaComanda {
 	}
 	
 	//Modifica taula LiniaComanda
-	public void modificaLiniaComandas(LiniaComanda cli) throws SQLException {
+	public void modificaLiniaComandas(LiniaComanda lin) throws SQLException {
 
 		try {
 
@@ -84,13 +84,13 @@ public class SQLLiniaComanda {
 	
 			String sqlUpdate ="UPDATE LiniaComanda "
 							+ "SET"
-							+ " idComanda='" + cli.getIdComanda()
-							+ "', idArticulo='" + cli.getIdArticulo()
-							+ "', estado='" + cli.getEstado()
-							+ "', tipo='" + cli.getTipo()
-							+ "', precio='" +cli.getPrecio()
-							+ "', cantidad='"+ cli.getCantidad()
-							+ "' WHERE idLiniaComanda=" + cli.getIdLiniaComanda() + ";";
+							+ " idComanda='" + lin.getIdComanda()
+							+ "', idArticulo='" + lin.getIdArticulo()
+							+ "', estado='" + lin.getEstado()
+							+ "', tipo='" + lin.getTipo()
+							+ "', precio='" +lin.getPrecio()
+							+ "', cantidad='"+ lin.getCantidad()
+							+ "' WHERE idLiniaComanda=" + lin.getIdLiniaComanda() + ";";
 					
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlUpdate);
@@ -107,13 +107,13 @@ public class SQLLiniaComanda {
 	}
 		
 	//Elimina LiniaComanda
-	public void deleteLiniaComandas(LiniaComanda cli) throws SQLException {
+	public void deleteLiniaComandas(LiniaComanda lin) throws SQLException {
 
 		try {
 
 			conectar();
 
-			String sqlDelete = "DELETE FROM LiniaComanda WHERE idLiniaComanda='"	+ cli.getIdLiniaComanda() + "';";
+			String sqlDelete = "DELETE FROM LiniaComanda WHERE idLiniaComanda='"	+ lin.getIdLiniaComanda() + "';";
 			
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlDelete);
@@ -177,206 +177,28 @@ public class SQLLiniaComanda {
 		}
 		return LiniaComandas;
 	}
-	/*
-	//Muestra Deutor Tabla LiniaComanda
-	public ArrayList<LiniaComanda> consultaDeutorLiniaComandas() throws SQLException {
-
-		conectar();
-
-		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM LiniaComanda WHERE Deutor = 'true';";
-		
-		try {
-
-			ResultSet rs = sentencia.executeQuery(consultaSql);
-			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
-			while (rs.next()) {
-					
-				idLiniaComanda = rs.getString("Dni");
-				password = rs.getString("Password");
-				rol = rs.getString("Rol");
-				nom = rs.getString("Nom");
-				cognom = rs.getString("Cognom");
-				adresa = rs.getString("adresa");
-				precio = rs.getString("Telf");
-				correu = rs.getString("Correu");
-				deutor = rs.getString("Deutor");
-					
-				//GUARDA EN ARRAY LIST LiniaComanda
-				LiniaComandas.add(new LiniaComanda(
-						idLiniaComanda, 
-						password, 
-						rol,
-						nom, 
-						cognom, 
-						adresa, 
-						precio, 
-						correu, 
-						deutor));
-
-			//i++;//---------- AUMENTA CONTADOR
-			}
-
-			rs.close();
-			sentencia.close();
-			c.close();
-
-		} catch (Exception e) {
-
-			Talal: 	System.out.println(e.getMessage());
-
-		}
-		return LiniaComandas;
-	}
 	
-	//Muestra Admins Tabla LiniaComanda
-	public ArrayList<LiniaComanda> consultaAdminLiniaComandas() throws SQLException {
+	//Elimina LiniaComanda
+		public void deleteComandas(LiniaComanda lin) throws SQLException {
 
-			conectar();
-
-			sentencia = c.createStatement();
-			String consultaSql = "SELECT * FROM LiniaComanda WHERE Rol = 'A';";
-			
 			try {
 
-				ResultSet rs = sentencia.executeQuery(consultaSql);
-				//int i = 0;//-------------CONTADOR PARA LA MATRIZ
-				while (rs.next()) {
-						
-					idLiniaComanda = rs.getString("Dni");
-					password = rs.getString("Password");
-					rol = rs.getString("Rol");
-					nom = rs.getString("Nom");
-					cognom = rs.getString("Cognom");
-					adresa = rs.getString("adresa");
-					precio = rs.getString("Telf");
-					correu = rs.getString("Correu");
-					deutor = rs.getString("Deutor");
-						
-					//GUARDA EN ARRAY LIST LiniaComanda
-					LiniaComandas.add(new LiniaComanda(
-							idLiniaComanda, 
-							password, 
-							rol,
-							nom, 
-							cognom, 
-							adresa, 
-							precio, 
-							correu, 
-							deutor));
+				conectar();
 
-				//i++;//---------- AUMENTA CONTADOR
-				}
-
-				rs.close();
+				String sqlDelete = "DELETE FROM LiniaComanda WHERE idComanda='"	+ lin.getIdComanda() + "';";
+				
+				sentencia = c.createStatement();
+				sentencia.executeUpdate(sqlDelete);
 				sentencia.close();
 				c.close();
 
+				System.out.println("Datos eliminados");
+
 			} catch (Exception e) {
 
-				Talal: 	System.out.println(e.getMessage());
+				System.out.println("Error al eliminar datos en la tabla LiniaComanda");
 
 			}
-			return LiniaComandas;
-		}
-		
-	//Busca LiniaComanda per Dni
-	public LiniaComanda buscaDniLiniaComandas(LiniaComanda cli) throws SQLException {
-
-		conectar();
-
-		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM LiniaComanda WHERE Dni = '" + cli.getDni() + "';";
-		LiniaComanda LiniaComanda = new LiniaComanda(cli.getDni(),cli.getPassword());	
-		try {
-
-			ResultSet rs = sentencia.executeQuery(consultaSql);
-			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
-			while (rs.next()) {
-					
-				idLiniaComanda = rs.getString("Dni");
-				password = rs.getString("Password");
-				rol = rs.getString("Rol");
-				nom = rs.getString("Nom");
-				cognom = rs.getString("Cognom");
-				adresa = rs.getString("adresa");
-				precio = rs.getString("Telf");
-				correu = rs.getString("Correu");
-				deutor = rs.getString("Deutor");
-					
-				//GUARDA EN ARRAY LIST LiniaComanda
-				 LiniaComanda = new LiniaComanda(
-						idLiniaComanda, 
-						password, 
-						rol,
-						nom, 
-						cognom, 
-						adresa, 
-						precio, 
-						correu, 
-						deutor);
-
-				//i++;//---------- AUMENTA CONTADOR
-			}
-
-			rs.close();
-			sentencia.close();
-			c.close();
-		} catch (Exception e) {
-			System.out.println("impossible");
-			Talal: 	System.out.println(e.getMessage());
 
 		}
-		return LiniaComanda;
-	}
-		
-	//Busca LiniaComanda	per idLiniaComanda pero por letras
-	public ArrayList<LiniaComanda> buscaLiniaComandas(LiniaComanda cli) throws SQLException {
-		conectar();
-
-		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM LiniaComanda WHERE Dni LIKE '%" + cli.getDni() + "%';";
-		//LiniaComanda LiniaComanda = new LiniaComanda(cli.getDni(),cli.getPassword());	
-		try {
-
-			ResultSet rs = sentencia.executeQuery(consultaSql);
-
-			while (rs.next()) {
-					
-				idLiniaComanda = rs.getString("Dni");
-				password = rs.getString("Password");
-				rol = rs.getString("Rol");
-				nom = rs.getString("Nom");
-				cognom = rs.getString("Cognom");
-				adresa = rs.getString("adresa");
-				precio = rs.getString("Telf");
-				correu = rs.getString("Correu");
-				deutor = rs.getString("Deutor");
-					
-				//GUARDA EN ARRAY LIST LiniaComanda
-				LiniaComandas.add(new LiniaComanda(
-						idLiniaComanda, 
-						password, 
-						rol,
-						nom, 
-						cognom, 
-						adresa, 
-						precio, 
-						correu, 
-						deutor));
-				
-			}
-
-			rs.close();
-			sentencia.close();
-			c.close();
-			
-		} catch (Exception e) {
-			System.out.println("fALLO AL BUSCAR ");
-			Talal: 	System.out.println(e.getMessage());
-
-		}
-		return LiniaComandas;
-	}
-	*/	
 };

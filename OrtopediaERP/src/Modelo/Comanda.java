@@ -26,7 +26,7 @@ public class Comanda{
 		this.descripcion = descripcion;
 	}
 	
-	public Comanda( String idCliente, double precioTotal, String estado, String fechaLimite, String descripcion) {
+	public Comanda( String idCliente, String estado, String fechaLimite, String descripcion) {
 		
 		this.idCliente = idCliente;
 		this.precioTotal = precioTotal;

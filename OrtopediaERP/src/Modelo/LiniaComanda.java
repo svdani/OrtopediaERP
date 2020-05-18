@@ -33,6 +33,11 @@ public class LiniaComanda{
 		this.cantidad = cantidad;
 	}
 
+	public LiniaComanda(int idComanda, int idLiniaComanda) {
+		this.idComanda = idComanda;
+		this.idLiniaComanda = idLiniaComanda;
+	}
+	
 	public LiniaComanda(int idLiniaComanda) {
 
 		this.idLiniaComanda = idLiniaComanda;

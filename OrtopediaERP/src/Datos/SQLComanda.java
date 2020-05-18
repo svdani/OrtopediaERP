@@ -141,7 +141,6 @@ public class SQLComanda {
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
-			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 			while (rs.next()) {
 					
 				idComanda = rs.getInt("idComanda");
@@ -162,59 +161,6 @@ public class SQLComanda {
 						fechaInicio, 
 						fechaLimite, 
 						descripcion));
-
-			//i++;//---------- AUMENTA CONTADOR
-			}
-
-			rs.close();
-			sentencia.close();
-			c.close();
-
-		} catch (Exception e) {
-
-			Talal: 	System.out.println(e.getMessage());
-
-		}
-		return Comandas;
-	}
-	/*
-	//Muestra Deutor Tabla Comanda
-	public ArrayList<Comanda> consultaDeutorComandas() throws SQLException {
-
-		conectar();
-
-		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Comanda WHERE Deutor = 'true';";
-		
-		try {
-
-			ResultSet rs = sentencia.executeQuery(consultaSql);
-			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
-			while (rs.next()) {
-					
-				idComanda = rs.getString("Dni");
-				password = rs.getString("Password");
-				rol = rs.getString("Rol");
-				nom = rs.getString("Nom");
-				cognom = rs.getString("Cognom");
-				adresa = rs.getString("adresa");
-				fechaLimite = rs.getString("Telf");
-				correu = rs.getString("Correu");
-				deutor = rs.getString("Deutor");
-					
-				//GUARDA EN ARRAY LIST Comanda
-				Comandas.add(new Comanda(
-						idComanda, 
-						password, 
-						rol,
-						nom, 
-						cognom, 
-						adresa, 
-						fechaLimite, 
-						correu, 
-						deutor));
-
-			//i++;//---------- AUMENTA CONTADOR
 			}
 
 			rs.close();
@@ -229,94 +175,35 @@ public class SQLComanda {
 		return Comandas;
 	}
 	
-	//Muestra Admins Tabla Comanda
-	public ArrayList<Comanda> consultaAdminComandas() throws SQLException {
-
-			conectar();
-
-			sentencia = c.createStatement();
-			String consultaSql = "SELECT * FROM Comanda WHERE Rol = 'A';";
-			
-			try {
-
-				ResultSet rs = sentencia.executeQuery(consultaSql);
-				//int i = 0;//-------------CONTADOR PARA LA MATRIZ
-				while (rs.next()) {
-						
-					idComanda = rs.getString("Dni");
-					password = rs.getString("Password");
-					rol = rs.getString("Rol");
-					nom = rs.getString("Nom");
-					cognom = rs.getString("Cognom");
-					adresa = rs.getString("adresa");
-					fechaLimite = rs.getString("Telf");
-					correu = rs.getString("Correu");
-					deutor = rs.getString("Deutor");
-						
-					//GUARDA EN ARRAY LIST Comanda
-					Comandas.add(new Comanda(
-							idComanda, 
-							password, 
-							rol,
-							nom, 
-							cognom, 
-							adresa, 
-							fechaLimite, 
-							correu, 
-							deutor));
-
-				//i++;//---------- AUMENTA CONTADOR
-				}
-
-				rs.close();
-				sentencia.close();
-				c.close();
-
-			} catch (Exception e) {
-
-				Talal: 	System.out.println(e.getMessage());
-
-			}
-			return Comandas;
-		}
-		
-	//Busca Comanda per Dni
-	public Comanda buscaDniComandas(Comanda cli) throws SQLException {
-
+	//Busca Comanda por Dni
+	public ArrayList<Comanda> filtraComandasEstado(String est) throws SQLException {
 		conectar();
 
 		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Comanda WHERE Dni = '" + cli.getDni() + "';";
-		Comanda Comanda = new Comanda(cli.getDni(),cli.getPassword());	
+		String consultaSql = "SELECT * FROM Comanda WHERE Estado = '" + est + "';";
+	
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
-			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 			while (rs.next()) {
 					
-				idComanda = rs.getString("Dni");
-				password = rs.getString("Password");
-				rol = rs.getString("Rol");
-				nom = rs.getString("Nom");
-				cognom = rs.getString("Cognom");
-				adresa = rs.getString("adresa");
-				fechaLimite = rs.getString("Telf");
-				correu = rs.getString("Correu");
-				deutor = rs.getString("Deutor");
-					
+				idComanda = rs.getInt("idComanda");
+				idCliente = rs.getString("idCliente");
+				precioTotal = rs.getDouble("precioTotal");
+				estado = rs.getString("estado");
+				fechaInicio = rs.getString("fechaInicio");
+				fechaLimite = rs.getString("fechaLimite");
+				descripcion = rs.getString("descripcion");
+				
 				//GUARDA EN ARRAY LIST Comanda
-				 Comanda = new Comanda(
+				Comandas.add(new Comanda(
 						idComanda, 
-						password, 
-						rol,
-						nom, 
-						cognom, 
-						adresa, 
+						idCliente, 
+						precioTotal,
+						estado, 
+						fechaInicio, 
 						fechaLimite, 
-						correu, 
-						deutor);
-
-				//i++;//---------- AUMENTA CONTADOR
+						descripcion));
 			}
 
 			rs.close();
@@ -325,46 +212,40 @@ public class SQLComanda {
 		} catch (Exception e) {
 			System.out.println("impossible");
 			Talal: 	System.out.println(e.getMessage());
-
 		}
-		return Comanda;
+		return Comandas;
 	}
-		
-	//Busca Comanda	per idComanda pero por letras
-	public ArrayList<Comanda> buscaComandas(Comanda cli) throws SQLException {
+			
+	//Busca Comanda	por Estado
+	public ArrayList<Comanda> buscaComandas(String cli) throws SQLException {
 		conectar();
 
 		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Comanda WHERE Dni LIKE '%" + cli.getDni() + "%';";
-		//Comanda Comanda = new Comanda(cli.getDni(),cli.getPassword());	
+		String consultaSql = "SELECT * FROM Comanda WHERE idCliente LIKE '%" + cli + "%';";
+		
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
 
 			while (rs.next()) {
 					
-				idComanda = rs.getString("Dni");
-				password = rs.getString("Password");
-				rol = rs.getString("Rol");
-				nom = rs.getString("Nom");
-				cognom = rs.getString("Cognom");
-				adresa = rs.getString("adresa");
-				fechaLimite = rs.getString("Telf");
-				correu = rs.getString("Correu");
-				deutor = rs.getString("Deutor");
-					
+				idComanda = rs.getInt("idComanda");
+				idCliente = rs.getString("idCliente");
+				precioTotal = rs.getDouble("precioTotal");
+				estado = rs.getString("estado");
+				fechaInicio = rs.getString("fechaInicio");
+				fechaLimite = rs.getString("fechaLimite");
+				descripcion = rs.getString("descripcion");
+				
 				//GUARDA EN ARRAY LIST Comanda
 				Comandas.add(new Comanda(
 						idComanda, 
-						password, 
-						rol,
-						nom, 
-						cognom, 
-						adresa, 
+						idCliente, 
+						precioTotal,
+						estado, 
+						fechaInicio, 
 						fechaLimite, 
-						correu, 
-						deutor));
-				
+						descripcion));
 			}
 
 			rs.close();
@@ -378,5 +259,48 @@ public class SQLComanda {
 		}
 		return Comandas;
 	}
-	*/	
+	
+	//Busca Comanda	por Estado
+	public ArrayList<Comanda> filtraComandasFecha(String column, String desde, String hasta) throws SQLException {
+		conectar();
+
+		sentencia = c.createStatement();
+		String consultaSql = "SELECT * FROM Comanda WHERE "+ column +" BETWEEN '" + desde + "' AND '" + hasta + "';";
+		System.out.println(consultaSql);
+		try {
+
+			ResultSet rs = sentencia.executeQuery(consultaSql);
+
+			while (rs.next()) {
+					
+				idComanda = rs.getInt("idComanda");
+				idCliente = rs.getString("idCliente");
+				precioTotal = rs.getDouble("precioTotal");
+				estado = rs.getString("estado");
+				fechaInicio = rs.getString("fechaInicio");
+				fechaLimite = rs.getString("fechaLimite");
+				descripcion = rs.getString("descripcion");
+				
+				//GUARDA EN ARRAY LIST Comanda
+				Comandas.add(new Comanda(
+						idComanda, 
+						idCliente, 
+						precioTotal,
+						estado, 
+						fechaInicio, 
+						fechaLimite, 
+						descripcion));
+			}
+
+			rs.close();
+			sentencia.close();
+			c.close();
+			
+		} catch (Exception e) {
+			System.out.println("fALLO AL BUSCAR ");
+			Talal: 	System.out.println(e.getMessage());
+
+		}
+		return Comandas;
+	}
 };

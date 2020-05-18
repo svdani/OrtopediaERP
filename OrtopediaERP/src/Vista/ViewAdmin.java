@@ -122,7 +122,9 @@ public class ViewAdmin extends JDialog {
 		txtPanel();
 		btnPanel();
 	}
-	
+
+	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
+
 	private void updateTable() {
 		//---Actualiza valores que se muestran en la tabla
 		SQLAdmin conAdmin = new SQLAdmin();
@@ -195,7 +197,9 @@ public class ViewAdmin extends JDialog {
 			}
 		});
 	}
-		
+
+	//--------------------------------------------------------------------------------MENU---------------------------------------------------------------------------------------------	
+	
 	public void menuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -270,9 +274,10 @@ public class ViewAdmin extends JDialog {
 		mnNewMenu.add(mntmProveedor);
 	}
 
-	//--------------------------------------------------------------------------------BOTONES--------------------------------------------------------------------------------------	
+	//--------------------------------------------------------------------------------BOTONES------------------------------------------------------------------------------------------	
 
 	public void btnBuscar() {
+		
 		//CAJA TEXTO BUSCAR
 		txtBuscar = new JTextField();
 		txtBuscar.addMouseListener(new MouseAdapter() {
@@ -504,7 +509,9 @@ public class ViewAdmin extends JDialog {
 		group.add(rdbtnNombre);
 		group.add(rdbtnApellidos);
 	}
-	
+
+	//--------------------------------------------------------------------------------CAJAS TEXTO--------------------------------------------------------------------------------------	
+
 	public void txtPanel() {
 
 		txtDni = new JTextField();
@@ -582,7 +589,9 @@ public class ViewAdmin extends JDialog {
 		
 		
 	}
-		
+
+	//--------------------------------------------------------------------------------PANEL INFERIOR BOTONES---------------------------------------------------------------------------	
+	
 	public void btnPanel() {
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
