@@ -45,7 +45,7 @@ public class SQLComanda {
 	}
 	
 	//Inserta en tabla Comanda
-	public void insertaComandas(Comanda cli) throws SQLException {
+	public void insertaComandas(Comanda com) throws SQLException {
 
 		
 		try {
@@ -54,12 +54,12 @@ public class SQLComanda {
 			String sqlInsert = "INSERT INTO Comanda (idCliente, precioTotal, estado, fechaInicio, fechaLimite, descripcion) "
 
 		            	 + "VALUES (" 
-		            	 + "'" + cli.getIdCliente() + "',"
-		            	 + "" + cli.getPrecioTotal() + ","
-		            	 + "'" + cli.getEstado() + "',"
-		            	 + "'" + cli.getFechaInicio() + "',"
-		            	 + "'" + cli.getFechaLimite() + "',"
-		            	 + "'" + cli.getDescripcion() + "');";
+		            	 + "'" + com.getIdCliente() + "',"
+		            	 + "" + com.getPrecioTotal() + ","
+		            	 + "'" + com.getEstado() + "',"
+		            	 + "'" + com.getFechaInicio() + "',"
+		            	 + "'" + com.getFechaLimite() + "',"
+		            	 + "'" + com.getDescripcion() + "');";
 			
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlInsert);
@@ -76,7 +76,7 @@ public class SQLComanda {
 	}
 	
 	//Modifica taula Comanda
-	public void modificaComandas(Comanda cli) throws SQLException {
+	public void modificaComandas(Comanda com) throws SQLException {
 
 		try {
 
@@ -84,13 +84,13 @@ public class SQLComanda {
 	
 			String sqlUpdate ="UPDATE Comanda "
 							+ "SET"
-							+ " idCliente='" + cli.getIdCliente()
-							+ "', precioTotal='" + cli.getPrecioTotal()
-							+ "', estado='" + cli.getEstado()
-							+ "', fechaInicio='" + cli.getFechaInicio()
-							+ "', fechaLimite='" +cli.getFechaLimite()
-							+ "', descripcion='"+ cli.getDescripcion()
-							+ "' WHERE idComanda='" + cli.getIdComanda() + "';";
+							+ " idCliente='" + com.getIdCliente()
+							+ "', precioTotal='" + com.getPrecioTotal()
+							+ "', estado='" + com.getEstado()
+							+ "', fechaInicio='" + com.getFechaInicio()
+							+ "', fechaLimite='" +com.getFechaLimite()
+							+ "', descripcion='"+ com.getDescripcion()
+							+ "' WHERE idComanda='" + com.getIdComanda() + "';";
 					
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlUpdate);
@@ -107,13 +107,13 @@ public class SQLComanda {
 	}
 		
 	//Elimina Comanda
-	public void deleteComandas(Comanda cli) throws SQLException {
+	public void deleteComandas(Comanda com) throws SQLException {
 
 		try {
 
 			conectar();
 
-			String sqlDelete = "DELETE FROM Comanda WHERE idComanda='"	+ cli.getIdComanda() + "';";
+			String sqlDelete = "DELETE FROM Comanda WHERE idComanda='"	+ com.getIdComanda() + "';";
 			
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlDelete);

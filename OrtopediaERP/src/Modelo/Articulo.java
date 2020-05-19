@@ -17,6 +17,11 @@ public class Articulo{
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
+	}
+	public Articulo(String idArticulo) {
+
+		this.idArticulo = idArticulo;
+
 	}	
 
 	//---------------------------------------------------------------------------------------------GETTER AND SETTER
@@ -60,7 +65,6 @@ public class Articulo{
 	public void setStock(int stock) {
 		this.stock = stock;
 	}
-	
 	
 	//---------------------------------------------------------------------------------------------TO STRING
 	

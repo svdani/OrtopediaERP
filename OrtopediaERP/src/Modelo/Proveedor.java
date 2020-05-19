@@ -17,6 +17,11 @@ public class Proveedor{
 		this.telf = telf;
 	}
 	
+	public Proveedor(String idProveedor) {
+
+		this.idProveedor = idProveedor;
+	}
+	
 	//---------------------------------------------------------------------------------------------GETTER AND SETTER
 
 	/**

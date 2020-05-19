@@ -19,7 +19,7 @@ public class SQLProveedor {
 	String email;
 	String telf;
 
-	ArrayList<Proveedor> Proveedors = new ArrayList<Proveedor>();
+	ArrayList<Proveedor> Proveedores = new ArrayList<Proveedor>();
 	
 	//Conecta base dades
 	public Connection conectar() {
@@ -130,7 +130,6 @@ public class SQLProveedor {
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
-			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 			while (rs.next()) {
 					
 				idProveedor = rs.getString("idProveedor");
@@ -138,14 +137,13 @@ public class SQLProveedor {
 				email = rs.getString("email");
 				telf = rs.getString("Telf");
 					
-				//GUARDA EN ARRAY LIST Proveedor
-				Proveedors.add(new Proveedor(
+				//GUARDA EN ARRAY LIST Proveedores
+				Proveedores.add(new Proveedor(
 						idProveedor, 
 						nombre, 
 						email, 
 						telf));
 
-			//i++;//---------- AUMENTA CONTADOR
 			}
 
 			rs.close();
@@ -157,208 +155,44 @@ public class SQLProveedor {
 			Talal: 	System.out.println(e.getMessage());
 
 		}
-		return Proveedors;
-	}
-	/*
-	//Muestra Deutor Tabla Proveedor
-	public ArrayList<Proveedor> consultaDeutorProveedors() throws SQLException {
-
-		conectar();
-
-		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Proveedor WHERE Deutor = 'true';";
-		
-		try {
-
-			ResultSet rs = sentencia.executeQuery(consultaSql);
-			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
-			while (rs.next()) {
-					
-				idProveedor = rs.getString("Dni");
-				password = rs.getString("Password");
-				rol = rs.getString("Rol");
-				nom = rs.getString("Nom");
-				cognom = rs.getString("Cognom");
-				adresa = rs.getString("adresa");
-				telf = rs.getString("Telf");
-				correu = rs.getString("Correu");
-				deutor = rs.getString("Deutor");
-					
-				//GUARDA EN ARRAY LIST Proveedor
-				Proveedors.add(new Proveedor(
-						idProveedor, 
-						password, 
-						rol,
-						nom, 
-						cognom, 
-						adresa, 
-						telf, 
-						correu, 
-						deutor));
-
-			//i++;//---------- AUMENTA CONTADOR
-			}
-
-			rs.close();
-			sentencia.close();
-			c.close();
-
-		} catch (Exception e) {
-
-			Talal: 	System.out.println(e.getMessage());
-
-		}
-		return Proveedors;
+		return Proveedores;
 	}
 	
-	//Muestra Admins Tabla Proveedor
-	public ArrayList<Proveedor> consultaAdminProveedors() throws SQLException {
-
-			conectar();
-
-			sentencia = c.createStatement();
-			String consultaSql = "SELECT * FROM Proveedor WHERE Rol = 'A';";
-			
-			try {
-
-				ResultSet rs = sentencia.executeQuery(consultaSql);
-				//int i = 0;//-------------CONTADOR PARA LA MATRIZ
-				while (rs.next()) {
-						
-					idProveedor = rs.getString("Dni");
-					password = rs.getString("Password");
-					rol = rs.getString("Rol");
-					nom = rs.getString("Nom");
-					cognom = rs.getString("Cognom");
-					adresa = rs.getString("adresa");
-					telf = rs.getString("Telf");
-					correu = rs.getString("Correu");
-					deutor = rs.getString("Deutor");
-						
-					//GUARDA EN ARRAY LIST Proveedor
-					Proveedors.add(new Proveedor(
-							idProveedor, 
-							password, 
-							rol,
-							nom, 
-							cognom, 
-							adresa, 
-							telf, 
-							correu, 
-							deutor));
-
-				//i++;//---------- AUMENTA CONTADOR
-				}
-
-				rs.close();
-				sentencia.close();
-				c.close();
-
-			} catch (Exception e) {
-
-				Talal: 	System.out.println(e.getMessage());
-
-			}
-			return Proveedors;
-		}
-		
-	//Busca Proveedor per Dni
-	public Proveedor buscaDniProveedors(Proveedor pro) throws SQLException {
+	//Busca Proveedores por Dni, Nombre, Apellidos pero por letras
+	public ArrayList<Proveedor> buscaProveedores(String registro, String filtro) throws SQLException {
 
 		conectar();
 
 		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Proveedor WHERE Dni = '" + pro.getDni() + "';";
-		Proveedor Proveedor = new Proveedor(pro.getDni(),pro.getPassword());	
+		String consultaSql = "SELECT * FROM Proveedor WHERE " + filtro +" LIKE '%" + registro + "%';";
+		
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
-			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 			while (rs.next()) {
 					
-				idProveedor = rs.getString("Dni");
-				password = rs.getString("Password");
-				rol = rs.getString("Rol");
-				nom = rs.getString("Nom");
-				cognom = rs.getString("Cognom");
-				adresa = rs.getString("adresa");
+				idProveedor = rs.getString("idProveedor");
+				nombre = rs.getString("nombre");
+				email = rs.getString("email");
 				telf = rs.getString("Telf");
-				correu = rs.getString("Correu");
-				deutor = rs.getString("Deutor");
 					
-				//GUARDA EN ARRAY LIST Proveedor
-				 Proveedor = new Proveedor(
+				//GUARDA EN ARRAY LIST Proveedores
+				Proveedores.add(new Proveedor(
 						idProveedor, 
-						password, 
-						rol,
-						nom, 
-						cognom, 
-						adresa, 
-						telf, 
-						correu, 
-						deutor);
-
-				//i++;//---------- AUMENTA CONTADOR
+						nombre, 
+						email, 
+						telf));
 			}
 
 			rs.close();
 			sentencia.close();
 			c.close();
+
 		} catch (Exception e) {
-			System.out.println("impossible");
+
 			Talal: 	System.out.println(e.getMessage());
 
 		}
-		return Proveedor;
+		return Proveedores;
 	}
-		
-	//Busca Proveedor	per idProveedor pero por letras
-	public ArrayList<Proveedor> buscaProveedors(Proveedor pro) throws SQLException {
-		conectar();
-
-		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Proveedor WHERE Dni LIKE '%" + pro.getDni() + "%';";
-		//Proveedor Proveedor = new Proveedor(pro.getDni(),pro.getPassword());	
-		try {
-
-			ResultSet rs = sentencia.executeQuery(consultaSql);
-
-			while (rs.next()) {
-					
-				idProveedor = rs.getString("Dni");
-				password = rs.getString("Password");
-				rol = rs.getString("Rol");
-				nom = rs.getString("Nom");
-				cognom = rs.getString("Cognom");
-				adresa = rs.getString("adresa");
-				telf = rs.getString("Telf");
-				correu = rs.getString("Correu");
-				deutor = rs.getString("Deutor");
-					
-				//GUARDA EN ARRAY LIST Proveedor
-				Proveedors.add(new Proveedor(
-						idProveedor, 
-						password, 
-						rol,
-						nom, 
-						cognom, 
-						adresa, 
-						telf, 
-						correu, 
-						deutor));
-				
-			}
-
-			rs.close();
-			sentencia.close();
-			c.close();
-			
-		} catch (Exception e) {
-			System.out.println("fALLO AL BUSCAR ");
-			Talal: 	System.out.println(e.getMessage());
-
-		}
-		return Proveedors;
-	}
-	*/	
 };

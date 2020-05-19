@@ -92,7 +92,6 @@ public class ViewCliente extends JDialog {
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
 		setBounds(100, 100, 783, 486);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setToolTipText("sxadxas");
 		contentPanel.setBackground(UIManager.getColor("Button.background"));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -655,9 +654,8 @@ public class ViewCliente extends JDialog {
 		btnVerNota = new JButton("Ver Nota");
 		btnVerNota.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				if (table.getSelectedRow() != -1) {
-					System.out.println("hola");
 					Cliente cli = new Cliente(
 							(String) model.getValueAt(table.getSelectedRow(), 0),
 							(String) model.getValueAt(table.getSelectedRow(), 1),
@@ -667,10 +665,10 @@ public class ViewCliente extends JDialog {
 							(String) model.getValueAt(table.getSelectedRow(), 5),
 							(String) model.getValueAt(table.getSelectedRow(), 6)
 							);
-				ViewNota windowNota = new ViewNota(cli);
-				windowNota.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-				windowNota.setVisible(true);
-				//dispose();
+					ViewNota windowNota = new ViewNota(cli);
+					windowNota.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					windowNota.setVisible(true);
+					//dispose();
 				} else {
 					JOptionPane.showMessageDialog(null, "Seleccione un registro primero");
 				}
@@ -680,6 +678,28 @@ public class ViewCliente extends JDialog {
 		buttonPane.add(btnVerNota);
 		
 		JButton btnVerHistorial = new JButton("Ver Historial");
+		btnVerHistorial.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				if (table.getSelectedRow() != -1) {
+					Cliente cli = new Cliente(
+							(String) model.getValueAt(table.getSelectedRow(), 0),
+							(String) model.getValueAt(table.getSelectedRow(), 1),
+							(String) model.getValueAt(table.getSelectedRow(), 2),
+							(String) model.getValueAt(table.getSelectedRow(), 3),
+							(String) model.getValueAt(table.getSelectedRow(), 4),
+							(String) model.getValueAt(table.getSelectedRow(), 5),
+							(String) model.getValueAt(table.getSelectedRow(), 6)
+							);
+					ViewComanda windowComanda = new ViewComanda(cli);
+					windowComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					windowComanda.setVisible(true);
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione un registro primero");
+				}
+			}
+		});
 		buttonPane.add(btnVerHistorial);
 		btnVerHistorial.setActionCommand("Ver Historial");
 		{

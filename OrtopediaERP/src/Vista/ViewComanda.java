@@ -142,6 +142,63 @@ public class ViewComanda extends JDialog {
 		txtPanel();
 		btnPanel();
 	}
+	
+	/**
+	 * Crea el dialog relacionado con el Cliente.
+	 */
+	public ViewComanda(Cliente cli) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
+		setBounds(100, 100, 783, 537);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setToolTipText("sxadxas");
+		contentPanel.setBackground(UIManager.getColor("Button.background"));
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(30, 23, 578, 343);
+		contentPanel.add(scrollPane);
+		
+		table = new JTable();		
+		model = new DefaultTableModel() {
+			public boolean isCellEditable(int row,int column) {
+				//Todas las celdas en false
+				return false;
+			}
+		};
+
+		//----INTRODUCE NOMBRE COLUMNAS TABLA DESDE SQL
+		model.addColumn("Id Comanda");
+		model.addColumn("Id Cliente");
+		model.addColumn("Precio Total");
+		model.addColumn("Estado");
+		model.addColumn("Fecha Inicio");
+		model.addColumn("Fecha Limite");
+		model.addColumn("Descripción");
+
+		table.setModel(model);
+		
+		//---FUNCIONES TABLA
+		updateBusca(cli.getDni());
+		//updateTable();
+		selectRow();
+		scrollPane.setViewportView(table);		
+		
+		btnMostrarTodo();
+		btnBuscar();
+		btnNuevo();
+		btnModifica();
+		btnInserta();
+		btnElimina();
+		btnFiltrar();
+		
+		menuBar();
+		btnGrup();
+		calendarPanel();
+		txtPanel();
+		btnPanel();
+	}
 
 	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
 
@@ -424,8 +481,8 @@ public class ViewComanda extends JDialog {
 					txtNotas.setText("");
 
 				} catch (SQLException e1) {
-					System.out.println("Falla al insertar Admin");
-					JOptionPane.showMessageDialog(null, "Ha habido un error al insertar Admin revise los campos");	
+					System.out.println("Falla al insertar Comanda");
+					JOptionPane.showMessageDialog(null, "Ha habido un error al insertar Comanda revise los campos");	
 					e1.printStackTrace();
 				}
 			}
@@ -438,6 +495,57 @@ public class ViewComanda extends JDialog {
 	public void btnModifica() {
 
 		btnModificar = new JButton("Modificar");
+		btnModificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SQLComanda conCom = new SQLComanda();
+
+				// Obtenemos el primer dato del registro seleccionado
+				if (table.getSelectedRow() != -1) {
+					//COMPRUEBA QUE EL VALOR PRECIO SEA DOUBLE
+					if( isDouble(txtPrecioTotal.getText()) == true) {
+						Comanda com = new Comanda(
+								(int) model.getValueAt(table.getSelectedRow(), 0),
+								(String) model.getValueAt(table.getSelectedRow(), 1),
+								(double) model.getValueAt(table.getSelectedRow(), 2),
+								(String) model.getValueAt(table.getSelectedRow(), 3),
+								(String) model.getValueAt(table.getSelectedRow(), 4),
+								(String) model.getValueAt(table.getSelectedRow(), 5),
+								(String) model.getValueAt(table.getSelectedRow(), 6)
+								);
+
+						com.setIdCliente(txtIdCliente.getText().toString());
+						com.setPrecioTotal(Double.parseDouble(txtPrecioTotal.getText()));
+						com.setEstado(txtEstado.getSelectedItem().toString());
+						//com.setFechaInicio(sdf.format(dateFechaInicio.getDate()).toString());
+						com.setFechaLimite(sdf.format(dateFechaLimite.getDate()).toString());
+						com.setDescripcion(txtNotas.getText().toString());
+
+						//Confirmacion de editado
+						int dialogButton = JOptionPane.YES_NO_OPTION;
+						int dialogResult = JOptionPane.showConfirmDialog (null, "Quieres editar el registro seleccionado?","Warning",dialogButton);			
+
+						if(dialogResult == 0){
+
+							if(Integer.parseInt(txtIdComanda.getText()) == (com.getIdComanda())) {
+								try {
+									conCom.modificaComandas(com);						
+									updateTable();
+
+								} catch (SQLException e1) {
+									e1.printStackTrace();
+								}						
+							} else {
+								JOptionPane.showMessageDialog(null, "EL ID COMANDA NO SE PUEDE CAMBIAR");
+							}
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "Ha habido un error al insertar Articulo revise los campos\n Precio y Stock puede que no sean valores numericos.");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione un registro primero para EDITAR");
+				}
+			}
+		});
 		btnModificar.setActionCommand("OK");
 		btnModificar.setBounds(630, 411, 119, 23);
 		contentPanel.add(btnModificar);
@@ -688,22 +796,72 @@ public class ViewComanda extends JDialog {
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
-		JButton btnVerLiniaComanda = new JButton("Ver Lineas Comanda");
+		//BOTON VER LINIAS DE COMANDA
+		JButton	 btnVerLiniaComanda = new JButton("Ver Lineas Comanda");
 		btnVerLiniaComanda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
+		
+		//BOTON VER DESCRIPCION
+		JButton btnVerNota = new JButton("Ver Descripcion");
+		btnVerNota.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				if (table.getSelectedRow() != -1) {
+					System.out.println("hola");
+					SQLComanda conCom = new SQLComanda();
+					// Obtenemos el primer dato del registro seleccionado
+						Comanda com = new Comanda(
+								(int) model.getValueAt(table.getSelectedRow(), 0),
+								(String) model.getValueAt(table.getSelectedRow(), 1),
+								(double) model.getValueAt(table.getSelectedRow(), 2),
+								(String) model.getValueAt(table.getSelectedRow(), 3),
+								(String) model.getValueAt(table.getSelectedRow(), 4),
+								(String) model.getValueAt(table.getSelectedRow(), 5),
+								(String) model.getValueAt(table.getSelectedRow(), 6)
+								);
+					
+				ViewNota windowNota = new ViewNota(com);
+				windowNota.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				windowNota.setVisible(true);
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione un registro primero");
+				}
+			}
+		});
+		buttonPane.add(btnVerNota);
 		buttonPane.add(btnVerLiniaComanda);
 		btnVerLiniaComanda.setActionCommand("Ver Historial");
-		{
-			JButton cancelButton = new JButton("Cancelar");
-			cancelButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					System.exit(0);
-				}
-			});
-			cancelButton.setActionCommand("Cancelar");
-			buttonPane.add(cancelButton);
+		
+		//BOTON CANCELAR
+		JButton cancelButton = new JButton("Cancelar");
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		cancelButton.setActionCommand("Cancelar");
+		buttonPane.add(cancelButton);
+
+		
+		
+	}
+
+
+	//--------------------------------------------------------------------------------CONTROL ERRORES---------------------------------------------------------------------------	
+	
+	public static boolean isDouble(String cadena) {
+
+		boolean resultado;
+
+		try {
+			Double.parseDouble(cadena);
+			resultado = true;
+		} catch (NumberFormatException excepcion) {
+			resultado = false;
 		}
+
+		return resultado;
 	}
 }

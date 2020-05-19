@@ -8,7 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Modelo.Cliente;
+import Modelo.*;
 
 import java.awt.Panel;
 import java.awt.ScrollPane;
@@ -20,7 +20,7 @@ public class ViewNota extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private Cliente cli;
-
+	private Comanda com;
 	/**
 	 * Create the dialog.
 	 */
@@ -41,5 +41,21 @@ public class ViewNota extends JDialog {
 		
 
 
+	}
+
+	public ViewNota(Comanda com) {
+		this.com = com;
+		
+		setBounds(100, 100, 450, 300);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+		
+		JTextPane textPane = new JTextPane();
+		textPane.setText(com.getDescripcion());
+		textPane.setEditable(false);
+		textPane.setBounds(10, 11, 414, 240);
+		contentPanel.add(textPane);
 	}
 }

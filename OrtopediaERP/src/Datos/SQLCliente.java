@@ -180,7 +180,7 @@ public class SQLCliente {
 	}
 	
 	//Busca Clientes por Dni, Nombre, Apellidos pero por letras
-	public  ArrayList<Cliente>  buscaClientes(String registro, String filtro) throws SQLException {
+	public  ArrayList<Cliente> buscaClientes(String registro, String filtro) throws SQLException {
 		conectar();
 
 		sentencia = c.createStatement();
@@ -209,7 +209,6 @@ public class SQLCliente {
 						email, 
 						telf, 
 						notas));
-
 			}
 
 			rs.close();

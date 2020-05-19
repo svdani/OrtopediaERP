@@ -44,7 +44,7 @@ public class SQLArticulo {
 	}
 	
 	//Inserta en tabla Articulo
-	public void insertaArticulos(Articulo cli) throws SQLException {
+	public void insertaArticulos(Articulo art) throws SQLException {
 
 		
 		try {
@@ -52,11 +52,11 @@ public class SQLArticulo {
 
 			String sqlInsert = "INSERT INTO Articulo (idArticulo, idProveedor, nombre, precio, stock) "
 
-		            	 + "VALUES ('" + cli.getIdArticulo() + "', '"
-		            	 + cli.getIdProveedor() + "', '"
-		            	 + cli.getNombre() + "', "
-		            	 + cli.getPrecio() + ", "
-		            	 + cli.getStock() + ");";
+		            	 + "VALUES ('" + art.getIdArticulo() + "', '"
+		            	 + art.getIdProveedor() + "', '"
+		            	 + art.getNombre() + "', "
+		            	 + art.getPrecio() + ", "
+		            	 + art.getStock() + ");";
 			
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlInsert);
@@ -73,7 +73,7 @@ public class SQLArticulo {
 	}
 	
 	//Modifica taula Articulo
-	public void modificaArticulos(Articulo cli) throws SQLException {
+	public void modificaArticulos(Articulo art) throws SQLException {
 
 		try {
 
@@ -81,11 +81,11 @@ public class SQLArticulo {
 	
 			String sqlUpdate ="UPDATE Articulo "
 							+ "SET"
-							+ " idProveedor='"+ cli.getIdProveedor()
-							+ "', nombre='" + cli.getNombre()
-							+ "', precio=" + cli.getPrecio()
-							+ ", stock=" +cli.getStock()						
-							+ " WHERE idArticulo='" + cli.getIdArticulo() + "';";
+							+ " idProveedor='"+ art.getIdProveedor()
+							+ "', nombre='" + art.getNombre()
+							+ "', precio=" + art.getPrecio()
+							+ ", stock=" +art.getStock()						
+							+ " WHERE idArticulo='" + art.getIdArticulo() + "';";
 					
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlUpdate);
@@ -102,13 +102,13 @@ public class SQLArticulo {
 	}
 		
 	//Elimina Articulo
-	public void deleteArticulos(Articulo cli) throws SQLException {
+	public void deleteArticulos(Articulo art) throws SQLException {
 
 		try {
 
 			conectar();
 
-			String sqlDelete = "DELETE FROM Articulo WHERE idArticulo='" + cli.getIdArticulo() + "';";
+			String sqlDelete = "DELETE FROM Articulo WHERE idArticulo='" + art.getIdArticulo() + "';";
 			
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlDelete);
@@ -144,8 +144,6 @@ public class SQLArticulo {
 				nombre = rs.getString("nombre");
 				precio = rs.getDouble("precio");
 				stock = rs.getInt("stock");
-				
-
 					
 				//GUARDA EN ARRAY LIST Articulo
 				Articulos.add(new Articulo(
@@ -155,58 +153,6 @@ public class SQLArticulo {
 						precio,
 						stock));
 
-			//i++;//---------- AUMENTA CONTADOR
-			}
-
-			rs.close();
-			sentencia.close();
-			c.close();
-
-		} catch (Exception e) {
-
-			Talal: 	System.out.println(e.getMessage());
-
-		}
-		return Articulos;
-	}
-	/*
-	//Muestra Deutor Tabla Articulo
-	public ArrayList<Articulo> consultaDeutorArticulos() throws SQLException {
-
-		conectar();
-
-		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Articulo WHERE Deutor = 'true';";
-		
-		try {
-
-			ResultSet rs = sentencia.executeQuery(consultaSql);
-			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
-			while (rs.next()) {
-					
-				idArticulo = rs.getString("idArticulo");
-				idProveedor = rs.getString("idProveedor");
-				rol = rs.getString("Rol");
-				nom = rs.getString("Nom");
-				cognom = rs.getString("Cognom");
-				adresa = rs.getString("adresa");
-				telf = rs.getString("Telf");
-				correu = rs.getString("Correu");
-				deutor = rs.getString("Deutor");
-					
-				//GUARDA EN ARRAY LIST Articulo
-				Articulos.add(new Articulo(
-						idArticulo, 
-						idProveedor, 
-						rol,
-						nom, 
-						cognom, 
-						adresa, 
-						telf, 
-						correu, 
-						deutor));
-
-			//i++;//---------- AUMENTA CONTADOR
 			}
 
 			rs.close();
@@ -221,154 +167,44 @@ public class SQLArticulo {
 		return Articulos;
 	}
 	
-	//Muestra Articulos Tabla Articulo
-	public ArrayList<Articulo> consultaArticuloArticulos() throws SQLException {
-
-			conectar();
-
-			sentencia = c.createStatement();
-			String consultaSql = "SELECT * FROM Articulo WHERE Rol = 'A';";
-			
-			try {
-
-				ResultSet rs = sentencia.executeQuery(consultaSql);
-				//int i = 0;//-------------CONTADOR PARA LA MATRIZ
-				while (rs.next()) {
-						
-					idArticulo = rs.getString("idArticulo");
-					idProveedor = rs.getString("idProveedor");
-					rol = rs.getString("Rol");
-					nom = rs.getString("Nom");
-					cognom = rs.getString("Cognom");
-					adresa = rs.getString("adresa");
-					telf = rs.getString("Telf");
-					correu = rs.getString("Correu");
-					deutor = rs.getString("Deutor");
-						
-					//GUARDA EN ARRAY LIST Articulo
-					Articulos.add(new Articulo(
-							idArticulo, 
-							idProveedor, 
-							rol,
-							nom, 
-							cognom, 
-							adresa, 
-							telf, 
-							correu, 
-							deutor));
-
-				//i++;//---------- AUMENTA CONTADOR
-				}
-
-				rs.close();
-				sentencia.close();
-				c.close();
-
-			} catch (Exception e) {
-
-				Talal: 	System.out.println(e.getMessage());
-
-			}
-			return Articulos;
-		}
-		
-	//Busca Articulo per idArticulo
-	public Articulo buscaidArticuloArticulos(Articulo cli) throws SQLException {
+	//Busca Articulos por idArticulo, idProveedor y Nombre pero por letras
+	public ArrayList<Articulo> buscaArticulos(String registro, String filtro) throws SQLException {
 
 		conectar();
 
 		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Articulo WHERE idArticulo = '" + cli.getidArticulo() + "';";
-		Articulo Articulo = new Articulo(cli.getidArticulo(),cli.getidProveedor());	
-		try {
-
-			ResultSet rs = sentencia.executeQuery(consultaSql);
-			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
-			while (rs.next()) {
-					
-				idArticulo = rs.getString("idArticulo");
-				idProveedor = rs.getString("idProveedor");
-				rol = rs.getString("Rol");
-				nom = rs.getString("Nom");
-				cognom = rs.getString("Cognom");
-				adresa = rs.getString("adresa");
-				telf = rs.getString("Telf");
-				correu = rs.getString("Correu");
-				deutor = rs.getString("Deutor");
-					
-				//GUARDA EN ARRAY LIST Articulo
-				 Articulo = new Articulo(
-						idArticulo, 
-						idProveedor, 
-						rol,
-						nom, 
-						cognom, 
-						adresa, 
-						telf, 
-						correu, 
-						deutor);
-
-				//i++;//---------- AUMENTA CONTADOR
-			}
-
-			rs.close();
-			sentencia.close();
-			c.close();
-		} catch (Exception e) {
-			System.out.println("impossible");
-			Talal: 	System.out.println(e.getMessage());
-
-		}
-		return Articulo;
-	}
+		String consultaSql = "SELECT * FROM Articulo WHERE "+ filtro +" LIKE '%" + registro + "%';";
 		
-	//Busca Articulo	per idArticulo pero por letras
-	public ArrayList<Articulo> buscaArticulos(Articulo cli) throws SQLException {
-		conectar();
-
-		sentencia = c.createStatement();
-		String consultaSql = "SELECT * FROM Articulo WHERE idArticulo LIKE '%" + cli.getidArticulo() + "%';";
-		//Articulo Articulo = new Articulo(cli.getidArticulo(),cli.getidProveedor());	
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
-
 			while (rs.next()) {
 					
 				idArticulo = rs.getString("idArticulo");
 				idProveedor = rs.getString("idProveedor");
-				rol = rs.getString("Rol");
-				nom = rs.getString("Nom");
-				cognom = rs.getString("Cognom");
-				adresa = rs.getString("adresa");
-				telf = rs.getString("Telf");
-				correu = rs.getString("Correu");
-				deutor = rs.getString("Deutor");
-					
+				nombre = rs.getString("nombre");
+				precio = rs.getDouble("precio");
+				stock = rs.getInt("stock");
+						
 				//GUARDA EN ARRAY LIST Articulo
 				Articulos.add(new Articulo(
-						idArticulo, 
-						idProveedor, 
-						rol,
-						nom, 
-						cognom, 
-						adresa, 
-						telf, 
-						correu, 
-						deutor));
-				
+						idArticulo,
+						idProveedor,
+						nombre, 
+						precio,
+						stock));
+
 			}
 
 			rs.close();
 			sentencia.close();
 			c.close();
-			
+
 		} catch (Exception e) {
-			System.out.println("fALLO AL BUSCAR ");
+
 			Talal: 	System.out.println(e.getMessage());
 
 		}
 		return Articulos;
 	}
-	*/	
 };
