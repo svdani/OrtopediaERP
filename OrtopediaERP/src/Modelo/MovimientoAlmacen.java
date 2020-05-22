@@ -15,7 +15,7 @@ public class MovimientoAlmacen{
 	
 	//---------------------------------------------------------------------------------------------CONSTRUCTOR
 	
-	public MovimientoAlmacen(int idMovimientoAlmacen, String idArticulo, String tipoMovimiento, String ubicacion,String fecha) {
+	public MovimientoAlmacen(int idMovimientoAlmacen, String idArticulo, String tipoMovimiento, String ubicacion, String fecha) {
 
 		this.idMovimientoAlmacen = idMovimientoAlmacen;
 		this.idArticulo = idArticulo;
@@ -110,21 +110,6 @@ public class MovimientoAlmacen{
 	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
-
-	/**
-	 * @return the sdf
-	 */
-	public SimpleDateFormat getSdf() {
-		return sdf;
-	}
-
-	/**
-	 * @param sdf the sdf to set
-	 */
-	public void setSdf(SimpleDateFormat sdf) {
-		this.sdf = sdf;
-	}
-
 	
 	//---------------------------------------------------------------------------------------------TO STRING
 	

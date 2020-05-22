@@ -14,8 +14,6 @@ public class SQLArticulo {
 
 	Statement sentencia = null;
 
-	//String nombreTabla;
-
 	String idArticulo;
 	String idProveedor;
 	String nombre;
@@ -35,21 +33,17 @@ public class SQLArticulo {
 			System.out.println("Exito al conectar con base de datos Articulo");
 
 		} catch (Exception e) {
-
 			System.out.println("Error al conectar con base de datos Articulo");
-
 		}
 		return c;
-
 	}
 	
 	//Inserta en tabla Articulo
 	public void insertaArticulos(Articulo art) throws SQLException {
 
-		
 		try {
+			
 			conectar();
-
 			String sqlInsert = "INSERT INTO Articulo (idArticulo, idProveedor, nombre, precio, stock) "
 
 		            	 + "VALUES ('" + art.getIdArticulo() + "', '"
@@ -66,9 +60,7 @@ public class SQLArticulo {
 			System.out.println("Datos insertados");
 
 		} catch (Exception e) {
-
 			System.out.println("Error al insertertar datos en la tabla Articulo");
-
 		}
 	}
 	
@@ -78,7 +70,6 @@ public class SQLArticulo {
 		try {
 
 			conectar();
-	
 			String sqlUpdate ="UPDATE Articulo "
 							+ "SET"
 							+ " idProveedor='"+ art.getIdProveedor()
@@ -86,7 +77,7 @@ public class SQLArticulo {
 							+ "', precio=" + art.getPrecio()
 							+ ", stock=" +art.getStock()						
 							+ " WHERE idArticulo='" + art.getIdArticulo() + "';";
-					
+					System.out.println(sqlUpdate);
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlUpdate);
 			sentencia.close();
@@ -95,9 +86,7 @@ public class SQLArticulo {
 			System.out.println("Datos actualizados");
 
 		} catch (Exception e) {
-
 				System.out.println("Error al actualizar datos en la tabla Articulo");
-
 		}
 	}
 		
@@ -107,7 +96,6 @@ public class SQLArticulo {
 		try {
 
 			conectar();
-
 			String sqlDelete = "DELETE FROM Articulo WHERE idArticulo='" + art.getIdArticulo() + "';";
 			
 			sentencia = c.createStatement();
@@ -120,16 +108,13 @@ public class SQLArticulo {
 		} catch (Exception e) {
 
 			System.out.println("Error al eliminar datos en la tabla Articulo");
-
 		}
-
 	}
 	
 	//Muestra Tabla Articulo
 	public ArrayList<Articulo> consultaArticulos() throws SQLException {
 
 		conectar();
-
 		sentencia = c.createStatement();
 		String consultaSql = "SELECT * FROM Articulo;";
 		
@@ -152,7 +137,6 @@ public class SQLArticulo {
 						nombre, 
 						precio,
 						stock));
-
 			}
 
 			rs.close();
@@ -171,7 +155,6 @@ public class SQLArticulo {
 	public ArrayList<Articulo> buscaArticulos(String registro, String filtro) throws SQLException {
 
 		conectar();
-
 		sentencia = c.createStatement();
 		String consultaSql = "SELECT * FROM Articulo WHERE "+ filtro +" LIKE '%" + registro + "%';";
 		
@@ -193,7 +176,6 @@ public class SQLArticulo {
 						nombre, 
 						precio,
 						stock));
-
 			}
 
 			rs.close();
@@ -207,4 +189,51 @@ public class SQLArticulo {
 		}
 		return Articulos;
 	}
+	
+	//Cuenta Articulos
+	public String numArticulos() throws SQLException {
+		String valor = "P";
+		ResultSet rs;
+		try {
+			
+			conectar();
+
+			sentencia = c.createStatement();
+			String consultaSql = "SELECT COUNT (*) FROM Articulo;";
+			
+			rs = sentencia.executeQuery(consultaSql);
+			valor = rs.getString(1);
+			rs.close();
+			sentencia.close();
+			c.close();
+				
+		} catch (Exception e) {
+			System.out.println("CUENTA ARTICULOS" + e.getMessage());
+		}
+		return valor;
+	}
+
+	//Descubre precio Articulos
+	public double precioArticulos(Articulo art) throws SQLException {
+		double valor = 0;
+		ResultSet rs;
+		try {
+
+			conectar();
+
+			sentencia = c.createStatement();
+			String consultaSql = "SELECT precio FROM Articulo WHERE idArticulo = '" + art.getIdArticulo() + "';";
+		
+			rs = sentencia.executeQuery(consultaSql);
+			valor = rs.getDouble(1);
+			rs.close();
+			sentencia.close();
+			c.close();
+
+		} catch (Exception e) {
+			System.out.println("CUENTA ARTICULOS" + e.getMessage());
+		}
+		return valor;
+	}
+	
 };

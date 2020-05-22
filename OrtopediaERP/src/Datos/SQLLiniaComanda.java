@@ -7,14 +7,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import Modelo.Articulo;
 import Modelo.LiniaComanda;
 
 public class SQLLiniaComanda {
 	Connection c = null;
 
 	Statement sentencia = null;
-
-	//String idComandaTabla;
 
 	int idLiniaComanda;
 	int idComanda;
@@ -84,14 +83,14 @@ public class SQLLiniaComanda {
 	
 			String sqlUpdate ="UPDATE LiniaComanda "
 							+ "SET"
-							+ " idComanda='" + lin.getIdComanda()
-							+ "', idArticulo='" + lin.getIdArticulo()
+							+ " idComanda=" + lin.getIdComanda()
+							+ ", idArticulo='" + lin.getIdArticulo()
 							+ "', estado='" + lin.getEstado()
 							+ "', tipo='" + lin.getTipo()
-							+ "', precio='" +lin.getPrecio()
-							+ "', cantidad='"+ lin.getCantidad()
-							+ "' WHERE idLiniaComanda=" + lin.getIdLiniaComanda() + ";";
-					
+							+ "', precio=" +lin.getPrecio()
+							+ ", cantidad="+ lin.getCantidad()
+							+ " WHERE idLiniaComanda=" + lin.getIdLiniaComanda() + ";";
+				System.out.println(sqlUpdate);	
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlUpdate);
 			sentencia.close();
@@ -129,7 +128,29 @@ public class SQLLiniaComanda {
 		}
 
 	}
-	
+
+	//Elimina LiniaComanda
+	public void deleteComandas(LiniaComanda lin) throws SQLException {
+
+		try {
+
+			conectar();
+
+			String sqlDelete = "DELETE FROM LiniaComanda WHERE idComanda='"	+ lin.getIdComanda() + "';";
+
+			sentencia = c.createStatement();
+			sentencia.executeUpdate(sqlDelete);
+			sentencia.close();
+			c.close();
+
+			System.out.println("Datos eliminados");
+
+		} catch (Exception e) {
+
+			System.out.println("Error al eliminar datos en la tabla LiniaComanda");
+		}
+	}
+
 	//Muestra Tabla LiniaComanda
 	public ArrayList<LiniaComanda> consultaLiniaComandas() throws SQLException {
 
@@ -137,13 +158,13 @@ public class SQLLiniaComanda {
 
 		sentencia = c.createStatement();
 		String consultaSql = "SELECT * FROM LiniaComanda;";
-		
+
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
 			//int i = 0;//-------------CONTADOR PARA LA MATRIZ
 			while (rs.next()) {
-					
+
 				idLiniaComanda = rs.getInt("idLiniaComanda");
 				idComanda = rs.getInt("idComanda");
 				idArticulo = rs.getString("idArticulo");
@@ -152,7 +173,7 @@ public class SQLLiniaComanda {
 				precio = rs.getDouble("precio");
 				cantidad = rs.getInt("cantidad");
 
-					
+
 				//GUARDA EN ARRAY LIST LiniaComanda
 				LiniaComandas.add(new LiniaComanda(
 						idLiniaComanda, 
@@ -163,7 +184,7 @@ public class SQLLiniaComanda {
 						precio, 
 						cantidad));
 
-			//i++;//---------- AUMENTA CONTADOR
+				//i++;//---------- AUMENTA CONTADOR
 			}
 
 			rs.close();
@@ -178,27 +199,115 @@ public class SQLLiniaComanda {
 		return LiniaComandas;
 	}
 	
-	//Elimina LiniaComanda
-		public void deleteComandas(LiniaComanda lin) throws SQLException {
+	//Busca LiniaComanda por comanda
+	public ArrayList<LiniaComanda> buscaLiniasComandas(LiniaComanda lin) throws SQLException {
 
-			try {
+		conectar();
 
-				conectar();
+		sentencia = c.createStatement();
+		String consultaSql = "SELECT * FROM LiniaComanda WHERE idComanda = " + lin.getIdComanda() + ";";
+		
+		try {
 
-				String sqlDelete = "DELETE FROM LiniaComanda WHERE idComanda='"	+ lin.getIdComanda() + "';";
-				
-				sentencia = c.createStatement();
-				sentencia.executeUpdate(sqlDelete);
-				sentencia.close();
-				c.close();
-
-				System.out.println("Datos eliminados");
-
-			} catch (Exception e) {
-
-				System.out.println("Error al eliminar datos en la tabla LiniaComanda");
-
+			ResultSet rs = sentencia.executeQuery(consultaSql);
+			while (rs.next()) {
+					
+				idLiniaComanda = rs.getInt("idLiniaComanda");
+				idComanda = rs.getInt("idComanda");
+				idArticulo = rs.getString("idArticulo");
+				estado = rs.getString("estado");
+				tipo = rs.getString("tipo");
+				precio = rs.getDouble("precio");
+				cantidad = rs.getInt("cantidad");
+					
+				//GUARDA EN ARRAY LIST LiniaComanda
+				LiniaComandas.add(new LiniaComanda(
+						idLiniaComanda, 
+						idComanda, 
+						idArticulo,
+						estado, 
+						tipo, 
+						precio, 
+						cantidad));
 			}
 
+			rs.close();
+			sentencia.close();
+			c.close();
+
+		} catch (Exception e) {
+
+			Talal: 	System.out.println(e.getMessage());
+
 		}
+		return LiniaComandas;
+	}
+	
+	//Filtra LiniaComanda por estado o tipo
+	public ArrayList<LiniaComanda> filtraLiniasComandas(String registro, String columna) throws SQLException {
+
+		conectar();
+
+		sentencia = c.createStatement();
+		String consultaSql = "SELECT * FROM LiniaComanda WHERE " + columna + " = '" + registro + "';";
+
+		try {
+
+			ResultSet rs = sentencia.executeQuery(consultaSql);
+			while (rs.next()) {
+
+				idLiniaComanda = rs.getInt("idLiniaComanda");
+				idComanda = rs.getInt("idComanda");
+				idArticulo = rs.getString("idArticulo");
+				estado = rs.getString("estado");
+				tipo = rs.getString("tipo");
+				precio = rs.getDouble("precio");
+				cantidad = rs.getInt("cantidad");
+
+				//GUARDA EN ARRAY LIST LiniaComanda
+				LiniaComandas.add(new LiniaComanda(
+						idLiniaComanda, 
+						idComanda, 
+						idArticulo,
+						estado, 
+						tipo, 
+						precio, 
+						cantidad));
+			}
+
+			rs.close();
+			sentencia.close();
+			c.close();
+
+		} catch (Exception e) {
+
+			Talal: 	System.out.println(e.getMessage());
+
+		}
+		return LiniaComandas;
+	}
+
+	//Suma precios linias
+	public double precioLinias(LiniaComanda lin) throws SQLException {
+		double valor = 0;
+		ResultSet rs;
+		try {
+
+			conectar();
+
+			sentencia = c.createStatement();
+			String consultaSql = "SELECT SUM(precio) FROM LiniaComanda WHERE idComanda = " + lin.getIdComanda() + ";";
+
+			rs = sentencia.executeQuery(consultaSql);
+			valor = rs.getDouble(1);
+			rs.close();
+			sentencia.close();
+			c.close();
+
+		} catch (Exception e) {
+			System.out.println("CUENTA ARTICULOS" + e.getMessage());
+		}
+		return valor;
+	}	
+
 };

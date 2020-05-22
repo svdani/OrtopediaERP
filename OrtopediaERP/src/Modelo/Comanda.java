@@ -29,13 +29,18 @@ public class Comanda{
 	public Comanda( String idCliente, String estado, String fechaLimite, String descripcion) {
 		
 		this.idCliente = idCliente;
-		this.precioTotal = precioTotal;
 		this.estado = estado;
 		this.fechaInicio = sdf.format(new Date());
 		this.fechaLimite = fechaLimite;
 		this.descripcion = descripcion;
 	}
 	
+	public Comanda(int idComanda, double precioTotal) {
+	
+		this.precioTotal = precioTotal;
+		this.idComanda = idComanda;
+	}
+
 	public Comanda(int idComanda) {
 		
 		this.idComanda = idComanda;

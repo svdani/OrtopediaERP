@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import Modelo.Comanda;
+import Modelo.LiniaComanda;
 
 public class SQLComanda {
 	Connection c = null;
@@ -105,6 +106,32 @@ public class SQLComanda {
 
 		}
 	}
+	
+	//Modifica taula Comanda
+	public void modificaPrecioComanda(Comanda com) throws SQLException {
+
+		try {
+
+			conectar();
+
+			String sqlUpdate ="UPDATE Comanda "
+					+ "SET "
+					+ "precioTotal= " + com.getPrecioTotal()
+					+ " WHERE idComanda= " + com.getIdComanda() + ";";
+			
+			sentencia = c.createStatement();
+			sentencia.executeUpdate(sqlUpdate);
+			sentencia.close();
+			c.close();
+
+			System.out.println("Datos actualizados");
+
+		} catch (Exception e) {
+
+			System.out.println("Error al actualizar datos en la tabla Comanda");
+
+		}
+	}
 		
 	//Elimina Comanda
 	public void deleteComandas(Comanda com) throws SQLException {
@@ -175,7 +202,7 @@ public class SQLComanda {
 		return Comandas;
 	}
 	
-	//Busca Comanda por Dni
+	//Busca Comanda por Estado
 	public ArrayList<Comanda> filtraComandasEstado(String est) throws SQLException {
 		conectar();
 
@@ -266,7 +293,6 @@ public class SQLComanda {
 
 		sentencia = c.createStatement();
 		String consultaSql = "SELECT * FROM Comanda WHERE "+ column +" BETWEEN '" + desde + "' AND '" + hasta + "';";
-		System.out.println(consultaSql);
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
@@ -303,4 +329,28 @@ public class SQLComanda {
 		}
 		return Comandas;
 	}
+
+	//Obtiene la ultima comanda registrada
+	public int ultimaComanda() throws SQLException {
+		int valor = 0;
+		ResultSet rs;
+		try {
+
+			conectar();
+
+			sentencia = c.createStatement();
+			String consultaSql = "SELECT max(idComanda) FROM Comanda;";
+
+			rs = sentencia.executeQuery(consultaSql);
+			valor = rs.getInt(1);
+			rs.close();
+			sentencia.close();
+			c.close();
+
+		} catch (Exception e) {
+			System.out.println("CUENTA ARTICULOS" + e.getMessage());
+		}
+		return valor;
+	}
+	
 };

@@ -87,13 +87,13 @@ public class ViewComanda extends JDialog {
 	}
 
 	/**
-	 * Create the dialog.
+	 * Crea el dialog.
 	 */
 	public ViewComanda() {
+		setTitle("ERP Ortopedias - Comandas");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
 		setBounds(100, 100, 783, 537);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setToolTipText("sxadxas");
 		contentPanel.setBackground(UIManager.getColor("Button.background"));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -147,6 +147,7 @@ public class ViewComanda extends JDialog {
 	 * Crea el dialog relacionado con el Cliente.
 	 */
 	public ViewComanda(Cliente cli) {
+		setTitle("ERP Ortopedias - Comandas");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
 		setBounds(100, 100, 783, 537);
 		getContentPane().setLayout(new BorderLayout());
@@ -201,7 +202,10 @@ public class ViewComanda extends JDialog {
 	}
 
 	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
-
+	
+	/*
+	 * muestra todos los registros de la base de datos
+	 */
 	private void updateTable() {
 		//---Actualiza valores que se muestran en la tabla
 		SQLComanda conCom = new SQLComanda();
@@ -226,55 +230,56 @@ public class ViewComanda extends JDialog {
 		}		
 	}	
 	
+	/*
+	 * muetra los valores del registro seleccionado en sus respectivas cajas de texto y bloquea el boton insertar
+	 */
 	public void selectRow() {
 		//----FUNCION AL SELECCIONAR CAMPO
 
-			table.addMouseListener(new MouseAdapter() {
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
 
-				@Override
-				public void mousePressed(MouseEvent e) {
+				btnModificar.setEnabled(true);// DESBLOQUEA BTN EDITAR
+				btnEliminar.setEnabled(true);// DESBLOQUEA BTN ELIMINAR
+				btnInsertar.setEnabled(false);// BLOQUEA BTN INSERTAR
+				btnNuevo.setEnabled(true);// DESBLOQUEA BTN NUEVO
 
-					btnModificar.setEnabled(true);// DESBLOQUEA BTN EDITAR
-					btnEliminar.setEnabled(true);// DESBLOQUEA BTN ELIMINAR
-					btnInsertar.setEnabled(false);// BLOQUEA BTN INSERTAR
-					btnNuevo.setEnabled(true);// DESBLOQUEA BTN NUEVO
+				txtPrecioTotal.setEnabled(true);// DESBLOQUEA PRECIO 
+				dateFechaInicio.setEnabled(true);// DESBLOQUEA FECHA INICIO
 
-					txtPrecioTotal.setEnabled(true);// DESBLOQUEA PRECIO 
-					dateFechaInicio.setEnabled(true);// DESBLOQUEA FECHA INICIO
-					
-					//------CAMBIA VALOR CAJAS TEXTO SEGUN EL REGISTRO SELECCIONADO
-					txtIdComanda.setText(table.getValueAt(table.getSelectedRow(), 0).toString());				
-					txtIdCliente.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
-					txtPrecioTotal.setText(table.getValueAt(table.getSelectedRow(), 2).toString());	
-					txtNotas.setText(table.getValueAt(table.getSelectedRow(), 6).toString());
-					
-					//CAMBIA VALOR DENTRO DE LA CAJA DE ELECCION SEGUN EL REGISTRO SELECCIONADO
-					switch (table.getValueAt(table.getSelectedRow(), 3).toString()) {				
-					case "Pendiente":
-						txtEstado.setSelectedItem("Pendiente");
-						break;
-					case "Curso":
-						txtEstado.setSelectedItem("Curso");
-						break;
-					case "Finalizado":
-						txtEstado.setSelectedItem("Finalizado");
-						break;
-					default:
-						break;
-					}
-					
-					//CAMBIA LA FECHA DENTRO DEL CALENDARIO SEGUN EL REGISTRO SELECCIONADO
-					try {
-						dateFechaInicio.setDate(sdf.parse((String) table.getValueAt(table.getSelectedRow(), 4)));
-						dateFechaLimite.setDate(sdf.parse((String) table.getValueAt(table.getSelectedRow(), 5)));
-					} catch (ParseException e1) {
-						System.out.println("ERROR AL CAMIARO CONTENIDO DEL CALENDARIO AL SELECCIONAR REGISTRO");
-						e1.printStackTrace();
-					}
+				//------CAMBIA VALOR CAJAS TEXTO SEGUN EL REGISTRO SELECCIONADO
+				txtIdComanda.setText(table.getValueAt(table.getSelectedRow(), 0).toString());				
+				txtIdCliente.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+				txtPrecioTotal.setText(table.getValueAt(table.getSelectedRow(), 2).toString());	
+				txtNotas.setText(table.getValueAt(table.getSelectedRow(), 6).toString());
 
+				//CAMBIA VALOR DENTRO DE LA CAJA DE ELECCION SEGUN EL REGISTRO SELECCIONADO
+				switch (table.getValueAt(table.getSelectedRow(), 3).toString()) {				
+				case "Pendiente":
+					txtEstado.setSelectedItem("Pendiente");
+					break;
+				case "Curso":
+					txtEstado.setSelectedItem("Curso");
+					break;
+				case "Finalizado":
+					txtEstado.setSelectedItem("Finalizado");
+					break;
+				default:
+					break;
 				}
-			});
-		}
+
+				//CAMBIA LA FECHA DENTRO DEL CALENDARIO SEGUN EL REGISTRO SELECCIONADO
+				try {
+					dateFechaInicio.setDate(sdf.parse((String) table.getValueAt(table.getSelectedRow(), 4)));
+					dateFechaLimite.setDate(sdf.parse((String) table.getValueAt(table.getSelectedRow(), 5)));
+				} catch (ParseException e1) {
+					System.out.println("ERROR AL CAMIARO CONTENIDO DEL CALENDARIO AL SELECCIONAR REGISTRO");
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
 
 	private void updateBusca(String cli) {
 		//---Actualiza valores que se muestran en la tabla
@@ -350,6 +355,9 @@ public class ViewComanda extends JDialog {
 	
 	//--------------------------------------------------------------------------------MENU---------------------------------------------------------------------------------------------	
 	
+	/*
+	 * Crea el Menu y sus difernetes items que actuan como boton de reconduccion a otro dialog
+	 */
 	public void menuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -426,6 +434,9 @@ public class ViewComanda extends JDialog {
 	
 	//--------------------------------------------------------------------------------BOTONES------------------------------------------------------------------------------------------	
 	
+	/*
+	 * Crea el boton Nuevo que resetea las cajas de texto y bloquea los botones eliminar y modificar para no causar errores
+	 */
 	public void btnNuevo() {
 		
 		btnNuevo = new JButton("Nuevo");
@@ -454,6 +465,9 @@ public class ViewComanda extends JDialog {
 		contentPanel.add(btnNuevo);
 	}
 	
+	/*
+	 * Crea el boton Insertar que llamando al archivo SQL inserta un nuevo registro y luego limpia las cajas para no causar errores
+	 */
 	public void btnInserta() {
 		
 		btnInsertar = new JButton("Insertar");
@@ -470,6 +484,11 @@ public class ViewComanda extends JDialog {
 							sdf.format(dateFechaLimite.getDate()).toString(),	
 							txtNotas.getText().toString()
 							));
+					
+					ViewLiniaComanda windowLiniaComanda = new ViewLiniaComanda(new Comanda(conCom.ultimaComanda()));
+					windowLiniaComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					windowLiniaComanda.setVisible(true);
+					dispose();
 					//Actualiza la tabla para ver el nuevo registro
 					updateTable();
 					
@@ -503,15 +522,7 @@ public class ViewComanda extends JDialog {
 				if (table.getSelectedRow() != -1) {
 					//COMPRUEBA QUE EL VALOR PRECIO SEA DOUBLE
 					if( isDouble(txtPrecioTotal.getText()) == true) {
-						Comanda com = new Comanda(
-								(int) model.getValueAt(table.getSelectedRow(), 0),
-								(String) model.getValueAt(table.getSelectedRow(), 1),
-								(double) model.getValueAt(table.getSelectedRow(), 2),
-								(String) model.getValueAt(table.getSelectedRow(), 3),
-								(String) model.getValueAt(table.getSelectedRow(), 4),
-								(String) model.getValueAt(table.getSelectedRow(), 5),
-								(String) model.getValueAt(table.getSelectedRow(), 6)
-								);
+						Comanda com = cojerValores();
 
 						com.setIdCliente(txtIdCliente.getText().toString());
 						com.setPrecioTotal(Double.parseDouble(txtPrecioTotal.getText()));
@@ -723,19 +734,25 @@ public class ViewComanda extends JDialog {
 		
 		//CALENDARIOS DE INSERTAR Y MODIFICAR
 		dateFechaInicio = new JDateChooser();
+		dateFechaInicio.setToolTipText("Fecha Inicio");
 		dateFechaInicio.setBounds(254, 377, 109, 23);
 		contentPanel.add(dateFechaInicio);
 		
 		dateFechaLimite = new JDateChooser();
+		dateFechaLimite.setToolTipText("Fecha Limite");
 		dateFechaLimite.setBounds(254, 411, 109, 23);
 		contentPanel.add(dateFechaLimite);
 	}
 	
 	//--------------------------------------------------------------------------------CAJAS TEXTO--------------------------------------------------------------------------------------	
-
+	
+	/*
+	 * Crea las cajas de texto para insertar y modificar registros
+	 */
 	public void txtPanel() {
 
 		txtIdComanda = new JTextField();
+		txtIdComanda.setToolTipText("Id Comanda");
 		txtIdComanda.setEditable(false);
 		txtIdComanda.setForeground(Color.GRAY);
 		txtIdComanda.setText("ID Comanda");
@@ -744,6 +761,7 @@ public class ViewComanda extends JDialog {
 		contentPanel.add(txtIdComanda);
 		
 		txtIdCliente = new JTextField();
+		txtIdCliente.setToolTipText("Id Cliente");
 		txtIdCliente.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -751,13 +769,21 @@ public class ViewComanda extends JDialog {
 				txtIdCliente.setText("");
 			}
 		});
-		txtIdCliente.setText("ID Cliente");
+		txtIdCliente.setText("Is Cliente");
 		txtIdCliente.setForeground(Color.GRAY);
 		txtIdCliente.setColumns(10);
 		txtIdCliente.setBounds(30, 411, 86, 23);
 		contentPanel.add(txtIdCliente);
 		
 		txtPrecioTotal = new JTextField();
+		txtPrecioTotal.setToolTipText("Precio Total");
+		txtPrecioTotal.addMouseListener(new MouseAdapter() {
+			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				txtPrecioTotal.setText("");
+			}
+		});
 		txtPrecioTotal.setText("Precio Total");
 		txtPrecioTotal.setForeground(Color.GRAY);
 		txtPrecioTotal.setColumns(10);
@@ -765,6 +791,7 @@ public class ViewComanda extends JDialog {
 		contentPanel.add(txtPrecioTotal);
 		
 		txtNotas = new JEditorPane();
+		txtNotas.setToolTipText("Notas");
 		txtNotas.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -783,6 +810,7 @@ public class ViewComanda extends JDialog {
 		contentPanel.add(label);
 		
 		txtEstado = new JComboBox();
+		txtEstado.setToolTipText("Estado");
 		txtEstado.setModel(new DefaultComboBoxModel(new String[] {"Pendiente", "Curso", "Finalizado"}));
 		txtEstado.setBounds(144, 412, 88, 20);
 		contentPanel.add(txtEstado);
@@ -791,6 +819,9 @@ public class ViewComanda extends JDialog {
 	
 	//--------------------------------------------------------------------------------PANEL INFERIOR BOTONES---------------------------------------------------------------------------	
 	
+	/*
+	 * Crea el panel inferior de botones con el boton cancelar que cierra el dialog
+	 */
 	public void btnPanel() {
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -800,6 +831,19 @@ public class ViewComanda extends JDialog {
 		JButton	 btnVerLiniaComanda = new JButton("Ver Lineas Comanda");
 		btnVerLiniaComanda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				// Obtenemos el primer dato del registro seleccionado
+				if (table.getSelectedRow() != -1) {
+					
+					Comanda com = cojerValores();
+					
+					ViewLiniaComanda windowLiniaComanda = new ViewLiniaComanda(com);
+					windowLiniaComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					windowLiniaComanda.setVisible(true);
+					dispose();
+					
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione un registro primero para EDITAR");
+				}
 			}
 		});
 		
@@ -809,18 +853,10 @@ public class ViewComanda extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				if (table.getSelectedRow() != -1) {
-					System.out.println("hola");
+			
 					SQLComanda conCom = new SQLComanda();
 					// Obtenemos el primer dato del registro seleccionado
-						Comanda com = new Comanda(
-								(int) model.getValueAt(table.getSelectedRow(), 0),
-								(String) model.getValueAt(table.getSelectedRow(), 1),
-								(double) model.getValueAt(table.getSelectedRow(), 2),
-								(String) model.getValueAt(table.getSelectedRow(), 3),
-								(String) model.getValueAt(table.getSelectedRow(), 4),
-								(String) model.getValueAt(table.getSelectedRow(), 5),
-								(String) model.getValueAt(table.getSelectedRow(), 6)
-								);
+						Comanda com = cojerValores();
 					
 				ViewNota windowNota = new ViewNota(com);
 				windowNota.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -843,14 +879,31 @@ public class ViewComanda extends JDialog {
 		});
 		cancelButton.setActionCommand("Cancelar");
 		buttonPane.add(cancelButton);
-
-		
-		
+	
 	}
-
+	
+	//--------------------------------------------------------------------------------OBTIENE INFO REGISTRO---------------------------------------------------------------------------	
+	
+	private Comanda cojerValores() {
+		
+		Comanda com = new Comanda(
+				(int) model.getValueAt(table.getSelectedRow(), 0),
+				(String) model.getValueAt(table.getSelectedRow(), 1),
+				(double) model.getValueAt(table.getSelectedRow(), 2),
+				(String) model.getValueAt(table.getSelectedRow(), 3),
+				(String) model.getValueAt(table.getSelectedRow(), 4),
+				(String) model.getValueAt(table.getSelectedRow(), 5),
+				(String) model.getValueAt(table.getSelectedRow(), 6)
+				);
+		
+		return com;
+	}
 
 	//--------------------------------------------------------------------------------CONTROL ERRORES---------------------------------------------------------------------------	
 	
+	/*
+	 * comprueba si en string enviado se puede pasasr a double, ayuda al control de errores
+	 */
 	public static boolean isDouble(String cadena) {
 
 		boolean resultado;

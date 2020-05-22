@@ -86,9 +86,10 @@ public class ViewCliente extends JDialog {
 	}
 
 	/**
-	 * Create the dialog.
+	 * Crea el dialog.
 	 */
 	public ViewCliente() {
+		setTitle("ERP Ortopedias - Clientes");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
 		setBounds(100, 100, 783, 486);
 		getContentPane().setLayout(new BorderLayout());
@@ -140,6 +141,9 @@ public class ViewCliente extends JDialog {
 	
 	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
 
+	/*
+	 * muestra todos los registros de la base de datos
+	 */
 	private void updateTable() {
 		//---Actualiza valores que se muestran en la tabla
 		SQLCliente conCli = new SQLCliente();
@@ -164,6 +168,9 @@ public class ViewCliente extends JDialog {
 		}		
 	}	
 	
+	/*
+	 * muetra los valores del registro seleccionado en sus respectivas cajas de texto y bloquea el boton insertar
+	 */
 	public void selectRow() {
 		//----FUNCION AL SELECCIONAR CAMPO
 
@@ -221,6 +228,9 @@ public class ViewCliente extends JDialog {
 
 	//--------------------------------------------------------------------------------MENU---------------------------------------------------------------------------------------------	
 	
+	/*
+	 * Crea el Menu y sus difernetes items que actuan como boton de reconduccion a otro dialog
+	 */
 	public void menuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -298,6 +308,9 @@ public class ViewCliente extends JDialog {
 
 	//--------------------------------------------------------------------------------BOTONES------------------------------------------------------------------------------------------	
 	
+	/*
+	 * Crea el boton Nuevo que resetea las cajas de texto y bloquea los botones eliminar y modificar para no causar errores
+	 */
 	public void btnNuevo() {
 
 		btnNuevo = new JButton("Nuevo");
@@ -325,6 +338,9 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(btnNuevo);
 	}
 
+	/*
+	 * Crea el boton Insertar que llamando al archivo SQL inserta un nuevo registro y luego limpia las cajas para no causar errores
+	 */
 	public void btnInserta() {
 		
 		btnInsertar = new JButton("Insertar");
@@ -538,10 +554,14 @@ public class ViewCliente extends JDialog {
 	}
 	
 	//--------------------------------------------------------------------------------CAJAS TEXTO--------------------------------------------------------------------------------------	
-
+	
+	/*
+	 * Crea las cajas de texto para insertar y modificar registros
+	 */
 	public void txtPanel() {
 
 		txtDni = new JTextField();
+		txtDni.setToolTipText("DNI");
 		txtDni.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -556,6 +576,7 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(txtDni);
 		
 		txtNombre = new JTextField();
+		txtNombre.setToolTipText("Nombre");
 		txtNombre.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -570,6 +591,7 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(txtNombre);
 		
 		txtApellidos = new JTextField();
+		txtApellidos.setToolTipText("Apellidos");
 		txtApellidos.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -584,6 +606,7 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(txtApellidos);
 		
 		txtDireccion = new JTextField();
+		txtDireccion.setToolTipText("Direcci\\u00F3n");
 		txtDireccion.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -598,6 +621,7 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(txtDireccion);
 		
 		txtEmail = new JTextField();
+		txtEmail.setToolTipText("Email");
 		txtEmail.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -612,6 +636,7 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(txtEmail);
 		
 		txtTelf = new JTextField();
+		txtTelf.setToolTipText("Telf");
 		txtTelf.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -626,6 +651,7 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(txtTelf);
 		
 		txtNotas = new JEditorPane();
+		txtNotas.setToolTipText("Notas");
 		txtNotas.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -646,6 +672,9 @@ public class ViewCliente extends JDialog {
 	
 	//--------------------------------------------------------------------------------PANEL INFERIOR BOTONES---------------------------------------------------------------------------	
 	
+	/*
+	 * Crea el panel inferior de botones con el boton cancelar que cierra el dialog
+	 */
 	public void btnPanel() {
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

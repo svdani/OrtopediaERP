@@ -19,13 +19,12 @@ import java.awt.Canvas;
 public class ViewNota extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private Cliente cli;
-	private Comanda com;
+	
 	/**
 	 * Create the dialog.
 	 */
 	public ViewNota(Cliente cli) {
-		this.cli = cli;
+		
 		
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -38,13 +37,9 @@ public class ViewNota extends JDialog {
 		textPane.setEditable(false);
 		textPane.setBounds(10, 11, 414, 240);
 		contentPanel.add(textPane);
-		
-
-
 	}
 
 	public ViewNota(Comanda com) {
-		this.com = com;
 		
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());

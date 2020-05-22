@@ -31,8 +31,10 @@ import javax.swing.table.DefaultTableModel;
 
 import Datos.SQLArticulo;
 import Datos.SQLCliente;
+import Datos.SQLComanda;
 import Modelo.Articulo;
 import Modelo.Cliente;
+import Modelo.Comanda;
 import Modelo.Proveedor;
 
 public class ViewArticulo extends JDialog {
@@ -73,6 +75,7 @@ public class ViewArticulo extends JDialog {
 	 * Crea el dialog.
 	 */
 	public ViewArticulo() {
+		setTitle("ERP Ortopedias - Articulos");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
 		setBounds(100, 100, 783, 486);
 		getContentPane().setLayout(new BorderLayout());
@@ -124,6 +127,7 @@ public class ViewArticulo extends JDialog {
 	 * Crea el dialog relacionado con el Proveedor.
 	 */
 	public ViewArticulo(Proveedor pro) {
+		setTitle("ERP Ortopedias - Articulos");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
 		setBounds(100, 100, 783, 486);
 		getContentPane().setLayout(new BorderLayout());
@@ -174,6 +178,9 @@ public class ViewArticulo extends JDialog {
 	
 	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
 
+	/*
+	 * muestra todos los registros de la base de datos
+	 */
 	private void updateTable() {
 	
 		//---Actualiza valores que se muestran en la tabla
@@ -197,6 +204,9 @@ public class ViewArticulo extends JDialog {
 		}		
 	}	
 	
+	/*
+	 * muetra los valores del registro seleccionado en sus respectivas cajas de texto y bloquea el boton insertar
+	 */
 	public void selectRow() {
 		//----FUNCION AL SELECCIONAR CAMPO
 
@@ -249,6 +259,9 @@ public class ViewArticulo extends JDialog {
 
 	//--------------------------------------------------------------------------------MENU---------------------------------------------------------------------------------------------	
 	
+	/*
+	 * Crea el Menu y sus difernetes items que actuan como boton de reconduccion a otro dialog
+	 */
 	public void menuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -326,6 +339,9 @@ public class ViewArticulo extends JDialog {
 
 	//--------------------------------------------------------------------------------BOTONES------------------------------------------------------------------------------------------	
 	
+	/*
+	 * Crea el boton Nuevo que resetea las cajas de texto y bloquea los botones eliminar y modificar para no causar errores
+	 */
 	public void btnNuevo() {
 
 		btnNuevo = new JButton("Nuevo");
@@ -350,7 +366,9 @@ public class ViewArticulo extends JDialog {
 		btnNuevo.setBounds(630, 254, 119, 23);
 		contentPanel.add(btnNuevo);
 	}
-
+	/*
+	 * Crea el boton Insertar que llamando al archivo SQL inserta un nuevo registro y luego limpia las cajas para no causar errores
+	 */
 	public void btnInserta() {
 		
 		btnInsertar = new JButton("Insertar");
@@ -566,10 +584,14 @@ public class ViewArticulo extends JDialog {
 	}
 	
 	//--------------------------------------------------------------------------------CAJAS TEXTO--------------------------------------------------------------------------------------	
-
+	
+	/*
+	 * Crea las cajas de texto para insertar y modificar registros
+	 */
 	public void txtPanel() {
 
 		txtIdArticulo = new JTextField();
+		txtIdArticulo.setToolTipText("ID Articulo");
 		txtIdArticulo.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -585,6 +607,7 @@ public class ViewArticulo extends JDialog {
 		contentPanel.add(txtIdArticulo);
 		
 		txtIdProveedor = new JTextField();
+		txtIdProveedor.setToolTipText("ID Proveedor");
 		txtIdProveedor.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -599,6 +622,7 @@ public class ViewArticulo extends JDialog {
 		contentPanel.add(txtIdProveedor);
 		
 		txtPrecio = new JTextField();
+		txtPrecio.setToolTipText("Precio");
 		txtPrecio.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -613,6 +637,7 @@ public class ViewArticulo extends JDialog {
 		contentPanel.add(txtPrecio);
 		
 		txtNombre = new JTextField();
+		txtNombre.setToolTipText("Nombre");
 		txtNombre.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -627,6 +652,7 @@ public class ViewArticulo extends JDialog {
 		contentPanel.add(txtNombre);
 		
 		txtStock = new JTextField();
+		txtStock.setToolTipText("Stock");
 		txtStock.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -647,25 +673,54 @@ public class ViewArticulo extends JDialog {
 	}
 
 	//--------------------------------------------------------------------------------PANEL INFERIOR BOTONES---------------------------------------------------------------------------	
-	
+
+	/*
+	 * Crea el panel inferior de botones con el boton cancelar que cierra el dialog
+	 */
 	public void btnPanel() {
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
 		JButton btnHistorial = new JButton("Ver Historial");
+		btnHistorial.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (table.getSelectedRow() != -1) {
+					
+					SQLComanda conCom = new SQLComanda();
+					// Obtenemos el primer dato del registro seleccionado
+					Articulo art = new Articulo(
+							(String) model.getValueAt(table.getSelectedRow(), 0),
+							(String) model.getValueAt(table.getSelectedRow(), 1),
+							(String) model.getValueAt(table.getSelectedRow(), 2),
+							(double) model.getValueAt(table.getSelectedRow(), 3),
+							(int) model.getValueAt(table.getSelectedRow(), 4)
+							);
+					
+					ViewMovimientoAlmacen windowMovimientoAlmacen = new ViewMovimientoAlmacen(art);
+					windowMovimientoAlmacen.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					windowMovimientoAlmacen.setVisible(true);
+					dispose();
+					
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione un registro primero");
+				}
+
+			}
+		});
 		buttonPane.add(btnHistorial);
 		btnHistorial.setActionCommand("Ver Historial");
-		{
-			JButton cancelButton = new JButton("Cancelar");
-			cancelButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					System.exit(0);
-				}
-			});
-			cancelButton.setActionCommand("Cancelar");
-			buttonPane.add(cancelButton);
-		}
+
+		JButton cancelButton = new JButton("Cancelar");
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+		cancelButton.setActionCommand("Cancelar");
+		buttonPane.add(cancelButton);
+
 	}
 
 	//--------------------------------------------------------------------------------CONTROL ERRORES---------------------------------------------------------------------------	

@@ -6,6 +6,12 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -17,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -25,19 +32,46 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
+
+import Datos.SQLCliente;
+import Datos.SQLComanda;
+import Datos.SQLLiniaComanda;
+import Datos.SQLMovimientoAlmacen;
+import Modelo.Articulo;
+import Modelo.Cliente;
+import Modelo.Comanda;
+import Modelo.LiniaComanda;
+import Modelo.MovimientoAlmacen;
+import javax.swing.DefaultComboBoxModel;
 
 public class ViewMovimientoAlmacen extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private static DefaultTableModel model;
 	private JTable table;
 	private JTextField txtBuscar;
 	private JTextField txtIdMovimiento;
 	private JTextField txtIdArticulo;
-	private JTextField txtTipo;
+	private JComboBox txtTipo;
 	private JTextField txtUbicacion;
-	private JTextField txtFecha;
+	
+	private JDateChooser dateFecha;
+	private JDateChooser dateHasta;
+	private JDateChooser dateDesde;
+	
+	private JButton btnNuevo;
+	private JButton btnEliminar;
+	private JButton btnInsertar;
+	private JButton btnModificar;
+	
+	private JRadioButton rdbtnTipo;
+	private JRadioButton rdbtnFecha;
+	
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
 	
 	/**
 	 * Launch the application.
@@ -53,13 +87,13 @@ public class ViewMovimientoAlmacen extends JDialog {
 	}
 
 	/**
-	 * Create the dialog.
+	 * Crea el dialog.
 	 */
 	public ViewMovimientoAlmacen() {
+		setTitle("ERP Ortopedias - Movimientos Almacen");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
 		setBounds(100, 100, 783, 498);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setToolTipText("sxadxas");
 		contentPanel.setBackground(UIManager.getColor("Button.background"));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -69,37 +103,219 @@ public class ViewMovimientoAlmacen extends JDialog {
 		scrollPane.setBounds(30, 23, 578, 343);
 		contentPanel.add(scrollPane);
 		
-		JTable table = new JTable();
+		table = new JTable();
+		model = new DefaultTableModel() {
+			public boolean isCellEditable(int row,int column) {
+				//Todas las celdas en false
+				return false;
+			}
+		};
+
+		//----INTRODUCE NOMBRE COLUMNAS TABLA DESDE SQL
+		model.addColumn("Id Movimiento");
+		model.addColumn("Id Articulo");
+		model.addColumn("Tipo Movimiento");
+		model.addColumn("Ubicacion");
+		model.addColumn("Fecha");
+
+		table.setModel(model);
+
+		//---FUNCIONES TABLA 
+		updateTable();
+		selectRow();
 		scrollPane.setViewportView(table);
 		
-		buscar();
-		menuBar();
-		btn();
+		btnMostrarTodo();
+		btnBuscar();
+		btnNuevo();
+		btnModifica();
+		btnInserta();
+		btnElimina();
 		btnFiltrar();
+
+		menuBar();
 		btnGrup();
 		calendarPanel();
 		txtPanel();
 		btnPanel();
 	}
-
 	
-public void buscar() {
+	/**
+	 * Crea el dialog relacionado con el Articulo.
+	 */
+	public ViewMovimientoAlmacen(Articulo art) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
+		setBounds(100, 100, 783, 498);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBackground(UIManager.getColor("Button.background"));
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
 		
-		JButton okButton = new JButton("");
-		okButton.setIcon(new ImageIcon("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\detection.png"));
-		okButton.setActionCommand("OK");
-		okButton.setBounds(717, 48, 36, 23);
-		contentPanel.add(okButton);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(30, 23, 578, 343);
+		contentPanel.add(scrollPane);
 		
-		txtBuscar = new JTextField();
-		txtBuscar.setForeground(Color.LIGHT_GRAY);
-		txtBuscar.setHorizontalAlignment(SwingConstants.CENTER);
-		txtBuscar.setText("Buscar Articulo");
-		txtBuscar.setBounds(630, 48, 88, 23);
-		contentPanel.add(txtBuscar);
-		txtBuscar.setColumns(10);
+		table = new JTable();
+		model = new DefaultTableModel() {
+			public boolean isCellEditable(int row,int column) {
+				//Todas las celdas en false
+				return false;
+			}
+		};
+
+		//----INTRODUCE NOMBRE COLUMNAS TABLA DESDE SQL
+		model.addColumn("Id Movimiento");
+		model.addColumn("Id Articulo");
+		model.addColumn("Tipo Movimiento");
+		model.addColumn("Ubicacion");
+		model.addColumn("Fecha");
+
+		table.setModel(model);
+
+		//---FUNCIONES TABLA 
+		updateTableBuscar(art.getIdArticulo(), "idArticulo");
+		selectRow();
+		scrollPane.setViewportView(table);
+		
+		btnMostrarTodo();
+		btnBuscar();
+		btnNuevo();
+		btnModifica();
+		btnInserta();
+		btnElimina();
+		btnFiltrar();
+
+		menuBar();
+		btnGrup();
+		calendarPanel();
+		txtPanel();
+		btnPanel();
 	}
 	
+	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
+	
+	/*
+	 * muestra todos los registros de la base de datos
+	 */
+	private void updateTable() {
+		//---Actualiza valores que se muestran en la tabla
+		SQLMovimientoAlmacen conMov = new SQLMovimientoAlmacen();
+		try {			
+			
+			model.setRowCount(0);	
+
+			//----RELLENA TABLA
+			for (MovimientoAlmacen mov:conMov.consultaMovimientoAlmacenes()) {
+				model.addRow(new Object[] {
+						mov.getIdMovimientoAlmacen(),
+						mov.getIdArticulo(),
+						mov.getTipoMovimiento(),
+						mov.getUbicacion(),
+						mov.getFecha()
+				});	
+			}	
+		} catch (Exception e) {
+			System.out.println("Error al actualizar la tabla Movimientos Almacen");
+		}		
+	}	
+	
+	/*
+	 * muetra los valores del registro seleccionado en sus respectivas cajas de texto y bloquea el boton insertar
+	 */
+	public void selectRow() {
+		//----FUNCION AL SELECCIONAR CAMPO
+
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+
+				btnModificar.setEnabled(true);// DESBLOQUEA BTN EDITAR
+				btnEliminar.setEnabled(true);// DESBLOQUEA BTN ELIMINAR
+				btnInsertar.setEnabled(false);// BLOQUEA BTN INSERTAR
+				btnNuevo.setEnabled(true);// DESBLOQUEA BTN NUEVO
+
+				txtIdMovimiento.setEnabled(false);// BLOQUEA CAJA DE TEXTO CIF
+
+				//------CAMBIA VALOR CAJAS TEXTO SEGUN EL REGISTRO SELECCIONADO
+				txtIdMovimiento.setText(table.getValueAt(table.getSelectedRow(), 0).toString());				
+				txtIdArticulo.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+				txtUbicacion.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
+
+				//CAMBIA VALOR DENTRO DE LA CAJA DE ELECCION SEGUN EL REGISTRO SELECCIONADO
+				switch (table.getValueAt(table.getSelectedRow(), 2).toString()) {				
+				case "Entrada":
+					txtTipo.setSelectedItem("Entrada");
+					break;
+				case "Salida":
+					txtTipo.setSelectedItem("Salida");
+					break;
+				default:
+					break;
+				}	
+
+				//CAMBIA LA FECHA DENTRO DEL CALENDARIO SEGUN EL REGISTRO SELECCIONADO
+				try {
+					dateFecha.setDate(sdf.parse((String) table.getValueAt(table.getSelectedRow(), 4)));			
+				} catch (ParseException e1) {
+					System.out.println("ERROR AL CAMIARO CONTENIDO DEL CALENDARIO AL SELECCIONAR REGISTRO");
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	private void updateTableBuscar(String registro, String filtro) {
+		//---Actualiza valores que se muestran en la tabla
+		
+		SQLMovimientoAlmacen conMov = new SQLMovimientoAlmacen();
+		try {			
+			
+			model.setRowCount(0);	
+
+			//----RELLENA TABLA
+			for (MovimientoAlmacen mov:conMov.filtraMovimientoAlmacen(registro, filtro)) {
+				model.addRow(new Object[] {
+						mov.getIdMovimientoAlmacen(),
+						mov.getIdArticulo(),
+						mov.getTipoMovimiento(),
+						mov.getUbicacion(),
+						mov.getFecha()
+				});	
+			}	
+		} catch (Exception e) {
+			System.out.println("Error al actualizar la tabla Movimientos Almacen");
+		}		
+	}	
+	
+	private void updateTableFiltrar(String desde, String hasta) {
+		//---Actualiza valores que se muestran en la tabla
+		
+		SQLMovimientoAlmacen conMov = new SQLMovimientoAlmacen();
+		try {			
+			
+			model.setRowCount(0);	
+
+			//----RELLENA TABLA
+			for (MovimientoAlmacen mov:conMov.filtraMovimientoAlmacenFecha(desde, hasta)) {
+				model.addRow(new Object[] {
+						mov.getIdMovimientoAlmacen(),
+						mov.getIdArticulo(),
+						mov.getTipoMovimiento(),
+						mov.getUbicacion(),
+						mov.getFecha()
+				});	
+			}	
+		} catch (Exception e) {
+			System.out.println("Error al actualizar la tabla Movimientos Almacen");
+		}		
+	}	
+	
+	//--------------------------------------------------------------------------------MENU---------------------------------------------------------------------------------------------	
+	
+	/*
+	 * Crea el Menu y sus difernetes items que actuan como boton de reconduccion a otro dialog
+	 */
 	public void menuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -107,65 +323,308 @@ public void buscar() {
 		JMenu mnNewMenu = new JMenu("Menu");
 		menuBar.add(mnNewMenu);
 		
-		JMenuItem mntmNewMenuItem = new JMenuItem("Articulo");
-		mnNewMenu.add(mntmNewMenuItem);
-		
-		JMenuItem mntmProveedor = new JMenuItem("Proveedor");
-		mnNewMenu.add(mntmProveedor);
+		//-------------------------------------------------------ITEMS MENU
+				JMenuItem mntmAdmin = new JMenuItem("Admin");
+				mntmAdmin.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						
+						ViewAdmin windowAdmin = new ViewAdmin();
+						windowAdmin.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						windowAdmin.setVisible(true);
+						dispose();
+				
+					}
+				});
+				mnNewMenu.add(mntmAdmin);
+				
+				JMenuItem mntmArticulo = new JMenuItem("Articulo");
+				mntmArticulo.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						
+						ViewArticulo windowArticulo = new ViewArticulo();
+						windowArticulo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						windowArticulo.setVisible(true);
+						dispose();
+				
+					}
+				});
+				mnNewMenu.add(mntmArticulo);
+				
+				JMenuItem mntmCliente = new JMenuItem("Cliente");
+				mntmCliente.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+
+						ViewCliente windowCliente = new ViewCliente();
+						windowCliente.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						windowCliente.setVisible(true);
+						dispose();
+
+					}
+				});
+				mnNewMenu.add(mntmCliente);
+				
+				JMenuItem mntmComanda = new JMenuItem("Comanda");
+				mntmComanda.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						
+						ViewComanda windowComanda = new ViewComanda();
+						windowComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						windowComanda.setVisible(true);
+						dispose();
+				
+					}
+				});
+				mnNewMenu.add(mntmComanda);
+				
+				JMenuItem mntmProveedor = new JMenuItem("Proveedor");
+				mntmProveedor.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						
+						ViewProveedor windowProveedor = new ViewProveedor();
+						windowProveedor.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						windowProveedor.setVisible(true);
+						dispose();
+				
+					}
+				});
+				mnNewMenu.add(mntmProveedor);
+	}
+
+	//--------------------------------------------------------------------------------BOTONES------------------------------------------------------------------------------------------	
+	
+	/*
+	 * Crea el boton Nuevo que resetea las cajas de texto y bloquea los botones eliminar y modificar para no causar errores
+	 */
+	public void btnNuevo() {
+
+		btnNuevo = new JButton("Nuevo");
+		btnNuevo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnModificar.setEnabled(false);// BLOQUEA BTN EDITAR
+				btnEliminar.setEnabled(false);// BLOQUEA BTN ELIMINAR
+				btnInsertar.setEnabled(true);// DESBLOQUEA BTN INSERTAR
+				btnNuevo.setEnabled(false);// BLOQUEA BTN NUEVO
+
+				txtIdMovimiento.setEnabled(false);// BLOQUEA PRECIO PORQUE DERIVA DE LAS LINEAS DE COMANDA
+				dateFecha.setEnabled(false);// BLOQUEA FECHA COJE DIRECTAMENTE LA FECHA DEL MOMENTO ACTUAL
+
+				txtIdMovimiento.setText("Id Movimiento");				
+				txtIdArticulo.setText("");
+				txtUbicacion.setText("");
+				txtTipo.setSelectedItem("Entrada");
+				dateFecha.setDate(new Date());
+
+			}
+		});
+		btnNuevo.setActionCommand("Nuevo");
+		btnNuevo.setBounds(630, 304, 119, 23);
+		contentPanel.add(btnNuevo);
+	}
+
+	/*
+	 * Crea el boton Insertar que llamando al archivo SQL inserta un nuevo registro y luego limpia las cajas para no causar errores
+	 */
+	public void btnInserta() {
+
+		btnInsertar = new JButton("Insertar");
+		btnInsertar.setEnabled(false);// BLOQUEA BTN INSERTAR
+		btnInsertar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SQLMovimientoAlmacen conMov = new SQLMovimientoAlmacen();
+
+				try {
+					conMov.insertaMovimientoAlmacenes(new MovimientoAlmacen(
+							txtIdArticulo.getText().toString(),
+							txtTipo.getSelectedItem().toString(),
+							txtUbicacion.getText().toString()
+							));
+					
+					//Actualiza la tabla para ver el nuevo registro
+					updateTable();
+
+					//Limpia el contenido de las cajas
+					txtIdMovimiento.setText("");				
+					txtIdArticulo.setText("");
+					txtUbicacion.setText("");
+					txtTipo.setSelectedItem("Entrada");
+					dateFecha.setDate(null);
+
+				} catch (SQLException e1) {
+					System.out.println("Falla al insertar Movimiento Almacen");
+					JOptionPane.showMessageDialog(null, "Ha habido un error al insertar Movimiento Almacen revise los campos");	
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnInsertar.setActionCommand("Insertar");
+		btnInsertar.setBounds(630, 270, 119, 23);
+		contentPanel.add(btnInsertar);
+	}
+
+	public void btnModifica() {
+
+		btnModificar = new JButton("Modificar");
+		btnModificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SQLMovimientoAlmacen conMov = new SQLMovimientoAlmacen();
+
+				// Obtenemos el primer dato del registro seleccionado
+				if (table.getSelectedRow() != -1) {
+
+					MovimientoAlmacen mov = new MovimientoAlmacen(
+							(int) model.getValueAt(table.getSelectedRow(), 0),
+							(String) model.getValueAt(table.getSelectedRow(), 1),
+							(String) model.getValueAt(table.getSelectedRow(), 2),
+							(String) model.getValueAt(table.getSelectedRow(), 3),
+							(String) model.getValueAt(table.getSelectedRow(), 4)
+							);
+
+					mov.setIdArticulo(txtIdArticulo.getText().toString());
+					mov.setTipoMovimiento(txtTipo.getSelectedItem().toString());
+					mov.setUbicacion(txtUbicacion.getText().toString());
+
+					//Confirmacion de editado
+					int dialogButton = JOptionPane.YES_NO_OPTION;
+					int dialogResult = JOptionPane.showConfirmDialog (null, "Quieres editar el registro seleccionado?","Warning",dialogButton);			
+
+					if(dialogResult == 0){
+
+						if(Integer.parseInt(txtIdMovimiento.getText()) == (mov.getIdMovimientoAlmacen())) {
+							try {
+								conMov.modificaMovimientoAlmacenes(mov);						
+								updateTable();
+
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}						
+						} else {
+							JOptionPane.showMessageDialog(null, "EL ID MOVIMEINTO NO SE PUEDE CAMBIAR");
+						}
+					}
+
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione un registro primero para Modificar");
+				}
+			}
+		});
+		btnModificar.setActionCommand("OK");
+		btnModificar.setBounds(630, 372, 119, 23);
+		contentPanel.add(btnModificar);
+	}
+
+	public void btnElimina() {
+
+		btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SQLMovimientoAlmacen conMov = new SQLMovimientoAlmacen();
+
+				//Controla que tengas un registro seleccionado
+				if (table.getSelectedRow() != -1) {
+
+					//Confirmacion de borrado
+					int dialogButton = JOptionPane.YES_NO_OPTION;
+					int dialogResult = JOptionPane.showConfirmDialog (null, "Quieres eliminar el registro seleccionado?","Warning",dialogButton);			
+
+					if(dialogResult == 0){
+
+						// Obtenemos el primer dato del registro seleccionado (El Id Comanda)
+						MovimientoAlmacen mov = new MovimientoAlmacen((int) model.getValueAt(table.getSelectedRow(), 0));
+						
+						try {//---BORRA DE LA TABLA SQL
+							model.removeRow(table.getSelectedRow());	
+							conMov.deleteMovimientoAlmacenes(mov);
+							
+						} catch (SQLException e1) {
+							System.out.println("No se ha podido eliminar el registro");
+							e1.printStackTrace();
+						}
+					} 
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione un registro primero");
+				}
+			}
+		});
+		btnEliminar.setActionCommand("Eliminar");
+		btnEliminar.setBounds(630, 338, 119, 23);
+		contentPanel.add(btnEliminar);
 	}
 	
-	public void btn() {
-		JButton btnModificar = new JButton("Modificar");
-		btnModificar.setActionCommand("OK");
-		btnModificar.setBounds(630, 380, 119, 23);
-		contentPanel.add(btnModificar);
-		
-		JButton btnInsertar = new JButton("Insertar");
-		btnInsertar.setActionCommand("Insertar");
-		btnInsertar.setBounds(630, 278, 119, 23);
-		contentPanel.add(btnInsertar);
-		
-		JButton btnNuevo = new JButton("Nuevo");
-		btnNuevo.setActionCommand("Nuevo");
-		btnNuevo.setBounds(630, 312, 119, 23);
-		contentPanel.add(btnNuevo);
-		
-		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.setActionCommand("Eliminar");
-		btnEliminar.setBounds(630, 346, 119, 23);
-		contentPanel.add(btnEliminar);
-			
-		JLabel lblBuscarPor = new JLabel("Filtrar por:");
-		lblBuscarPor.setBounds(630, 86, 86, 14);
-		contentPanel.add(lblBuscarPor);
-
-		
-		JButton btnMostrarTodos = new JButton("Mostrar Todos");
-		btnMostrarTodos.setActionCommand("Mostrar Todos");
-		btnMostrarTodos.setBounds(630, 11, 119, 23);
-		contentPanel.add(btnMostrarTodos);
-		
-	}
 	public void btnFiltrar() {
+		JComboBox tipoBox = new JComboBox();
+		tipoBox.setModel(new DefaultComboBoxModel(new String[] {"Entrada", "Salida"}));
+		tipoBox.setBounds(707, 108, 50, 20);
+		contentPanel.add(tipoBox);
+		
 		JButton btnFiltrar = new JButton("Filtrar");
+		btnFiltrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (rdbtnTipo.isSelected()) {
+					updateTableBuscar(tipoBox.getSelectedItem().toString(),"tipoMovimiento");
+				} else if (rdbtnFecha.isSelected()) {
+					updateTableFiltrar(
+							sdf.format(dateDesde.getDate()),
+							sdf.format(dateHasta.getDate())
+							);
+				} else {
+					JOptionPane.showMessageDialog(null, "Selecciona por que buscas");	
+				}
+			}
+		});
 		btnFiltrar.setActionCommand("Filtrar");
 		btnFiltrar.setBounds(630, 226, 119, 23);
 		contentPanel.add(btnFiltrar);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(707, 108, 50, 20);
-		contentPanel.add(comboBox);
+		
 	}
 	
-	public void calendarPanel() {
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setToolTipText("Desde");
-		dateChooser.setBounds(658, 167, 95, 20);
-		contentPanel.add(dateChooser);
+	public void btnMostrarTodo() {
 		
-		JDateChooser dateChooser_1 = new JDateChooser();
-		dateChooser_1.setBounds(658, 195, 95, 20);
-		contentPanel.add(dateChooser_1);
+		JButton btnMostrarTodos = new JButton("Mostrar Todos");
+		btnMostrarTodos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateTable();
+			}
+		});
+		btnMostrarTodos.setActionCommand("Mostrar Todos");
+		btnMostrarTodos.setBounds(630, 11, 119, 23);
+		contentPanel.add(btnMostrarTodos);
+	}
+
+	public void btnBuscar() {
+
+		//CAJA TEXTO BUSCAR
+		txtBuscar = new JTextField();
+		txtBuscar.addMouseListener(new MouseAdapter() {
+			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				txtBuscar.setText("");
+			}
+		});
+		txtBuscar.setForeground(Color.LIGHT_GRAY);
+		txtBuscar.setHorizontalAlignment(SwingConstants.CENTER);
+		txtBuscar.setText("Buscar Articulo");
+		txtBuscar.setBounds(630, 48, 88, 23);
+		contentPanel.add(txtBuscar);
+		txtBuscar.setColumns(10);
+		
+		//BOTON BUSCAR
+		JButton okButton = new JButton("");
+		okButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				updateTableBuscar(txtBuscar.getText(), "idArticulo");
+			}
+		});
+		okButton.setIcon(new ImageIcon("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\detection.png"));
+		okButton.setActionCommand("OK");
+		okButton.setBounds(717, 48, 36, 23);
+		contentPanel.add(okButton);
+	}
+	
+	//--------------------------------------------------------------------------------CALENDARIOS--------------------------------------------------------------------------------------	
+	
+	public void calendarPanel() {
 		
 		JLabel lblDesde = new JLabel("Desde:");
 		lblDesde.setBounds(618, 167, 86, 14);
@@ -174,27 +633,62 @@ public void buscar() {
 		JLabel lblHasta = new JLabel("Hasta:");
 		lblHasta.setBounds(618, 198, 86, 14);
 		contentPanel.add(lblHasta);
+		
+		//CALENDARIO DE INSERTAR Y MODIFICAR
+		dateFecha = new JDateChooser();
+		dateFecha.setToolTipText("Fecha");
+		dateFecha.setBounds(504, 377, 104, 23);
+		contentPanel.add(dateFecha);
+		
+		//CALENDARIOS DE FILTRAR
+		dateDesde = new JDateChooser();
+		dateDesde.setToolTipText("Desde");
+		dateDesde.setBounds(658, 167, 95, 20);
+		contentPanel.add(dateDesde);
+		
+		dateHasta = new JDateChooser();
+		dateHasta.setToolTipText("Hasta");
+		dateHasta.setBounds(658, 195, 95, 20);
+		contentPanel.add(dateHasta);
+		
 	}
 	
 	public void btnGrup() {
 		
-		JRadioButton rdbtnTipo = new JRadioButton("Tipo");
+		JLabel lblBuscarPor = new JLabel("Filtrar por:");
+		lblBuscarPor.setBounds(630, 86, 86, 14);
+		contentPanel.add(lblBuscarPor);
+		
+		rdbtnTipo = new JRadioButton("Tipo");
 		rdbtnTipo.setBounds(642, 107, 59, 23);
 		contentPanel.add(rdbtnTipo);
 		
-		JRadioButton rdbtnNombre = new JRadioButton("Fecha");
-		rdbtnNombre.setBounds(640, 137, 109, 23);
-		contentPanel.add(rdbtnNombre);
+		rdbtnFecha = new JRadioButton("Fecha");
+		rdbtnFecha.setBounds(640, 137, 109, 23);
+		contentPanel.add(rdbtnFecha);
 		
 		//Group the radio buttons.
 		ButtonGroup group = new ButtonGroup();
 		group.add(rdbtnTipo);
-		group.add(rdbtnNombre);
+		group.add(rdbtnFecha);
 	}
 	
+	//--------------------------------------------------------------------------------CAJAS TEXTO--------------------------------------------------------------------------------------	
+	
+	/*
+	 * Crea las cajas de texto para insertar y modificar registros
+	 */
 	public void txtPanel() {
 
 		txtIdMovimiento = new JTextField();
+		txtIdMovimiento.addMouseListener(new MouseAdapter() {
+			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				txtIdMovimiento.setText("");
+			}
+		});
+		txtIdMovimiento.setToolTipText("ID Movimeinto");
 		txtIdMovimiento.setForeground(Color.GRAY);
 		txtIdMovimiento.setText("ID Movimeinto");
 		txtIdMovimiento.setColumns(10);
@@ -202,57 +696,66 @@ public void buscar() {
 		contentPanel.add(txtIdMovimiento);
 		
 		txtIdArticulo = new JTextField();
+		txtIdArticulo.addMouseListener(new MouseAdapter() {
+			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				txtIdArticulo.setText("");
+			}
+		});
+		txtIdArticulo.setToolTipText("ID Articulo");
 		txtIdArticulo.setText("ID Articulo");
 		txtIdArticulo.setForeground(Color.GRAY);
 		txtIdArticulo.setColumns(10);
-		txtIdArticulo.setBounds(154, 377, 86, 23);
+		txtIdArticulo.setBounds(149, 377, 86, 23);
 		contentPanel.add(txtIdArticulo);
 		
-		txtTipo = new JTextField();
-		txtTipo.setText("Tipo Movimiento");
-		txtTipo.setForeground(Color.GRAY);
-		txtTipo.setColumns(10);
-		txtTipo.setBounds(278, 377, 86, 23);
-		contentPanel.add(txtTipo);
-		
 		txtUbicacion = new JTextField();
+		txtUbicacion.addMouseListener(new MouseAdapter() {
+			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				txtUbicacion.setText("");
+			}
+		});
+		txtUbicacion.setToolTipText("Ubicacion");
 		txtUbicacion.setText("Ubicacion");
 		txtUbicacion.setForeground(Color.GRAY);
 		txtUbicacion.setColumns(10);
-		txtUbicacion.setBounds(398, 377, 86, 23);
+		txtUbicacion.setBounds(385, 377, 86, 23);
 		contentPanel.add(txtUbicacion);
-		
-		txtFecha = new JTextField();
-		txtFecha.setText("Fecha");
-		txtFecha.setForeground(Color.GRAY);
-		txtFecha.setColumns(10);
-		txtFecha.setBounds(522, 377, 86, 23);
-		contentPanel.add(txtFecha);
 		
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon("C:\\Users\\w7\\Desktop\\ortopedias.png"));
 		label.setBounds(-215, -292, 604, 616);
 		contentPanel.add(label);
 		
+		txtTipo = new JComboBox();
+		txtTipo.setModel(new DefaultComboBoxModel(new String[] {"Entrada", "Salida"}));
+		txtTipo.setBounds(267, 378, 88, 20);
+		contentPanel.add(txtTipo);	
+		
 	}
 	
-	
+	//--------------------------------------------------------------------------------PANEL INFERIOR BOTONES---------------------------------------------------------------------------	
+
+	/*
+	 * Crea el panel inferior de botones con el boton cancelar que cierra el dialog
+	 */
 	public void btnPanel() {
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
-		
-		JButton btnModificar_4 = new JButton("Ver Lineas Comanda");
-		btnModificar_4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		buttonPane.add(btnModificar_4);
-		btnModificar_4.setActionCommand("Ver Historial");
 		{
 			JButton cancelButton = new JButton("Cancelar");
+			cancelButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					System.exit(0);
+				}
+			});
 			cancelButton.setActionCommand("Cancelar");
 			buttonPane.add(cancelButton);
 		}
 	}
+
 }

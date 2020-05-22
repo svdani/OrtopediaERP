@@ -45,7 +45,7 @@ public class ViewLogin extends JDialog {
 	}
 
 	/**
-	 * Create the dialog.
+	 * Crea el dialog.
 	 */
 	public ViewLogin() {
 		setBounds(100, 100, 339, 185);
@@ -59,6 +59,11 @@ public class ViewLogin extends JDialog {
 			
 	}
 	
+	//--------------------------------------------------------------------------------CAJAS TEXTO--------------------------------------------------------------------------------------	
+	
+	/*
+	 * Crea las cajas de texto para insertar y modificar registros
+	 */
 	public void txtPanel() {
 		passwordField = new JPasswordField();
 		passwordField.setBounds(98, 62, 90, 20);
@@ -86,6 +91,9 @@ public class ViewLogin extends JDialog {
 		contentPanel.add(passwordField);
 	}
 	
+	/*
+	 * Crea el panel inferior de botones con el boton cancelar que cierra el dialog
+	 */
 	public void btnPanel() {
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

@@ -21,7 +21,6 @@ public class Articulo{
 	public Articulo(String idArticulo) {
 
 		this.idArticulo = idArticulo;
-
 	}	
 
 	//---------------------------------------------------------------------------------------------GETTER AND SETTER

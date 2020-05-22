@@ -72,9 +72,10 @@ public class ViewAdmin extends JDialog {
 	}
 
 	/**
-	 * Create the dialog.
+	 * Crea el dialog.
 	 */
 	public ViewAdmin() {
+		setTitle("ERP Ortopedias - Admins");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
 		setBounds(100, 100, 783, 448);
 		getContentPane().setLayout(new BorderLayout());
@@ -125,6 +126,9 @@ public class ViewAdmin extends JDialog {
 
 	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
 
+	/*
+	 * muestra todos los registros de la base de datos
+	 */
 	private void updateTable() {
 		//---Actualiza valores que se muestran en la tabla
 		SQLAdmin conAdmin = new SQLAdmin();
@@ -171,7 +175,10 @@ public class ViewAdmin extends JDialog {
 			System.out.println("Error al buscar y actualizar la tabla ADMIN");
 		}		
 	}
-
+	
+	/*
+	 * muetra los valores del registro seleccionado en sus respectivas cajas de texto y bloquea el boton insertar
+	 */
 	public void selectRow() {
 	//----FUNCION AL SELECCIONAR CAMPO
 
@@ -200,6 +207,9 @@ public class ViewAdmin extends JDialog {
 
 	//--------------------------------------------------------------------------------MENU---------------------------------------------------------------------------------------------	
 	
+	/*
+	 * Crea el Menu y sus difernetes items que actuan como boton de reconduccion a otro dialog
+	 */
 	public void menuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -275,50 +285,10 @@ public class ViewAdmin extends JDialog {
 	}
 
 	//--------------------------------------------------------------------------------BOTONES------------------------------------------------------------------------------------------	
-
-	public void btnBuscar() {
-		
-		//CAJA TEXTO BUSCAR
-		txtBuscar = new JTextField();
-		txtBuscar.addMouseListener(new MouseAdapter() {
-			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				txtBuscar.setText("");
-			}
-		});
-		txtBuscar.setForeground(Color.LIGHT_GRAY);
-		txtBuscar.setHorizontalAlignment(SwingConstants.CENTER);
-		txtBuscar.setText("Buscar");
-		txtBuscar.setBounds(630, 57, 88, 23);
-		contentPanel.add(txtBuscar);
-		txtBuscar.setColumns(10);
-		
-		//BOTON BUSCAR
-		JButton okButton = new JButton("");
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (rdbtnDni.isSelected()) {
-					updateTableBuscar(txtBuscar.getText().toString(),"dni");
-				} else if (rdbtnNombre.isSelected()) {
-					updateTableBuscar(txtBuscar.getText().toString(),"nombre");
-				} else if(rdbtnApellidos.isSelected()) {
-					updateTableBuscar(txtBuscar.getText().toString(),"apellidos");
-				} else {
-					JOptionPane.showMessageDialog(null, "Selecciona por que buscas");	
-				}
-				
-			}
-		});
-		
-		okButton.setIcon(new ImageIcon("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\detection.png"));
-		okButton.setActionCommand("OK");
-		okButton.setBounds(717, 57, 36, 23);
-		contentPanel.add(okButton);
-		
-		
-	}
-
+	
+	/*
+	 * Crea el boton Nuevo que resetea las cajas de texto y bloquea los botones eliminar y modificar para no causar errores
+	 */
 	public void btnNuevo() {
 		
 		btnNuevo = new JButton("Nuevo");
@@ -343,7 +313,10 @@ public class ViewAdmin extends JDialog {
 		btnNuevo.setBounds(630, 254, 119, 23);
 		contentPanel.add(btnNuevo);
 	}
-
+	
+	/*
+	 * Crea el boton Insertar que llamando al archivo SQL inserta un nuevo registro y luego limpia las cajas para no causar errores
+	 */
 	public void btnInserta() {
 		
 		btnInsertar = new JButton("Insertar");
@@ -484,7 +457,50 @@ public class ViewAdmin extends JDialog {
 		contentPanel.add(btnMostrarTodos);
 		
 	}
-	
+
+	public void btnBuscar() {
+
+		//CAJA TEXTO BUSCAR
+		txtBuscar = new JTextField();
+		txtBuscar.addMouseListener(new MouseAdapter() {
+			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				txtBuscar.setText("");
+			}
+		});
+		txtBuscar.setForeground(Color.LIGHT_GRAY);
+		txtBuscar.setHorizontalAlignment(SwingConstants.CENTER);
+		txtBuscar.setText("Buscar");
+		txtBuscar.setBounds(630, 57, 88, 23);
+		contentPanel.add(txtBuscar);
+		txtBuscar.setColumns(10);
+
+		//BOTON BUSCAR
+		JButton okButton = new JButton("");
+		okButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (rdbtnDni.isSelected()) {
+					updateTableBuscar(txtBuscar.getText().toString(),"dni");
+				} else if (rdbtnNombre.isSelected()) {
+					updateTableBuscar(txtBuscar.getText().toString(),"nombre");
+				} else if(rdbtnApellidos.isSelected()) {
+					updateTableBuscar(txtBuscar.getText().toString(),"apellidos");
+				} else {
+					JOptionPane.showMessageDialog(null, "Selecciona por que buscas");	
+				}
+
+			}
+		});
+
+		okButton.setIcon(new ImageIcon("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\detection.png"));
+		okButton.setActionCommand("OK");
+		okButton.setBounds(717, 57, 36, 23);
+		contentPanel.add(okButton);
+
+
+	}
+
 	public void btnGrup() {
 		
 		JLabel lblBuscarPor = new JLabel("Buscar por:");
@@ -511,10 +527,14 @@ public class ViewAdmin extends JDialog {
 	}
 
 	//--------------------------------------------------------------------------------CAJAS TEXTO--------------------------------------------------------------------------------------	
-
+	
+	/*
+	 * Crea las cajas de texto para insertar y modificar registros
+	 */
 	public void txtPanel() {
 
 		txtDni = new JTextField();
+		txtDni.setToolTipText("DNI");
 		txtDni.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -529,6 +549,7 @@ public class ViewAdmin extends JDialog {
 		contentPanel.add(txtDni);
 		
 		passwordField = new JPasswordField();
+		passwordField.setToolTipText("Password");
 		passwordField.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -541,6 +562,7 @@ public class ViewAdmin extends JDialog {
 		contentPanel.add(passwordField);
 		
 		txtNombre = new JTextField();
+		txtNombre.setToolTipText("Nombre");
 		txtNombre.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -555,6 +577,7 @@ public class ViewAdmin extends JDialog {
 		contentPanel.add(txtNombre);
 		
 		txtApellidos = new JTextField();
+		txtApellidos.setToolTipText("Apellidos");
 		txtApellidos.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -569,6 +592,7 @@ public class ViewAdmin extends JDialog {
 		contentPanel.add(txtApellidos);
 		
 		txtTelf = new JTextField();
+		txtTelf.setToolTipText("Telf");
 		txtTelf.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -591,7 +615,10 @@ public class ViewAdmin extends JDialog {
 	}
 
 	//--------------------------------------------------------------------------------PANEL INFERIOR BOTONES---------------------------------------------------------------------------	
-	
+
+	/*
+	 * Crea el panel inferior de botones con el boton cancelar que cierra el dialog
+	 */
 	public void btnPanel() {
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
