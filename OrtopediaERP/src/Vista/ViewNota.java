@@ -39,7 +39,7 @@ public class ViewNota extends JDialog {
 		contentPanel.add(textPane);
 	}
 
-	public ViewNota(Comanda com) {
+	public ViewNota(Pedido com) {
 		
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());

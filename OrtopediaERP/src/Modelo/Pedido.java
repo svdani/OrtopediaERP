@@ -3,8 +3,8 @@ package Modelo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Comanda{
-	int idComanda;
+public class Pedido{
+	int idPedido;
 	String idCliente;
 	double precioTotal;
 	String estado;
@@ -15,9 +15,9 @@ public class Comanda{
 	
 	//---------------------------------------------------------------------------------------------CONSTRUCTOR
 	
-	public Comanda(int idComanda, String idCliente, double precioTotal, String estado, String fechaInicio, String fechaLimite, String descripcion) {
+	public Pedido(int idPedido, String idCliente, double precioTotal, String estado, String fechaInicio, String fechaLimite, String descripcion) {
 		
-		this.idComanda = idComanda;
+		this.idPedido = idPedido;
 		this.idCliente = idCliente;
 		this.precioTotal = precioTotal;
 		this.estado = estado;
@@ -26,7 +26,7 @@ public class Comanda{
 		this.descripcion = descripcion;
 	}
 	
-	public Comanda( String idCliente, String estado, String fechaLimite, String descripcion) {
+	public Pedido( String idCliente, String estado, String fechaLimite, String descripcion) {
 		
 		this.idCliente = idCliente;
 		this.estado = estado;
@@ -35,25 +35,25 @@ public class Comanda{
 		this.descripcion = descripcion;
 	}
 	
-	public Comanda(int idComanda, double precioTotal) {
+	public Pedido(int idPedido, double precioTotal) {
 	
 		this.precioTotal = precioTotal;
-		this.idComanda = idComanda;
+		this.idPedido = idPedido;
 	}
 
-	public Comanda(int idComanda) {
+	public Pedido(int idPedido) {
 		
-		this.idComanda = idComanda;
+		this.idPedido = idPedido;
 	}
 	
 	//---------------------------------------------------------------------------------------------GETTER AND SETTER
 	
-	public int getIdComanda() {
-		return idComanda;
+	public int getIdPedido() {
+		return idPedido;
 	}
 
-	public void setIdComanda(int idComanda) {
-		this.idComanda = idComanda;
+	public void setIdPedido(int idPedido) {
+		this.idPedido = idPedido;
 	}
 
 	public String getIdCliente() {
@@ -110,7 +110,7 @@ public class Comanda{
 
 	@Override
 	public String toString() {
-		return "Comanda [idComanda=" + idComanda + ", idCliente=" + idCliente + ", precioTotal=" + precioTotal
+		return "Pedido [idPedido=" + idPedido + ", idCliente=" + idCliente + ", precioTotal=" + precioTotal
 				+ ", estado=" + estado + ", fechaInicio=" + fechaInicio + ", fechaLimite=" + fechaLimite
 				+ ", descripcion=" + descripcion + "]\n";
 	}	

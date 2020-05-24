@@ -31,10 +31,10 @@ import javax.swing.table.DefaultTableModel;
 
 import Datos.SQLArticulo;
 import Datos.SQLCliente;
-import Datos.SQLComanda;
+import Datos.SQLPedido;
 import Modelo.Articulo;
 import Modelo.Cliente;
-import Modelo.Comanda;
+import Modelo.Pedido;
 import Modelo.Proveedor;
 
 public class ViewArticulo extends JDialog {
@@ -76,7 +76,7 @@ public class ViewArticulo extends JDialog {
 	 */
 	public ViewArticulo() {
 		setTitle("ERP Ortopedias - Articulos");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ViewArticulo.class.getResource("/icon/ortopedias.png")));
 		setBounds(100, 100, 783, 486);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(UIManager.getColor("Button.background"));
@@ -158,7 +158,6 @@ public class ViewArticulo extends JDialog {
 		table.setModel(model);
 
 		//---FUNCIONES TABLA 
-		//updateTable();
 		updateTableBuscar(pro.getIdProveedor(), "idProveedor");
 		selectRow();
 		scrollPane.setViewportView(table);
@@ -296,18 +295,18 @@ public class ViewArticulo extends JDialog {
 		});
 		mnNewMenu.add(mntmCliente);
 
-		JMenuItem mntmComanda = new JMenuItem("Comanda");
-		mntmComanda.addActionListener(new ActionListener() {
+		JMenuItem mntmPedido = new JMenuItem("Pedido");
+		mntmPedido.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				ViewComanda windowComanda = new ViewComanda();
-				windowComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-				windowComanda.setVisible(true);
+				ViewPedido windowPedido = new ViewPedido();
+				windowPedido.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				windowPedido.setVisible(true);
 				dispose();
 
 			}
 		});
-		mnNewMenu.add(mntmComanda);
+		mnNewMenu.add(mntmPedido);
 
 		JMenuItem mntmMovimientosAlmacen = new JMenuItem("Movimientos Almacen");
 		mntmMovimientosAlmacen.addActionListener(new ActionListener() {
@@ -366,6 +365,7 @@ public class ViewArticulo extends JDialog {
 		btnNuevo.setBounds(630, 254, 119, 23);
 		contentPanel.add(btnNuevo);
 	}
+	
 	/*
 	 * Crea el boton Insertar que llamando al archivo SQL inserta un nuevo registro y luego limpia las cajas para no causar errores
 	 */
@@ -421,13 +421,7 @@ public class ViewArticulo extends JDialog {
 				if (table.getSelectedRow() != -1) {
 					//COMPRUEBA QUE EL VALOR PRECIO SEA DOUBLE
 					if( isDouble(txtPrecio.getText()) == true && isInteger(txtStock.getText()) == true) {
-						Articulo art = new Articulo(
-								(String) model.getValueAt(table.getSelectedRow(), 0),
-								(String) model.getValueAt(table.getSelectedRow(), 1),
-								(String) model.getValueAt(table.getSelectedRow(), 2),
-								(double) model.getValueAt(table.getSelectedRow(), 3),
-								(int) model.getValueAt(table.getSelectedRow(), 4)
-								);
+						Articulo art = cojerValores();
 
 						art.setIdProveedor(txtIdProveedor.getText().toString());
 						art.setNombre(txtNombre.getText().toString());
@@ -552,7 +546,7 @@ public class ViewArticulo extends JDialog {
 				}
 			}
 		});
-		okButton.setIcon(new ImageIcon("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\detection.png"));
+		okButton.setIcon(new ImageIcon(ViewProveedor.class.getResource("/icon/detection.png")));
 		okButton.setActionCommand("OK");
 		okButton.setBounds(717, 57, 36, 23);
 		contentPanel.add(okButton);
@@ -564,7 +558,7 @@ public class ViewArticulo extends JDialog {
 		lblBuscarPor.setBounds(640, 94, 86, 14);
 		contentPanel.add(lblBuscarPor);
 		
-		rdbtnIdArticulo = new JRadioButton("Referencia");
+		rdbtnIdArticulo = new JRadioButton("Id Articulo");
 		rdbtnIdArticulo.setBounds(661, 115, 109, 23);
 		contentPanel.add(rdbtnIdArticulo);
 		
@@ -667,7 +661,7 @@ public class ViewArticulo extends JDialog {
 		contentPanel.add(txtStock);
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("C:\\Users\\w7\\Desktop\\ortopedias.png"));
+		label.setIcon(new ImageIcon(ViewCliente.class.getResource("/icon/ortopedias(2).png")));
 		label.setBounds(-215, -292, 604, 616);
 		contentPanel.add(label);
 	}
@@ -688,15 +682,9 @@ public class ViewArticulo extends JDialog {
 				
 				if (table.getSelectedRow() != -1) {
 					
-					SQLComanda conCom = new SQLComanda();
+					SQLPedido conCom = new SQLPedido();
 					// Obtenemos el primer dato del registro seleccionado
-					Articulo art = new Articulo(
-							(String) model.getValueAt(table.getSelectedRow(), 0),
-							(String) model.getValueAt(table.getSelectedRow(), 1),
-							(String) model.getValueAt(table.getSelectedRow(), 2),
-							(double) model.getValueAt(table.getSelectedRow(), 3),
-							(int) model.getValueAt(table.getSelectedRow(), 4)
-							);
+					Articulo art = cojerValores();
 					
 					ViewMovimientoAlmacen windowMovimientoAlmacen = new ViewMovimientoAlmacen(art);
 					windowMovimientoAlmacen.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -723,6 +711,19 @@ public class ViewArticulo extends JDialog {
 
 	}
 
+	//--------------------------------------------------------------------------------OBTIENE INFO REGISTRO---------------------------------------------------------------------------	
+	
+	private Articulo cojerValores() {		
+		Articulo art = new Articulo(
+				(String) model.getValueAt(table.getSelectedRow(), 0),
+				(String) model.getValueAt(table.getSelectedRow(), 1),
+				(String) model.getValueAt(table.getSelectedRow(), 2),
+				(double) model.getValueAt(table.getSelectedRow(), 3),
+				(int) model.getValueAt(table.getSelectedRow(), 4)
+				);	
+		return art;
+	}
+	
 	//--------------------------------------------------------------------------------CONTROL ERRORES---------------------------------------------------------------------------	
 	
 	public static boolean isInteger(String cadena) {

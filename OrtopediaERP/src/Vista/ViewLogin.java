@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.Toolkit;
 
 public class ViewLogin extends JDialog {
 
@@ -48,6 +49,7 @@ public class ViewLogin extends JDialog {
 	 * Crea el dialog.
 	 */
 	public ViewLogin() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ViewLogin.class.getResource("/icon/ortopedias.png")));
 		setBounds(100, 100, 339, 185);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -100,7 +102,7 @@ public class ViewLogin extends JDialog {
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
 
-		JButton okButton = new JButton("Iniciar Sesion");
+		JButton okButton = new JButton("Iniciar Sesión");
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -139,7 +141,7 @@ public class ViewLogin extends JDialog {
 							break;
 
 						case "Comandas":
-							ViewComanda windowComanda = new ViewComanda();
+							ViewPedido windowComanda = new ViewPedido();
 							windowComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 							windowComanda.setVisible(true);
 							dispose();

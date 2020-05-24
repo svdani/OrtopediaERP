@@ -77,7 +77,6 @@ public class SQLArticulo {
 							+ "', precio=" + art.getPrecio()
 							+ ", stock=" +art.getStock()						
 							+ " WHERE idArticulo='" + art.getIdArticulo() + "';";
-					System.out.println(sqlUpdate);
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlUpdate);
 			sentencia.close();
@@ -89,6 +88,28 @@ public class SQLArticulo {
 				System.out.println("Error al actualizar datos en la tabla Articulo");
 		}
 	}
+	
+	//Modifica taula Articulo
+		public void modificaStockArticulos(Articulo art) throws SQLException {
+
+			try {
+				conectar();
+				String sqlUpdate ="UPDATE Articulo "
+								+ "SET"
+								+ " stock=" + art.getStock()						
+								+ " WHERE idArticulo='" + art.getIdArticulo() + "';";
+				
+				sentencia = c.createStatement();
+				sentencia.executeUpdate(sqlUpdate);
+				sentencia.close();
+				c.close();
+		
+				System.out.println("Datos actualizados");
+
+			} catch (Exception e) {
+					System.out.println("Error al actualizar datos en la tabla Articulo");
+			}
+		}
 		
 	//Elimina Articulo
 	public void deleteArticulos(Articulo art) throws SQLException {
@@ -226,6 +247,29 @@ public class SQLArticulo {
 		
 			rs = sentencia.executeQuery(consultaSql);
 			valor = rs.getDouble(1);
+			rs.close();
+			sentencia.close();
+			c.close();
+
+		} catch (Exception e) {
+			System.out.println("CUENTA ARTICULOS" + e.getMessage());
+		}
+		return valor;
+	}
+	
+	//Descubre precio Articulos
+	public int stockArticulos(Articulo art) throws SQLException {
+		int valor = 0;
+		ResultSet rs;
+		try {
+
+			conectar();
+
+			sentencia = c.createStatement();
+			String consultaSql = "SELECT stock FROM Articulo WHERE idArticulo = '" + art.getIdArticulo() + "';";
+
+			rs = sentencia.executeQuery(consultaSql);
+			valor = rs.getInt(1);
 			rs.close();
 			sentencia.close();
 			c.close();

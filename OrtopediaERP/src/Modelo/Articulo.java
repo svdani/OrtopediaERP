@@ -18,6 +18,13 @@ public class Articulo{
 		this.precio = precio;
 		this.stock = stock;
 	}
+	
+	public Articulo(String idArticulo, int stock) {
+
+		this.idArticulo = idArticulo;
+		this.stock = stock;
+	}	
+	
 	public Articulo(String idArticulo) {
 
 		this.idArticulo = idArticulo;

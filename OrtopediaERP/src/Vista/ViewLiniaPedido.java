@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,16 +35,17 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import com.toedter.calendar.JDateChooser;
 
 import Datos.SQLArticulo;
-import Datos.SQLComanda;
-import Datos.SQLLiniaComanda;
+import Datos.SQLPedido;
+import Datos.SQLLiniaPedido;
 import Datos.SQLMovimientoAlmacen;
 import Modelo.Articulo;
-import Modelo.Comanda;
-import Modelo.LiniaComanda;
+import Modelo.Pedido;
+import Modelo.LiniaPedido;
 import Modelo.MovimientoAlmacen;
 
 import javax.swing.DefaultComboBoxModel;
@@ -62,14 +64,14 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
-public class ViewLiniaComanda extends JDialog {
+public class ViewLiniaPedido extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private static DefaultTableModel model;
 	private JTable table;
 	private JTextField txtBuscar;
-	private JTextField txtIdComanda;
-	private JTextField txtIdLiniaComanda;
+	private JTextField txtIdPedido;
+	private JTextField txtIdLiniaPedido;
 	private JTextField txtPrecio;
 	private JSpinner txtCantidad;
 	private JComboBox txtIdArticulo;
@@ -87,7 +89,8 @@ public class ViewLiniaComanda extends JDialog {
 	private JRadioButton rdbtnTipo;
 	
 	private double precioLinia = 0;
-	
+	private DecimalFormat df = new DecimalFormat("#.00");
+	 //System.out.println(df.format(number));
 	String[] listaArticulos;
 	
 	/**
@@ -95,7 +98,7 @@ public class ViewLiniaComanda extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			ViewLiniaComanda dialog = new ViewLiniaComanda();
+			ViewLiniaPedido dialog = new ViewLiniaPedido();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -106,9 +109,9 @@ public class ViewLiniaComanda extends JDialog {
 	/**
 	 * Crea el dialog.
 	 */
-	public ViewLiniaComanda() {
-		setTitle("ERP Ortopedias - Linias Comanda");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
+	public ViewLiniaPedido() {
+		setTitle("ERP Ortopedias - Linias Pedido");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ViewLiniaPedido.class.getResource("/icon/ortopedias.png")));
 		setBounds(100, 100, 783, 532);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(UIManager.getColor("Button.background"));
@@ -129,8 +132,8 @@ public class ViewLiniaComanda extends JDialog {
 		};
 
 		//----INTRODUCE NOMBRE COLUMNAS TABLA DESDE SQL
-		model.addColumn("Id Linia Comanda");
-		model.addColumn("Id Comanda");
+		model.addColumn("Id Linia");
+		model.addColumn("Id Pedido");
 		model.addColumn("Id Articulo");
 		model.addColumn("Estado");
 		model.addColumn("Tipo");
@@ -157,10 +160,11 @@ public class ViewLiniaComanda extends JDialog {
 		btnGrup();
 		txtPanel();
 		btnPanel();
+		medidasTabla();
 	}
 	
-	public ViewLiniaComanda(Comanda com) {
-		setTitle("ERP Ortopedias - Linias Comanda");
+	public ViewLiniaPedido(Pedido com) {
+		setTitle("ERP Ortopedias - Linias Pedido");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
 		setBounds(100, 100, 783, 532);
 		getContentPane().setLayout(new BorderLayout());
@@ -182,8 +186,8 @@ public class ViewLiniaComanda extends JDialog {
 		};
 
 		//----INTRODUCE NOMBRE COLUMNAS TABLA DESDE SQL
-		model.addColumn("Id Linia Comanda");
-		model.addColumn("Id Comanda");
+		model.addColumn("Id Linia");
+		model.addColumn("Id Pedido");
 		model.addColumn("Id Articulo");
 		model.addColumn("Estado");
 		model.addColumn("Tipo");
@@ -193,7 +197,7 @@ public class ViewLiniaComanda extends JDialog {
 		table.setModel(model);
 		
 		//---FUNCIONES TABLA
-		updateBusca(new LiniaComanda(com.getIdComanda(), 0));	
+		updateBusca(new LiniaPedido(com.getIdPedido(), 0));	
 		selectRow();
 		scrollPane.setViewportView(table);
 		
@@ -210,28 +214,41 @@ public class ViewLiniaComanda extends JDialog {
 		btnGrup();
 		txtPanel();
 		btnPanel();
+		medidasTabla();
 		
-		
-		txtIdComanda.setText(String.valueOf(com.getIdComanda()));
+		txtIdPedido.setText(String.valueOf(com.getIdPedido()));
 	}
 	
 	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
+	
+	public void medidasTabla() {
+		TableColumnModel columnModel = table.getColumnModel();
+
+	    columnModel.getColumn(0).setPreferredWidth(100);
+	    columnModel.getColumn(1).setPreferredWidth(100);
+	    columnModel.getColumn(2).setPreferredWidth(200);
+	    columnModel.getColumn(3).setPreferredWidth(100);
+	    columnModel.getColumn(4).setPreferredWidth(100);
+	    columnModel.getColumn(5).setPreferredWidth(100);
+	    columnModel.getColumn(6).setPreferredWidth(100);
+	}
+	
 	
 	/*
 	 * muestra todos los registros de la base de datos
 	 */
 	private void updateTable() {
 		//---Actualiza valores que se muestran en la tabla
-		SQLLiniaComanda conLin = new SQLLiniaComanda();
+		SQLLiniaPedido conLin = new SQLLiniaPedido();
 		try {			
 			
 			model.setRowCount(0);	
 
 			//----RELLENA TABLA
-			for (LiniaComanda lin:conLin.consultaLiniaComandas()) {
+			for (LiniaPedido lin:conLin.consultaLiniaPedidos()) {
 				model.addRow(new Object[] {
-						lin.getIdLiniaComanda(),
-						lin.getIdComanda(),
+						lin.getIdLiniaPedido(),
+						lin.getIdPedido(),
 						lin.getIdArticulo(),
 						lin.getEstado(),
 						lin.getTipo(),
@@ -240,22 +257,22 @@ public class ViewLiniaComanda extends JDialog {
 				});	
 			}	
 		} catch (Exception e) {
-			System.out.println("Error al actualizar la tabla Linia Comanda");
+			System.out.println("Error al actualizar la tabla Linia Pedido");
 		}		
 	}	
 	 
 	private void updateArticulos() {
 		SQLArticulo conArt = new SQLArticulo();
+		
 		try {			
 			
-			int valor = Integer.parseInt(conArt.numArticulos());
+			int valor = Integer.parseInt(conArt.numArticulos());//busca con SQL COUNT la cantidad de articulos
 			listaArticulos = new String[valor];
 			int i = 0;
 					
 			for (Articulo art:conArt.consultaArticulos()) {
 				
 				listaArticulos[i] = art.getNombre() + "-" + art.getIdArticulo();
-				//System.out.println(listaArticulos[i]);
 				i++;		
 			}
 			
@@ -279,12 +296,12 @@ public class ViewLiniaComanda extends JDialog {
 				btnInsertar.setEnabled(false);// BLOQUEA BTN INSERTAR
 				btnNuevo.setEnabled(true);// DESBLOQUEA BTN NUEVO
 
-				txtIdLiniaComanda.setEnabled(false);// DESBLOQUEA PRECIO 
-				txtIdComanda.setEnabled(false);// DESBLOQUEA PRECIO 
+				txtIdLiniaPedido.setEnabled(false);// DESBLOQUEA PRECIO 
+				txtIdPedido.setEnabled(false);// DESBLOQUEA PRECIO 
 				
 				//------CAMBIA VALOR CAJAS TEXTO SEGUN EL REGISTRO SELECCIONADO
-				txtIdLiniaComanda.setText(table.getValueAt(table.getSelectedRow(), 0).toString());				
-				txtIdComanda.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+				txtIdLiniaPedido.setText(table.getValueAt(table.getSelectedRow(), 0).toString());				
+				txtIdPedido.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
 				
 //				txtIdArticulo.setSelectedItem(table.getValueAt(table.getSelectedRow(), 2).toString());
 				txtIdArticulo.setSelectedItem("hoola");
@@ -325,18 +342,18 @@ public class ViewLiniaComanda extends JDialog {
 		});
 	}
 
-	private void updateBusca(LiniaComanda linia) {
+	private void updateBusca(LiniaPedido linia) {
 		//---Actualiza valores que se muestran en la tabla
-		SQLLiniaComanda conLin = new SQLLiniaComanda();
+		SQLLiniaPedido conLin = new SQLLiniaPedido();
 		try {			
 			
 			model.setRowCount(0);	
 
 			//----RELLENA TABLA
-			for (LiniaComanda lin:conLin.buscaLiniasComandas(linia)) {
+			for (LiniaPedido lin:conLin.buscaLiniasPedidos(linia)) {
 				model.addRow(new Object[] {
-						lin.getIdLiniaComanda(),
-						lin.getIdComanda(),
+						lin.getIdLiniaPedido(),
+						lin.getIdPedido(),
 						lin.getIdArticulo(),
 						lin.getEstado(),
 						lin.getTipo(),
@@ -345,22 +362,22 @@ public class ViewLiniaComanda extends JDialog {
 				});	
 			}	
 		} catch (Exception e) {
-			System.out.println("Error al actualizar la tabla Linia Comanda");
+			System.out.println("Error al actualizar la tabla Linia Pedido");
 		}		
 	}	
 	
 	private void updateFiltrar(String registro, String columna) {
 		//---Actualiza valores que se muestran en la tabla
-		SQLLiniaComanda conLin = new SQLLiniaComanda();
+		SQLLiniaPedido conLin = new SQLLiniaPedido();
 		try {			
 			
 			model.setRowCount(0);	
 
 			//----RELLENA TABLA
-			for (LiniaComanda lin:conLin.filtraLiniasComandas(registro , columna)) {
+			for (LiniaPedido lin:conLin.filtraLiniasPedidos(registro , columna)) {
 				model.addRow(new Object[] {
-						lin.getIdLiniaComanda(),
-						lin.getIdComanda(),
+						lin.getIdLiniaPedido(),
+						lin.getIdPedido(),
 						lin.getIdArticulo(),
 						lin.getEstado(),
 						lin.getTipo(),
@@ -369,7 +386,7 @@ public class ViewLiniaComanda extends JDialog {
 				});	
 			}	
 		} catch (Exception e) {
-			System.out.println("Error al actualizar la tabla Linia Comanda");
+			System.out.println("Error al actualizar la tabla Linia Pedido");
 		}		
 	}	
 	
@@ -425,18 +442,18 @@ public class ViewLiniaComanda extends JDialog {
 		});
 		mnNewMenu.add(mntmCliente);
 		
-		JMenuItem mntmComanda = new JMenuItem("Comanda");
-		mntmComanda.addActionListener(new ActionListener() {
+		JMenuItem mntmPedido = new JMenuItem("Pedido");
+		mntmPedido.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				ViewComanda windowComanda = new ViewComanda();
-				windowComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-				windowComanda.setVisible(true);
+				ViewPedido windowPedido = new ViewPedido();
+				windowPedido.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				windowPedido.setVisible(true);
 				dispose();
 		
 			}
 		});
-		mnNewMenu.add(mntmComanda);
+		mnNewMenu.add(mntmPedido);
 		
 		JMenuItem mntmMovimientosAlmacen = new JMenuItem("Movimientos Almacen");
 		mntmMovimientosAlmacen.addActionListener(new ActionListener() {
@@ -479,11 +496,11 @@ public class ViewLiniaComanda extends JDialog {
 				btnInsertar.setEnabled(true);// DESBLOQUEA BTN INSERTAR
 				btnNuevo.setEnabled(false);// BLOQUEA BTN NUEVO
 
-				txtIdLiniaComanda.setEnabled(false);// BLOQUEA ID LINEAS DE COMANDA PORQUE ES AUTONUMERICO
-				//txtIdComanda.setEnabled(false);// BLOQUEA FECHA COJE DIRECTAMENTE LA FECHA DEL MOMENTO ACTUAL
+				txtIdLiniaPedido.setEnabled(false);// BLOQUEA ID LINEAS DE COMANDA PORQUE ES AUTONUMERICO
+				//txtIdPedido.setEnabled(false);// BLOQUEA FECHA COJE DIRECTAMENTE LA FECHA DEL MOMENTO ACTUAL
 
-				txtIdLiniaComanda.setText("Id Linia Comanda");		
-				txtIdComanda.setText("Id Comanda");
+				txtIdLiniaPedido.setText("Id Linia Pedido");		
+				txtIdPedido.setText("Id Pedido");
 				txtIdArticulo.setSelectedItem("");
 				txtEstado.setSelectedItem("Pendiente");
 				txtTipo.setSelectedItem("Envio");
@@ -504,41 +521,45 @@ public class ViewLiniaComanda extends JDialog {
 		btnInsertar = new JButton("Insertar");
 		btnInsertar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SQLLiniaComanda conLin = new SQLLiniaComanda();
+				SQLLiniaPedido conLin = new SQLLiniaPedido();
+				if (isInteger(txtIdPedido.getText().toString())) {
+					try {
 
-				try {
+						conLin.insertaLiniaPedidos(new LiniaPedido(
+								Integer.parseInt(txtIdPedido.getText().toString()),
+								txtIdArticulo.getSelectedItem().toString(),	
+								txtEstado.getSelectedItem().toString(),
+								txtTipo.getSelectedItem().toString(),	
+								Double.parseDouble(txtPrecio.getText().toString()),
+								Integer.parseInt(txtCantidad.getValue().toString())
+								
+								));
+						
+						//AL MODIFICAR LA LINEA DEBE ACTUALIZARSE LA COMANDA 
+						SQLPedido conCom = new SQLPedido();	
+						conCom.modificaPrecioPedido(new Pedido(
+								Integer.parseInt(txtIdPedido.getText().toString()),//Coje el valor de la comanda que inserta
+								conLin.precioLinias(new LiniaPedido(Integer.parseInt(txtIdPedido.getText().toString()), 0 ))//calcula el valor de todas linias
+								));
+						
+						//ACTUALIZA LA TABLA
+						updateTable();
+						
+						//Limpia el contenido de las cajas
+						txtEstado.setSelectedItem("Pendiente");
+						txtEstado.setSelectedItem("Envio");
+						txtPrecio.setText("0");				
+						txtCantidad.setValue(0);
+						
+					} catch (SQLException e1) {
+						System.out.println("Falla al insertar Pedido");
+						JOptionPane.showMessageDialog(null, "Ha habido un error al insertar Pedido revise los campos");	
+						e1.printStackTrace();
+					}
+				} else {
 
-					conLin.insertaLiniaComandas(new LiniaComanda(
-							Integer.parseInt(txtIdComanda.getText().toString()),
-							txtIdArticulo.getSelectedItem().toString(),	
-							txtEstado.getSelectedItem().toString(),
-							txtTipo.getSelectedItem().toString(),	
-							Double.parseDouble(txtPrecio.getText().toString()),
-							Integer.parseInt(txtCantidad.getValue().toString())
-							
-							));
-					
-					//AL MODIFICAR LA LINEA DEBE ACTUALIZARSE LA COMANDA 
-					SQLComanda conCom = new SQLComanda();	
-					conCom.modificaPrecioComanda(new Comanda(
-							Integer.parseInt(txtIdComanda.getText().toString()),//Coje el valor de la comanda que inserta
-							conLin.precioLinias(new LiniaComanda(Integer.parseInt(txtIdComanda.getText().toString()), 0 ))//calcula el valor de todas linias
-							));
-					
-					//ACTUALIZA LA TABLA
-					updateTable();
-					
-					//Limpia el contenido de las cajas
-					txtEstado.setSelectedItem("Pendiente");
-					txtEstado.setSelectedItem("Envio");
-					txtPrecio.setText("0");				
-					txtCantidad.setValue(0);
-					
-				} catch (SQLException e1) {
-					System.out.println("Falla al insertar Comanda");
-					JOptionPane.showMessageDialog(null, "Ha habido un error al insertar Comanda revise los campos");	
-					e1.printStackTrace();
-				}
+					JOptionPane.showMessageDialog(null, "Ha habido un error al insertar una Linia Pedido revise los campos");	
+				}	
 			}
 		});
 		btnInsertar.setActionCommand("Insertar");
@@ -551,12 +572,13 @@ public class ViewLiniaComanda extends JDialog {
 		btnModificar = new JButton("Modificar");
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SQLLiniaComanda conLin = new SQLLiniaComanda();
-
+				SQLLiniaPedido conLin = new SQLLiniaPedido();
+				boolean cambioEstado = false;
+				
 				// Obtenemos el primer dato del registro seleccionado
 				if (table.getSelectedRow() != -1) {
 
-					LiniaComanda lin = new LiniaComanda(//Crea una linia comanda apartir del registro seleccionado 
+					LiniaPedido lin = new LiniaPedido(//Crea una linia comanda apartir del registro seleccionado 
 							(int) model.getValueAt(table.getSelectedRow(), 0),
 							(int) model.getValueAt(table.getSelectedRow(), 1),
 							(String) model.getValueAt(table.getSelectedRow(), 2),
@@ -565,6 +587,10 @@ public class ViewLiniaComanda extends JDialog {
 							(double) model.getValueAt(table.getSelectedRow(), 5),
 							(int) model.getValueAt(table.getSelectedRow(), 6)
 							);			
+					if (lin.getEstado().equals(txtEstado.getSelectedItem().toString())) {						
+					} else {
+						cambioEstado = true;
+					}
 					
 					//cambia los valores de dicho registro
 					lin.setIdArticulo(txtIdArticulo.getSelectedItem().toString());
@@ -579,17 +605,31 @@ public class ViewLiniaComanda extends JDialog {
 
 					if(dialogResult == 0){
 
-						if(Integer.parseInt(txtIdLiniaComanda.getText()) == (lin.getIdLiniaComanda())) {
+						if(Integer.parseInt(txtIdLiniaPedido.getText()) == (lin.getIdLiniaPedido())) {
 							try {
 								//MODIFICA ELLOS VALORES DEL REGISTRO SELECCONADO 
-								conLin.modificaLiniaComandas(lin);
+								conLin.modificaLiniaPedidos(lin);
 								
 								//AL MODIFICAR LA LINEA DEBE ACTUALIZARSE LA COMANDA 
-								SQLComanda conCom = new SQLComanda();	
-								conCom.modificaPrecioComanda(new Comanda(
-										lin.getIdComanda(),//Coje el valor de la comanda que modifica
+								SQLPedido conCom = new SQLPedido();	
+								conCom.modificaPrecioPedido(new Pedido(
+										lin.getIdPedido(),//Coje el valor de la comanda que modifica
 										conLin.precioLinias(lin)//calcula el valor de todas linias
 										));
+								
+								if (cambioEstado) {
+								//SI CAMBIAS EL ESTADO DE UNA LINIA ACTUALIZA EL ESTADO DEL PEDIDO 
+									
+									if(conLin.numLinias(lin) <= conLin.numLiniasFinalizadas(lin)) {
+										//SI LAS LINIAS FINALIZADAS SON IGUAL A LAS TOTALES
+										conCom.modificaEstadoPedido(new Pedido(lin.getIdPedido()), "Finalizado");
+									
+									} else if(conLin.numLinias(lin) > conLin.numLiniasFinalizadas(lin) && conLin.numLiniasFinalizadas(lin) > 0) {
+										//SI LAS LINIAS FNALIZADAS SON INFERIOROES A LAS TOTALES PERO MAYOR DE 0
+										conCom.modificaEstadoPedido(new Pedido(lin.getIdPedido()), "Curso");
+									
+									}
+								}
 								
 								//ACTUALIZA LA TABLA
 								updateTable();
@@ -601,7 +641,6 @@ public class ViewLiniaComanda extends JDialog {
 							JOptionPane.showMessageDialog(null, "EL ID LINIA COMANDA NO SE PUEDE CAMBIAR");
 						}
 					}
-
 				} else {
 					JOptionPane.showMessageDialog(null, "Seleccione un registro primero para Modificar");
 				}
@@ -618,7 +657,7 @@ public class ViewLiniaComanda extends JDialog {
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				SQLLiniaComanda conLin = new SQLLiniaComanda();
+				SQLLiniaPedido conLin = new SQLLiniaPedido();
 
 				//Controla que tengas un registro seleccionado
 				if (table.getSelectedRow() != -1) {
@@ -629,12 +668,12 @@ public class ViewLiniaComanda extends JDialog {
 
 					if(dialogResult == 0){
 
-						// Obtenemos el primer dato del registro seleccionado (El Id Comanda)
-						LiniaComanda lin = new LiniaComanda((int) model.getValueAt(table.getSelectedRow(), 0));
+						// Obtenemos el primer dato del registro seleccionado (El Id Pedido)
+						LiniaPedido lin = new LiniaPedido((int) model.getValueAt(table.getSelectedRow(), 0));
 						
 						try {//---BORRA DE LA TABLA SQL
 							model.removeRow(table.getSelectedRow());	
-							conLin.deleteLiniaComandas(lin);
+							conLin.deleteLiniaPedidos(lin);
 							
 						} catch (SQLException e1) {
 							System.out.println("No se ha podido eliminar el registro");
@@ -691,7 +730,6 @@ public class ViewLiniaComanda extends JDialog {
 		btnMostrarTodos.setActionCommand("Mostrar Todos");
 		btnMostrarTodos.setBounds(630, 11, 119, 23);
 		contentPanel.add(btnMostrarTodos);
-		
 	}
 	
 	public void btnBuscar() {
@@ -707,7 +745,7 @@ public class ViewLiniaComanda extends JDialog {
 		});
 		txtBuscar.setForeground(Color.LIGHT_GRAY);
 		txtBuscar.setHorizontalAlignment(SwingConstants.CENTER);
-		txtBuscar.setText("Buscar Comanda");
+		txtBuscar.setText("Buscar Pedido");
 		txtBuscar.setBounds(630, 50, 88, 23);
 		contentPanel.add(txtBuscar);
 		txtBuscar.setColumns(10);
@@ -718,13 +756,13 @@ public class ViewLiniaComanda extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				
 				if (isInteger(txtBuscar.getText())) {				
-					updateBusca(new LiniaComanda ( Integer.parseInt(txtBuscar.getText()), 0));
+					updateBusca(new LiniaPedido ( Integer.parseInt(txtBuscar.getText()), 0));
 				}else {
 					JOptionPane.showMessageDialog(null, "El id debe ser numerico");
 				}
 			}
 		});
-		okButton.setIcon(new ImageIcon("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\detection.png"));
+		okButton.setIcon(new ImageIcon(ViewProveedor.class.getResource("/icon/detection.png")));
 		okButton.setActionCommand("OK");
 		okButton.setBounds(717, 50, 36, 23);
 		contentPanel.add(okButton);
@@ -757,29 +795,29 @@ public class ViewLiniaComanda extends JDialog {
 	 */
 	public void txtPanel() {
 
-		txtIdComanda = new JTextField();
-		txtIdComanda.setToolTipText("ID Comanda");
-		txtIdComanda.addMouseListener(new MouseAdapter() {
+		txtIdPedido = new JTextField();
+		txtIdPedido.setToolTipText("ID Pedido");
+		txtIdPedido.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				txtIdComanda.setText("");
+				txtIdPedido.setText("");
 			}
 		});
-		txtIdComanda.setForeground(Color.GRAY);
-		txtIdComanda.setText("ID Comanda");
-		txtIdComanda.setColumns(10);
-		txtIdComanda.setBounds(30, 411, 86, 23);
-		contentPanel.add(txtIdComanda);
+		txtIdPedido.setForeground(Color.GRAY);
+		txtIdPedido.setText("ID Pedido");
+		txtIdPedido.setColumns(10);
+		txtIdPedido.setBounds(30, 411, 86, 23);
+		contentPanel.add(txtIdPedido);
 		
-		txtIdLiniaComanda = new JTextField();
-		txtIdLiniaComanda.setToolTipText("ID Linia Comanda");
+		txtIdLiniaPedido = new JTextField();
+		txtIdLiniaPedido.setToolTipText("ID Linia Pedido");
 		
-		txtIdLiniaComanda.setText("ID Linia Comanda");
-		txtIdLiniaComanda.setForeground(Color.GRAY);
-		txtIdLiniaComanda.setColumns(10);
-		txtIdLiniaComanda.setBounds(30, 377, 86, 23);
-		contentPanel.add(txtIdLiniaComanda);
+		txtIdLiniaPedido.setText("ID Linia Pedido");
+		txtIdLiniaPedido.setForeground(Color.GRAY);
+		txtIdLiniaPedido.setColumns(10);
+		txtIdLiniaPedido.setBounds(30, 377, 86, 23);
+		contentPanel.add(txtIdLiniaPedido);
 		
 		txtPrecio = new JTextField();
 		txtPrecio.setEditable(false);
@@ -791,7 +829,7 @@ public class ViewLiniaComanda extends JDialog {
 		contentPanel.add(txtPrecio);
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("C:\\Users\\w7\\Desktop\\ortopedias.png"));
+		label.setIcon(new ImageIcon(ViewCliente.class.getResource("/icon/ortopedias(2).png")));
 		label.setBounds(-215, -292, 604, 616);
 		contentPanel.add(label);
 		
@@ -809,15 +847,16 @@ public class ViewLiniaComanda extends JDialog {
 	
 		txtIdArticulo = new JComboBox();
 		txtIdArticulo.addActionListener(new ActionListener() {
-			//aL SELECCIONAR UN ARTICULO DE LA LISTA COJE SU PRECIO DE LA BASE DE DATOS 
+			//AL SELECCIONAR UN ARTICULO DE LA LISTA COJE SU PRECIO DE LA BASE DE DATOS 
 			public void actionPerformed(ActionEvent arg0) {
 				SQLArticulo conArt = new SQLArticulo();
 				String cadena[] = txtIdArticulo.getSelectedItem().toString().split("-");
 				
 				try {
 					precioLinia = conArt.precioArticulos(new Articulo(cadena[1]));
-					if ((int)txtCantidad.getValue()>0) {		
-						txtPrecio.setText( String.valueOf(precioLinia * (int) txtCantidad.getValue()) );
+					if ((int)txtCantidad.getValue()>0) {
+						 
+						txtPrecio.setText( String.valueOf( Math.round((precioLinia * (int) txtCantidad.getValue())* 100d) / 100d ));
 					}else {
 						txtPrecio.setText(String.valueOf(precioLinia) );
 					}
@@ -863,6 +902,10 @@ public class ViewLiniaComanda extends JDialog {
 		JButton btnAtras = new JButton("Atras");
 		btnAtras.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				ViewPedido windowPedido = new ViewPedido();
+				windowPedido.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				windowPedido.setVisible(true);
+				dispose();
 			}
 		});
 		buttonPane.add(btnAtras);

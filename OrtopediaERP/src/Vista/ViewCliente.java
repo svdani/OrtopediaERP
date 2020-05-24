@@ -13,6 +13,7 @@ import Datos.SQLAdmin;
 import Datos.SQLCliente;
 import Modelo.Admin;
 import Modelo.Cliente;
+import Modelo.Pedido;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -90,7 +91,7 @@ public class ViewCliente extends JDialog {
 	 */
 	public ViewCliente() {
 		setTitle("ERP Ortopedias - Clientes");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ViewCliente.class.getResource("/icon/ortopedias.png")));
 		setBounds(100, 100, 783, 486);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(UIManager.getColor("Button.background"));
@@ -265,18 +266,18 @@ public class ViewCliente extends JDialog {
 		});
 		mnNewMenu.add(mntmArticulo);
 		
-		JMenuItem mntmComanda = new JMenuItem("Comanda");
-		mntmComanda.addActionListener(new ActionListener() {
+		JMenuItem mntmPedido = new JMenuItem("Pedido");
+		mntmPedido.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				ViewComanda windowComanda = new ViewComanda();
-				windowComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-				windowComanda.setVisible(true);
+				ViewPedido windowPedido = new ViewPedido();
+				windowPedido.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				windowPedido.setVisible(true);
 				dispose();
 		
 			}
 		});
-		mnNewMenu.add(mntmComanda);
+		mnNewMenu.add(mntmPedido);
 		
 		JMenuItem mntmMovimientosAlmacen = new JMenuItem("Movimientos Almacen");
 		mntmMovimientosAlmacen.addActionListener(new ActionListener() {
@@ -392,15 +393,7 @@ public class ViewCliente extends JDialog {
 
 				// Obtenemos el primer dato del registro seleccionado
 				if (table.getSelectedRow() != -1) {
-					Cliente cli = new Cliente(
-							(String) model.getValueAt(table.getSelectedRow(), 0),
-							(String) model.getValueAt(table.getSelectedRow(), 1),
-							(String) model.getValueAt(table.getSelectedRow(), 2),
-							(String) model.getValueAt(table.getSelectedRow(), 3),
-							(String) model.getValueAt(table.getSelectedRow(), 4),
-							(String) model.getValueAt(table.getSelectedRow(), 5),
-							(String) model.getValueAt(table.getSelectedRow(), 6)
-							);
+					Cliente cli = cojerValores();
 
 					cli.setNombre(txtNombre.getText().toString());
 					cli.setApellidos(txtApellidos.getText().toString());
@@ -523,7 +516,7 @@ public class ViewCliente extends JDialog {
 				}
 			}
 		});
-		okButton.setIcon(new ImageIcon("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\detection.png"));
+		okButton.setIcon(new ImageIcon(ViewProveedor.class.getResource("/icon/detection.png")));
 		okButton.setActionCommand("OK");
 		okButton.setBounds(717, 57, 36, 23);
 		contentPanel.add(okButton);
@@ -606,7 +599,7 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(txtApellidos);
 		
 		txtDireccion = new JTextField();
-		txtDireccion.setToolTipText("Direcci\\u00F3n");
+		txtDireccion.setToolTipText("Dirección");
 		txtDireccion.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -614,7 +607,7 @@ public class ViewCliente extends JDialog {
 				txtDireccion.setText("");
 			}
 		});
-		txtDireccion.setText("Direcci\u00F3n");
+		txtDireccion.setText("Dirección");
 		txtDireccion.setForeground(Color.GRAY);
 		txtDireccion.setColumns(10);
 		txtDireccion.setBounds(149, 363, 86, 23);
@@ -665,7 +658,7 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(txtNotas);
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("C:\\Users\\w7\\Desktop\\ortopedias.png"));
+		label.setIcon(new ImageIcon(ViewCliente.class.getResource("/icon/ortopedias(2).png")));
 		label.setBounds(-215, -292, 604, 616);
 		contentPanel.add(label);
 	}
@@ -685,15 +678,8 @@ public class ViewCliente extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 
 				if (table.getSelectedRow() != -1) {
-					Cliente cli = new Cliente(
-							(String) model.getValueAt(table.getSelectedRow(), 0),
-							(String) model.getValueAt(table.getSelectedRow(), 1),
-							(String) model.getValueAt(table.getSelectedRow(), 2),
-							(String) model.getValueAt(table.getSelectedRow(), 3),
-							(String) model.getValueAt(table.getSelectedRow(), 4),
-							(String) model.getValueAt(table.getSelectedRow(), 5),
-							(String) model.getValueAt(table.getSelectedRow(), 6)
-							);
+					Cliente cli = cojerValores();
+					
 					ViewNota windowNota = new ViewNota(cli);
 					windowNota.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					windowNota.setVisible(true);
@@ -711,18 +697,11 @@ public class ViewCliente extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 
 				if (table.getSelectedRow() != -1) {
-					Cliente cli = new Cliente(
-							(String) model.getValueAt(table.getSelectedRow(), 0),
-							(String) model.getValueAt(table.getSelectedRow(), 1),
-							(String) model.getValueAt(table.getSelectedRow(), 2),
-							(String) model.getValueAt(table.getSelectedRow(), 3),
-							(String) model.getValueAt(table.getSelectedRow(), 4),
-							(String) model.getValueAt(table.getSelectedRow(), 5),
-							(String) model.getValueAt(table.getSelectedRow(), 6)
-							);
-					ViewComanda windowComanda = new ViewComanda(cli);
-					windowComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					windowComanda.setVisible(true);
+					Cliente cli = cojerValores();
+					
+					ViewPedido windowPedido = new ViewPedido(cli);
+					windowPedido.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					windowPedido.setVisible(true);
 					dispose();
 				} else {
 					JOptionPane.showMessageDialog(null, "Seleccione un registro primero");
@@ -737,4 +716,22 @@ public class ViewCliente extends JDialog {
 			buttonPane.add(cancelButton);
 		}
 	}
+	
+	//--------------------------------------------------------------------------------OBTIENE INFO REGISTRO---------------------------------------------------------------------------	
+	
+	private Cliente cojerValores() {
+		
+		Cliente cli = new Cliente(
+				(String) model.getValueAt(table.getSelectedRow(), 0),
+				(String) model.getValueAt(table.getSelectedRow(), 1),
+				(String) model.getValueAt(table.getSelectedRow(), 2),
+				(String) model.getValueAt(table.getSelectedRow(), 3),
+				(String) model.getValueAt(table.getSelectedRow(), 4),
+				(String) model.getValueAt(table.getSelectedRow(), 5),
+				(String) model.getValueAt(table.getSelectedRow(), 6)
+				);
+		
+		return cli;
+	}
+	
 }

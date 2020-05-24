@@ -32,26 +32,27 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import com.toedter.calendar.JDateChooser;
 
 import Datos.SQLCliente;
-import Datos.SQLComanda;
-import Datos.SQLLiniaComanda;
+import Datos.SQLPedido;
+import Datos.SQLLiniaPedido;
 import Modelo.Cliente;
-import Modelo.Comanda;
-import Modelo.LiniaComanda;
+import Modelo.Pedido;
+import Modelo.LiniaPedido;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
-public class ViewComanda extends JDialog {
+public class ViewPedido extends JDialog {
 	
 	private final JPanel contentPanel = new JPanel();
 	private static DefaultTableModel model;
 	private JTable table;
 	private JTextField txtBuscar;
-	private JTextField txtIdComanda;
+	private JTextField txtIdPedido;
 	private JTextField txtIdCliente;
 	private JTextField txtPrecioTotal;
 	private JEditorPane txtNotas;
@@ -78,7 +79,7 @@ public class ViewComanda extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			ViewComanda dialog = new ViewComanda();
+			ViewPedido dialog = new ViewPedido();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -89,9 +90,9 @@ public class ViewComanda extends JDialog {
 	/**
 	 * Crea el dialog.
 	 */
-	public ViewComanda() {
-		setTitle("ERP Ortopedias - Comandas");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
+	public ViewPedido() {
+		setTitle("ERP Ortopedias - Pedidos");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ViewPedido.class.getResource("/icon/ortopedias.png")));
 		setBounds(100, 100, 783, 537);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(UIManager.getColor("Button.background"));
@@ -112,9 +113,9 @@ public class ViewComanda extends JDialog {
 		};
 
 		//----INTRODUCE NOMBRE COLUMNAS TABLA DESDE SQL
-		model.addColumn("Id Comanda");
+		model.addColumn("Id Pedido");
 		model.addColumn("Id Cliente");
-		model.addColumn("Precio Total");
+		model.addColumn("Precio");
 		model.addColumn("Estado");
 		model.addColumn("Fecha Inicio");
 		model.addColumn("Fecha Limite");
@@ -124,6 +125,7 @@ public class ViewComanda extends JDialog {
 		
 		//---FUNCIONES TABLA
 		updateTable();
+		medidasTabla();
 		selectRow();
 		scrollPane.setViewportView(table);
 		
@@ -146,8 +148,8 @@ public class ViewComanda extends JDialog {
 	/**
 	 * Crea el dialog relacionado con el Cliente.
 	 */
-	public ViewComanda(Cliente cli) {
-		setTitle("ERP Ortopedias - Comandas");
+	public ViewPedido(Cliente cli) {
+		setTitle("ERP Ortopedias - Pedidos");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
 		setBounds(100, 100, 783, 537);
 		getContentPane().setLayout(new BorderLayout());
@@ -170,9 +172,9 @@ public class ViewComanda extends JDialog {
 		};
 
 		//----INTRODUCE NOMBRE COLUMNAS TABLA DESDE SQL
-		model.addColumn("Id Comanda");
+		model.addColumn("Id Pedido");
 		model.addColumn("Id Cliente");
-		model.addColumn("Precio Total");
+		model.addColumn("Precio");
 		model.addColumn("Estado");
 		model.addColumn("Fecha Inicio");
 		model.addColumn("Fecha Limite");
@@ -182,7 +184,7 @@ public class ViewComanda extends JDialog {
 		
 		//---FUNCIONES TABLA
 		updateBusca(cli.getDni());
-		//updateTable();
+		medidasTabla();
 		selectRow();
 		scrollPane.setViewportView(table);		
 		
@@ -203,20 +205,33 @@ public class ViewComanda extends JDialog {
 
 	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
 	
+	public void medidasTabla() {
+		TableColumnModel columnModel = table.getColumnModel();
+
+	    columnModel.getColumn(0).setPreferredWidth(100);
+	    columnModel.getColumn(1).setPreferredWidth(100);
+	    columnModel.getColumn(2).setPreferredWidth(100);
+	    columnModel.getColumn(3).setPreferredWidth(100);
+	    columnModel.getColumn(4).setPreferredWidth(200);
+	    columnModel.getColumn(5).setPreferredWidth(200);
+	    columnModel.getColumn(6).setPreferredWidth(100);
+	}
+	
+	
 	/*
 	 * muestra todos los registros de la base de datos
 	 */
 	private void updateTable() {
 		//---Actualiza valores que se muestran en la tabla
-		SQLComanda conCom = new SQLComanda();
+		SQLPedido conCom = new SQLPedido();
 		try {			
 			
 			model.setRowCount(0);	
 
 			//----RELLENA TABLA
-			for (Comanda com:conCom.consultaComandas()) {
+			for (Pedido com:conCom.consultaPedidos()) {
 				model.addRow(new Object[] {
-						com.getIdComanda(),
+						com.getIdPedido(),
 						com.getIdCliente(),
 						com.getPrecioTotal(),
 						com.getEstado(),
@@ -249,7 +264,7 @@ public class ViewComanda extends JDialog {
 				dateFechaInicio.setEnabled(true);// DESBLOQUEA FECHA INICIO
 
 				//------CAMBIA VALOR CAJAS TEXTO SEGUN EL REGISTRO SELECCIONADO
-				txtIdComanda.setText(table.getValueAt(table.getSelectedRow(), 0).toString());				
+				txtIdPedido.setText(table.getValueAt(table.getSelectedRow(), 0).toString());				
 				txtIdCliente.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
 				txtPrecioTotal.setText(table.getValueAt(table.getSelectedRow(), 2).toString());	
 				txtNotas.setText(table.getValueAt(table.getSelectedRow(), 6).toString());
@@ -283,15 +298,15 @@ public class ViewComanda extends JDialog {
 
 	private void updateBusca(String cli) {
 		//---Actualiza valores que se muestran en la tabla
-		SQLComanda conCom = new SQLComanda();
+		SQLPedido conCom = new SQLPedido();
 		try {			
 			
 			model.setRowCount(0);	
 
 			//----RELLENA TABLA
-			for (Comanda com:conCom.buscaComandas(cli)) {
+			for (Pedido com:conCom.buscaPedidos(cli)) {
 				model.addRow(new Object[] {
-						com.getIdComanda(),
+						com.getIdPedido(),
 						com.getIdCliente(),
 						com.getPrecioTotal(),
 						com.getEstado(),
@@ -307,15 +322,15 @@ public class ViewComanda extends JDialog {
 
 	private void updateFiltrar( String estado) {
 		//---Actualiza valores que se muestran en la tabla
-		SQLComanda conCom = new SQLComanda();
+		SQLPedido conCom = new SQLPedido();
 		try {			
 
 			model.setRowCount(0);	
 
 			//----RELLENA TABLA
-			for (Comanda com:conCom.filtraComandasEstado(estado)) {
+			for (Pedido com:conCom.filtraPedidosEstado(estado)) {
 				model.addRow(new Object[] {
-						com.getIdComanda(),
+						com.getIdPedido(),
 						com.getIdCliente(),
 						com.getPrecioTotal(),
 						com.getEstado(),
@@ -331,15 +346,15 @@ public class ViewComanda extends JDialog {
 	
 	private void updateFecha(String column, String desde, String hasta) {
 		//---Actualiza valores que se muestran en la tabla
-		SQLComanda conCom = new SQLComanda();
+		SQLPedido conCom = new SQLPedido();
 		try {			
 
 			model.setRowCount(0);	
 
 			//----RELLENA TABLA
-			for (Comanda com:conCom.filtraComandasFecha(column, desde, hasta)) {
+			for (Pedido com:conCom.filtraPedidosFecha(column, desde, hasta)) {
 				model.addRow(new Object[] {
-						com.getIdComanda(),
+						com.getIdPedido(),
 						com.getIdCliente(),
 						com.getPrecioTotal(),
 						com.getEstado(),
@@ -450,7 +465,7 @@ public class ViewComanda extends JDialog {
 				txtPrecioTotal.setEnabled(false);// BLOQUEA PRECIO PORQUE DERIVA DE LAS LINEAS DE COMANDA
 				dateFechaInicio.setEnabled(false);// BLOQUEA FECHA INICIO COJE DIRECTAMENTE LA FECHA DELMOMENTO ACTUAL
 				
-				txtIdComanda.setText("ID Comanda");				
+				txtIdPedido.setText("ID Pedido");				
 				txtIdCliente.setText("");
 				txtPrecioTotal.setText("Precio Total");
 				txtEstado.setSelectedItem("Pendiente");
@@ -474,34 +489,34 @@ public class ViewComanda extends JDialog {
 		btnInsertar.setEnabled(false);// BLOQUEA BTN INSERTAR
 		btnInsertar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SQLComanda conCom = new SQLComanda();
+				SQLPedido conCom = new SQLPedido();
 
 				try {
 
-					conCom.insertaComandas(new Comanda(
+					conCom.insertaPedidos(new Pedido(
 							txtIdCliente.getText().toString(),
 							txtEstado.getSelectedItem().toString(),	
 							sdf.format(dateFechaLimite.getDate()).toString(),	
 							txtNotas.getText().toString()
 							));
 					
-					ViewLiniaComanda windowLiniaComanda = new ViewLiniaComanda(new Comanda(conCom.ultimaComanda()));
-					windowLiniaComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					windowLiniaComanda.setVisible(true);
+					ViewLiniaPedido windowLiniaPedido = new ViewLiniaPedido(new Pedido(conCom.ultimaPedido()));
+					windowLiniaPedido.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					windowLiniaPedido.setVisible(true);
 					dispose();
 					//Actualiza la tabla para ver el nuevo registro
 					updateTable();
 					
 					//Limpia el contenido de las cajas
-					txtIdComanda.setText("");				
+					txtIdPedido.setText("");				
 					txtIdCliente.setText("");
 					txtPrecioTotal.setText("");
 					txtEstado.setSelectedItem("Pendiente");
 					txtNotas.setText("");
 
 				} catch (SQLException e1) {
-					System.out.println("Falla al insertar Comanda");
-					JOptionPane.showMessageDialog(null, "Ha habido un error al insertar Comanda revise los campos");	
+					System.out.println("Falla al insertar Pedido");
+					JOptionPane.showMessageDialog(null, "Ha habido un error al insertar Pedido revise los campos");	
 					e1.printStackTrace();
 				}
 			}
@@ -516,13 +531,13 @@ public class ViewComanda extends JDialog {
 		btnModificar = new JButton("Modificar");
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				SQLComanda conCom = new SQLComanda();
+				SQLPedido conCom = new SQLPedido();
 
 				// Obtenemos el primer dato del registro seleccionado
 				if (table.getSelectedRow() != -1) {
 					//COMPRUEBA QUE EL VALOR PRECIO SEA DOUBLE
 					if( isDouble(txtPrecioTotal.getText()) == true) {
-						Comanda com = cojerValores();
+						Pedido com = cojerValores();
 
 						com.setIdCliente(txtIdCliente.getText().toString());
 						com.setPrecioTotal(Double.parseDouble(txtPrecioTotal.getText()));
@@ -537,9 +552,9 @@ public class ViewComanda extends JDialog {
 
 						if(dialogResult == 0){
 
-							if(Integer.parseInt(txtIdComanda.getText()) == (com.getIdComanda())) {
+							if(Integer.parseInt(txtIdPedido.getText()) == (com.getIdPedido())) {
 								try {
-									conCom.modificaComandas(com);						
+									conCom.modificaPedidos(com);						
 									updateTable();
 
 								} catch (SQLException e1) {
@@ -567,8 +582,8 @@ public class ViewComanda extends JDialog {
 		btnEliminar = new JButton("Eliminar");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SQLComanda conCom = new SQLComanda();
-				SQLLiniaComanda conLin = new SQLLiniaComanda();
+				SQLPedido conCom = new SQLPedido();
+				SQLLiniaPedido conLin = new SQLLiniaPedido();
 				
 				//Controla que tengas un registro seleccionado
 				if (table.getSelectedRow() != -1) {
@@ -579,14 +594,14 @@ public class ViewComanda extends JDialog {
 
 					if(dialogResult == 0){
 
-						// Obtenemos el primer dato del registro seleccionado (El Id Comanda)
-						Comanda com = new Comanda((int) model.getValueAt(table.getSelectedRow(), 0));
-						LiniaComanda linCom = new LiniaComanda((int) model.getValueAt(table.getSelectedRow(), 0),0);
+						// Obtenemos el primer dato del registro seleccionado (El Id Pedido)
+						Pedido com = new Pedido((int) model.getValueAt(table.getSelectedRow(), 0));
+						LiniaPedido linCom = new LiniaPedido((int) model.getValueAt(table.getSelectedRow(), 0),0);
 								
 						try {//---BORRA DE LA TABLA SQL
 							model.removeRow(table.getSelectedRow());	
-							conCom.deleteComandas(com);
-							conLin.deleteComandas(linCom);
+							conCom.deletePedidos(com);
+							conLin.deletePedidos(linCom);
 
 						} catch (SQLException e1) {
 							System.out.println("No se ha podido eliminar el registro");
@@ -628,7 +643,7 @@ public class ViewComanda extends JDialog {
 				updateBusca(txtBuscar.getText().toString());
 			}
 		});
-		okButton.setIcon(new ImageIcon("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\detection.png"));
+		okButton.setIcon(new ImageIcon(ViewProveedor.class.getResource("/icon/detection.png")));
 		okButton.setActionCommand("OK");
 		okButton.setBounds(717, 48, 36, 23);
 		contentPanel.add(okButton);
@@ -751,14 +766,14 @@ public class ViewComanda extends JDialog {
 	 */
 	public void txtPanel() {
 
-		txtIdComanda = new JTextField();
-		txtIdComanda.setToolTipText("Id Comanda");
-		txtIdComanda.setEditable(false);
-		txtIdComanda.setForeground(Color.GRAY);
-		txtIdComanda.setText("ID Comanda");
-		txtIdComanda.setColumns(10);
-		txtIdComanda.setBounds(30, 377, 86, 23);
-		contentPanel.add(txtIdComanda);
+		txtIdPedido = new JTextField();
+		txtIdPedido.setToolTipText("Id Pedido");
+		txtIdPedido.setEditable(false);
+		txtIdPedido.setForeground(Color.GRAY);
+		txtIdPedido.setText("ID Pedido");
+		txtIdPedido.setColumns(10);
+		txtIdPedido.setBounds(30, 377, 86, 23);
+		contentPanel.add(txtIdPedido);
 		
 		txtIdCliente = new JTextField();
 		txtIdCliente.setToolTipText("Id Cliente");
@@ -769,7 +784,7 @@ public class ViewComanda extends JDialog {
 				txtIdCliente.setText("");
 			}
 		});
-		txtIdCliente.setText("Is Cliente");
+		txtIdCliente.setText("Id Cliente");
 		txtIdCliente.setForeground(Color.GRAY);
 		txtIdCliente.setColumns(10);
 		txtIdCliente.setBounds(30, 411, 86, 23);
@@ -805,7 +820,7 @@ public class ViewComanda extends JDialog {
 		contentPanel.add(txtNotas);
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("C:\\Users\\w7\\Desktop\\ortopedias.png"));
+		label.setIcon(new ImageIcon(ViewCliente.class.getResource("/icon/ortopedias(2).png")));
 		label.setBounds(-215, -292, 604, 616);
 		contentPanel.add(label);
 		
@@ -828,21 +843,21 @@ public class ViewComanda extends JDialog {
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
 		//BOTON VER LINIAS DE COMANDA
-		JButton	 btnVerLiniaComanda = new JButton("Ver Lineas Comanda");
-		btnVerLiniaComanda.addActionListener(new ActionListener() {
+		JButton	 btnVerLiniaPedido = new JButton("Ver Lineas Pedido");
+		btnVerLiniaPedido.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// Obtenemos el primer dato del registro seleccionado
 				if (table.getSelectedRow() != -1) {
 					
-					Comanda com = cojerValores();
+					Pedido com = cojerValores();
 					
-					ViewLiniaComanda windowLiniaComanda = new ViewLiniaComanda(com);
-					windowLiniaComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					windowLiniaComanda.setVisible(true);
+					ViewLiniaPedido windowLiniaPedido = new ViewLiniaPedido(com);
+					windowLiniaPedido.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					windowLiniaPedido.setVisible(true);
 					dispose();
 					
 				} else {
-					JOptionPane.showMessageDialog(null, "Seleccione un registro primero para EDITAR");
+					JOptionPane.showMessageDialog(null, "Seleccione un registro primero ");
 				}
 			}
 		});
@@ -854,9 +869,9 @@ public class ViewComanda extends JDialog {
 				
 				if (table.getSelectedRow() != -1) {
 			
-					SQLComanda conCom = new SQLComanda();
+					SQLPedido conCom = new SQLPedido();
 					// Obtenemos el primer dato del registro seleccionado
-						Comanda com = cojerValores();
+						Pedido com = cojerValores();
 					
 				ViewNota windowNota = new ViewNota(com);
 				windowNota.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -867,8 +882,8 @@ public class ViewComanda extends JDialog {
 			}
 		});
 		buttonPane.add(btnVerNota);
-		buttonPane.add(btnVerLiniaComanda);
-		btnVerLiniaComanda.setActionCommand("Ver Historial");
+		buttonPane.add(btnVerLiniaPedido);
+		btnVerLiniaPedido.setActionCommand("Ver Historial");
 		
 		//BOTON CANCELAR
 		JButton cancelButton = new JButton("Cancelar");
@@ -884,9 +899,9 @@ public class ViewComanda extends JDialog {
 	
 	//--------------------------------------------------------------------------------OBTIENE INFO REGISTRO---------------------------------------------------------------------------	
 	
-	private Comanda cojerValores() {
+	private Pedido cojerValores() {
 		
-		Comanda com = new Comanda(
+		Pedido com = new Pedido(
 				(int) model.getValueAt(table.getSelectedRow(), 0),
 				(String) model.getValueAt(table.getSelectedRow(), 1),
 				(double) model.getValueAt(table.getSelectedRow(), 2),

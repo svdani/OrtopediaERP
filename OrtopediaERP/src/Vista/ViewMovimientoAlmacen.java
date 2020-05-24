@@ -36,16 +36,18 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import Datos.SQLArticulo;
 import Datos.SQLCliente;
-import Datos.SQLComanda;
-import Datos.SQLLiniaComanda;
+import Datos.SQLPedido;
+import Datos.SQLLiniaPedido;
 import Datos.SQLMovimientoAlmacen;
 import Modelo.Articulo;
 import Modelo.Cliente;
-import Modelo.Comanda;
-import Modelo.LiniaComanda;
+import Modelo.Pedido;
+import Modelo.LiniaPedido;
 import Modelo.MovimientoAlmacen;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JSpinner;
 
 public class ViewMovimientoAlmacen extends JDialog {
 
@@ -57,7 +59,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 	private JTextField txtIdArticulo;
 	private JComboBox txtTipo;
 	private JTextField txtUbicacion;
-	
+	private JSpinner txtCantidad;
 	private JDateChooser dateFecha;
 	private JDateChooser dateHasta;
 	private JDateChooser dateDesde;
@@ -91,7 +93,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 	 */
 	public ViewMovimientoAlmacen() {
 		setTitle("ERP Ortopedias - Movimientos Almacen");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ViewMovimientoAlmacen.class.getResource("/icon/ortopedias.png")));
 		setBounds(100, 100, 783, 498);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(UIManager.getColor("Button.background"));
@@ -117,6 +119,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 		model.addColumn("Tipo Movimiento");
 		model.addColumn("Ubicacion");
 		model.addColumn("Fecha");
+		model.addColumn("Cantidad");
 
 		table.setModel(model);
 
@@ -144,6 +147,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 	 * Crea el dialog relacionado con el Articulo.
 	 */
 	public ViewMovimientoAlmacen(Articulo art) {
+		setTitle("ERP Ortopedias - Movimientos Almacen");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
 		setBounds(100, 100, 783, 498);
 		getContentPane().setLayout(new BorderLayout());
@@ -170,6 +174,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 		model.addColumn("Tipo Movimiento");
 		model.addColumn("Ubicacion");
 		model.addColumn("Fecha");
+		model.addColumn("Cantidad");
 
 		table.setModel(model);
 
@@ -212,7 +217,8 @@ public class ViewMovimientoAlmacen extends JDialog {
 						mov.getIdArticulo(),
 						mov.getTipoMovimiento(),
 						mov.getUbicacion(),
-						mov.getFecha()
+						mov.getFecha(),
+						mov.getCantidad()
 				});	
 			}	
 		} catch (Exception e) {
@@ -241,7 +247,8 @@ public class ViewMovimientoAlmacen extends JDialog {
 				txtIdMovimiento.setText(table.getValueAt(table.getSelectedRow(), 0).toString());				
 				txtIdArticulo.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
 				txtUbicacion.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
-
+				txtCantidad.setValue(table.getValueAt(table.getSelectedRow(), 5));
+				
 				//CAMBIA VALOR DENTRO DE LA CAJA DE ELECCION SEGUN EL REGISTRO SELECCIONADO
 				switch (table.getValueAt(table.getSelectedRow(), 2).toString()) {				
 				case "Entrada":
@@ -280,7 +287,8 @@ public class ViewMovimientoAlmacen extends JDialog {
 						mov.getIdArticulo(),
 						mov.getTipoMovimiento(),
 						mov.getUbicacion(),
-						mov.getFecha()
+						mov.getFecha(),
+						mov.getCantidad()
 				});	
 			}	
 		} catch (Exception e) {
@@ -303,7 +311,8 @@ public class ViewMovimientoAlmacen extends JDialog {
 						mov.getIdArticulo(),
 						mov.getTipoMovimiento(),
 						mov.getUbicacion(),
-						mov.getFecha()
+						mov.getFecha(),
+						mov.getCantidad()
 				});	
 			}	
 		} catch (Exception e) {
@@ -363,18 +372,18 @@ public class ViewMovimientoAlmacen extends JDialog {
 				});
 				mnNewMenu.add(mntmCliente);
 				
-				JMenuItem mntmComanda = new JMenuItem("Comanda");
-				mntmComanda.addActionListener(new ActionListener() {
+				JMenuItem mntmPedido = new JMenuItem("Pedido");
+				mntmPedido.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						ViewComanda windowComanda = new ViewComanda();
-						windowComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-						windowComanda.setVisible(true);
+						ViewPedido windowPedido = new ViewPedido();
+						windowPedido.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						windowPedido.setVisible(true);
 						dispose();
 				
 					}
 				});
-				mnNewMenu.add(mntmComanda);
+				mnNewMenu.add(mntmPedido);
 				
 				JMenuItem mntmProveedor = new JMenuItem("Proveedor");
 				mntmProveedor.addActionListener(new ActionListener() {
@@ -413,6 +422,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 				txtUbicacion.setText("");
 				txtTipo.setSelectedItem("Entrada");
 				dateFecha.setDate(new Date());
+				txtCantidad.setValue(0);;
 
 			}
 		});
@@ -436,8 +446,25 @@ public class ViewMovimientoAlmacen extends JDialog {
 					conMov.insertaMovimientoAlmacenes(new MovimientoAlmacen(
 							txtIdArticulo.getText().toString(),
 							txtTipo.getSelectedItem().toString(),
-							txtUbicacion.getText().toString()
+							txtUbicacion.getText().toString(),
+							Integer.parseInt(txtCantidad.getValue().toString())
 							));
+					
+					SQLArticulo conArt = new SQLArticulo();
+					//SI HAYUNA ENTRADA DE ARTICULOS INCREMENTA EL STOCK
+					if (txtTipo.getSelectedItem().toString().equals("Entrada")) {
+						
+						int stock = conArt.stockArticulos(new Articulo(txtIdArticulo.getText().toString()));
+						stock = stock + Integer.parseInt(txtCantidad.getValue().toString());	
+						conArt.modificaStockArticulos(new Articulo(txtIdArticulo.getText().toString(), stock));
+					
+						//SI HAYUNA SALIDA DE ARTICULOS REDUCE EL STOCK
+					} else if (txtTipo.getSelectedItem().toString().equals("Salida")) {
+						int stock = conArt.stockArticulos(new Articulo(txtIdArticulo.getText().toString()));
+						stock = stock - Integer.parseInt(txtCantidad.getValue().toString());	
+						conArt.modificaStockArticulos(new Articulo(txtIdArticulo.getText().toString(), stock));
+					}
+					
 					
 					//Actualiza la tabla para ver el nuevo registro
 					updateTable();
@@ -467,7 +494,9 @@ public class ViewMovimientoAlmacen extends JDialog {
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SQLMovimientoAlmacen conMov = new SQLMovimientoAlmacen();
-
+				boolean modificaStock = false;
+				int diferencia = 0;
+				
 				// Obtenemos el primer dato del registro seleccionado
 				if (table.getSelectedRow() != -1) {
 
@@ -476,24 +505,62 @@ public class ViewMovimientoAlmacen extends JDialog {
 							(String) model.getValueAt(table.getSelectedRow(), 1),
 							(String) model.getValueAt(table.getSelectedRow(), 2),
 							(String) model.getValueAt(table.getSelectedRow(), 3),
-							(String) model.getValueAt(table.getSelectedRow(), 4)
+							(String) model.getValueAt(table.getSelectedRow(), 4),
+							(int) model.getValueAt(table.getSelectedRow(), 5)
 							);
-
+					
+					//COMPRUEVA SI HAY CAMBIO DE STOCK
+					if (Integer.parseInt(txtCantidad.getValue().toString()) != (mov.getCantidad())) {
+						modificaStock = true; 
+						if(txtTipo.getSelectedItem().toString().equals("Entrada")) {
+							diferencia = Integer.parseInt(txtCantidad.getValue().toString()) - mov.getCantidad();
+							System.out.println("entrada" + diferencia);
+						} else {
+							diferencia = mov.getCantidad() - Integer.parseInt(txtCantidad.getValue().toString());
+							System.out.println("salida" + diferencia);
+						}
+					}
+					
+					if (txtTipo.getSelectedItem().toString().equals(mov.getTipoMovimiento())) {							
+					} else {//SI MODIFICAS ENTRADA POR SALIDA 
+						modificaStock = true;
+						switch (mov.getTipoMovimiento().toString()) {
+						case "Entrada"://AHORA ES SALIDA
+							diferencia = -1 *(2 * mov.getCantidad());
+							break;
+						case "Salida"://AHORA ES ENTRADA
+							diferencia = 2 * mov.getCantidad();
+							break;
+						default:
+							break;
+						}					
+					}
+					
+					//CAMBIA ATRIBUTOS DEL MOVIMIENTO
 					mov.setIdArticulo(txtIdArticulo.getText().toString());
 					mov.setTipoMovimiento(txtTipo.getSelectedItem().toString());
 					mov.setUbicacion(txtUbicacion.getText().toString());
-
+					mov.setCantidad(Integer.parseInt(txtCantidad.getValue().toString()));					
+					
 					//Confirmacion de editado
 					int dialogButton = JOptionPane.YES_NO_OPTION;
 					int dialogResult = JOptionPane.showConfirmDialog (null, "Quieres editar el registro seleccionado?","Warning",dialogButton);			
 
 					if(dialogResult == 0){
 
-						if(Integer.parseInt(txtIdMovimiento.getText()) == (mov.getIdMovimientoAlmacen())) {
+						if(Integer.parseInt(txtIdMovimiento.getText()) == (mov.getIdMovimientoAlmacen())) {//SI EL ID ES EL MISMO MODIFICA EL CONTENIDO
 							try {
-								conMov.modificaMovimientoAlmacenes(mov);						
-								updateTable();
+								conMov.modificaMovimientoAlmacenes(mov);
+								if (modificaStock) {//DESPUES DE MODIFICAR EL MOVIMIENTO ACTUALIZA EL STOCK			
+									
+									SQLArticulo conArt = new SQLArticulo();
+									
+									int stock = conArt.stockArticulos(new Articulo(txtIdArticulo.getText().toString()));//RECOJE STOCK DE LA BD ARTICULO  							
+									stock = stock + diferencia;	
+									conArt.modificaStockArticulos(new Articulo(txtIdArticulo.getText().toString(), stock));//MODIFICA LA EL STOCK ARTICULO																	
 
+								} 
+								updateTable();
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}						
@@ -501,7 +568,6 @@ public class ViewMovimientoAlmacen extends JDialog {
 							JOptionPane.showMessageDialog(null, "EL ID MOVIMEINTO NO SE PUEDE CAMBIAR");
 						}
 					}
-
 				} else {
 					JOptionPane.showMessageDialog(null, "Seleccione un registro primero para Modificar");
 				}
@@ -528,7 +594,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 
 					if(dialogResult == 0){
 
-						// Obtenemos el primer dato del registro seleccionado (El Id Comanda)
+						// Obtenemos el primer dato del registro seleccionado (El Id Pedido)
 						MovimientoAlmacen mov = new MovimientoAlmacen((int) model.getValueAt(table.getSelectedRow(), 0));
 						
 						try {//---BORRA DE LA TABLA SQL
@@ -551,6 +617,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 	}
 	
 	public void btnFiltrar() {
+		
 		JComboBox tipoBox = new JComboBox();
 		tipoBox.setModel(new DefaultComboBoxModel(new String[] {"Entrada", "Salida"}));
 		tipoBox.setBounds(707, 108, 50, 20);
@@ -573,9 +640,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 		});
 		btnFiltrar.setActionCommand("Filtrar");
 		btnFiltrar.setBounds(630, 226, 119, 23);
-		contentPanel.add(btnFiltrar);
-		
-		
+		contentPanel.add(btnFiltrar);		
 	}
 	
 	public void btnMostrarTodo() {
@@ -616,7 +681,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 				updateTableBuscar(txtBuscar.getText(), "idArticulo");
 			}
 		});
-		okButton.setIcon(new ImageIcon("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\detection.png"));
+		okButton.setIcon(new ImageIcon(ViewProveedor.class.getResource("/icon/detection.png")));
 		okButton.setActionCommand("OK");
 		okButton.setBounds(717, 48, 36, 23);
 		contentPanel.add(okButton);
@@ -637,7 +702,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 		//CALENDARIO DE INSERTAR Y MODIFICAR
 		dateFecha = new JDateChooser();
 		dateFecha.setToolTipText("Fecha");
-		dateFecha.setBounds(504, 377, 104, 23);
+		dateFecha.setBounds(441, 377, 100, 23);
 		contentPanel.add(dateFecha);
 		
 		//CALENDARIOS DE FILTRAR
@@ -707,7 +772,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 		txtIdArticulo.setText("ID Articulo");
 		txtIdArticulo.setForeground(Color.GRAY);
 		txtIdArticulo.setColumns(10);
-		txtIdArticulo.setBounds(149, 377, 86, 23);
+		txtIdArticulo.setBounds(132, 377, 86, 23);
 		contentPanel.add(txtIdArticulo);
 		
 		txtUbicacion = new JTextField();
@@ -722,18 +787,22 @@ public class ViewMovimientoAlmacen extends JDialog {
 		txtUbicacion.setText("Ubicacion");
 		txtUbicacion.setForeground(Color.GRAY);
 		txtUbicacion.setColumns(10);
-		txtUbicacion.setBounds(385, 377, 86, 23);
+		txtUbicacion.setBounds(337, 377, 86, 23);
 		contentPanel.add(txtUbicacion);
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("C:\\Users\\w7\\Desktop\\ortopedias.png"));
+		label.setIcon(new ImageIcon(ViewCliente.class.getResource("/icon/ortopedias(2).png")));
 		label.setBounds(-215, -292, 604, 616);
 		contentPanel.add(label);
 		
 		txtTipo = new JComboBox();
 		txtTipo.setModel(new DefaultComboBoxModel(new String[] {"Entrada", "Salida"}));
-		txtTipo.setBounds(267, 378, 88, 20);
+		txtTipo.setBounds(234, 377, 86, 23);
 		contentPanel.add(txtTipo);	
+		
+		txtCantidad = new JSpinner();
+		txtCantidad.setBounds(558, 377, 50, 23);
+		contentPanel.add(txtCantidad);
 		
 	}
 	
@@ -757,5 +826,4 @@ public class ViewMovimientoAlmacen extends JDialog {
 			buttonPane.add(cancelButton);
 		}
 	}
-
 }

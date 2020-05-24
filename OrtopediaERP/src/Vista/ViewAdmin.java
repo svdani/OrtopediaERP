@@ -76,7 +76,7 @@ public class ViewAdmin extends JDialog {
 	 */
 	public ViewAdmin() {
 		setTitle("ERP Ortopedias - Admins");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ViewAdmin.class.getResource("/icon/ortopedias.png")));
 		setBounds(100, 100, 783, 448);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setToolTipText("sxadxas");
@@ -244,18 +244,18 @@ public class ViewAdmin extends JDialog {
 		});
 		mnNewMenu.add(mntmCliente);
 		
-		JMenuItem mntmComanda = new JMenuItem("Comanda");
-		mntmComanda.addActionListener(new ActionListener() {
+		JMenuItem mntmPedido = new JMenuItem("Pedido");
+		mntmPedido.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				ViewComanda windowComanda = new ViewComanda();
-				windowComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-				windowComanda.setVisible(true);
+				ViewPedido windowPedido = new ViewPedido();
+				windowPedido.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				windowPedido.setVisible(true);
 				dispose();
 		
 			}
 		});
-		mnNewMenu.add(mntmComanda);
+		mnNewMenu.add(mntmPedido);
 		
 		JMenuItem mntmMovimientosAlmacen = new JMenuItem("Movimientos Almacen");
 		mntmMovimientosAlmacen.addActionListener(new ActionListener() {
@@ -493,7 +493,7 @@ public class ViewAdmin extends JDialog {
 			}
 		});
 
-		okButton.setIcon(new ImageIcon("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\detection.png"));
+		okButton.setIcon(new ImageIcon(ViewProveedor.class.getResource("/icon/detection.png")));
 		okButton.setActionCommand("OK");
 		okButton.setBounds(717, 57, 36, 23);
 		contentPanel.add(okButton);
@@ -593,6 +593,7 @@ public class ViewAdmin extends JDialog {
 		
 		txtTelf = new JTextField();
 		txtTelf.setToolTipText("Telf");
+		txtTelf.setToolTipText("Telf");
 		txtTelf.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -607,7 +608,7 @@ public class ViewAdmin extends JDialog {
 		contentPanel.add(txtTelf);
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("C:\\Users\\w7\\Desktop\\ortopedias.png"));
+		label.setIcon(new ImageIcon(ViewCliente.class.getResource("/icon/ortopedias(2).png")));
 		label.setBounds(-215, -292, 604, 616);
 		contentPanel.add(label);
 		

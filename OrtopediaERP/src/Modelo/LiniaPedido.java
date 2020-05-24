@@ -1,9 +1,9 @@
 package Modelo;
 
-public class LiniaComanda{
+public class LiniaPedido{
 	
-	int idLiniaComanda;
-	int idComanda;
+	int idLiniaPedido;
+	int idPedido;
 	String idArticulo;
 	String estado;
 	String tipo;
@@ -12,10 +12,10 @@ public class LiniaComanda{
 
 	//---------------------------------------------------------------------------------------------CONSTRUCTOR
 	
-	public LiniaComanda(int idLiniaComanda, int idComanda, String idArticulo, String estado, String tipo, double precio, int cantidad) {
+	public LiniaPedido(int idLiniaPedido, int idPedido, String idArticulo, String estado, String tipo, double precio, int cantidad) {
 
-		this.idLiniaComanda = idLiniaComanda;
-		this.idComanda = idComanda;
+		this.idLiniaPedido = idLiniaPedido;
+		this.idPedido = idPedido;
 		this.idArticulo = idArticulo;
 		this.estado = estado;
 		this.tipo = tipo;
@@ -23,9 +23,9 @@ public class LiniaComanda{
 		this.cantidad = cantidad;
 	}
 	
-	public LiniaComanda(int idComanda, String idArticulo, String estado, String tipo, double precio, int cantidad) {
+	public LiniaPedido(int idPedido, String idArticulo, String estado, String tipo, double precio, int cantidad) {
 
-		this.idComanda = idComanda;
+		this.idPedido = idPedido;
 		this.idArticulo = idArticulo;
 		this.estado = estado;
 		this.tipo = tipo;
@@ -33,32 +33,32 @@ public class LiniaComanda{
 		this.cantidad = cantidad;
 	}
 
-	public LiniaComanda(int idComanda, int idLiniaComanda) {
-		this.idComanda = idComanda;
-		this.idLiniaComanda = idLiniaComanda;
+	public LiniaPedido(int idPedido, int idLiniaPedido) {
+		this.idPedido = idPedido;
+		this.idLiniaPedido = idLiniaPedido;
 	}
 	
-	public LiniaComanda(int idLiniaComanda) {
+	public LiniaPedido(int idLiniaPedido) {
 
-		this.idLiniaComanda = idLiniaComanda;
+		this.idLiniaPedido = idLiniaPedido;
 	}
 	
 	//---------------------------------------------------------------------------------------------GETTER AND SETTER
 		
-	public int getIdLiniaComanda() {
-		return idLiniaComanda;
+	public int getIdLiniaPedido() {
+		return idLiniaPedido;
 	}
 
-	public void setIdLiniaComanda(int idLiniaComanda) {
-		this.idLiniaComanda = idLiniaComanda;
+	public void setIdLiniaPedido(int idLiniaPedido) {
+		this.idLiniaPedido = idLiniaPedido;
 	}
 
-	public int getIdComanda() {
-		return idComanda;
+	public int getIdPedido() {
+		return idPedido;
 	}
 
-	public void setIdComanda(int idComanda) {
-		this.idComanda = idComanda;
+	public void setIdPedido(int idPedido) {
+		this.idPedido = idPedido;
 	}
 
 	public String getIdArticulo() {
@@ -106,7 +106,7 @@ public class LiniaComanda{
 	
 	@Override
 	public String toString() {
-		return "LiniaComanda [idLiniaComanda=" + idLiniaComanda + ", idComanda=" + idComanda + ", idArticulo="
+		return "LiniaPedido [idLiniaPedido=" + idLiniaPedido + ", idPedido=" + idPedido + ", idArticulo="
 				+ idArticulo + ", estado=" + estado + ", tipo=" + tipo + ", precio=" + precio + ", cantidad=" + cantidad
 				+ "]";
 	}

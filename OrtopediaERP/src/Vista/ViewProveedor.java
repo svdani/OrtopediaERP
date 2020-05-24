@@ -72,7 +72,7 @@ public class ViewProveedor extends JDialog {
 	 */
 	public ViewProveedor() {
 		setTitle("ERP Ortopedias - Proveedores");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ViewProveedor.class.getResource("/icon/ortopedias.png")));
 		setBounds(100, 100, 783, 486);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(UIManager.getColor("Button.background"));
@@ -195,7 +195,6 @@ public class ViewProveedor extends JDialog {
 			System.out.println("Error al actualizar la tabla Proveedor");
 		}		
 	}	
-
 	
 	//--------------------------------------------------------------------------------MENU---------------------------------------------------------------------------------------------	
 	
@@ -249,18 +248,18 @@ public class ViewProveedor extends JDialog {
 		});
 		mnNewMenu.add(mntmCliente);
 		
-		JMenuItem mntmComanda = new JMenuItem("Comanda");
-		mntmComanda.addActionListener(new ActionListener() {
+		JMenuItem mntmPedido = new JMenuItem("Pedido");
+		mntmPedido.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				ViewComanda windowComanda = new ViewComanda();
-				windowComanda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-				windowComanda.setVisible(true);
+				ViewPedido windowPedido = new ViewPedido();
+				windowPedido.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				windowPedido.setVisible(true);
 				dispose();
 		
 			}
 		});
-		mnNewMenu.add(mntmComanda);
+		mnNewMenu.add(mntmPedido);
 		
 		JMenuItem mntmMovimientosAlmacen = new JMenuItem("Movimientos Almacen");
 		mntmMovimientosAlmacen.addActionListener(new ActionListener() {
@@ -354,12 +353,7 @@ public class ViewProveedor extends JDialog {
 
 				// Obtenemos el primer dato del registro seleccionado
 				if (table.getSelectedRow() != -1) {
-					Proveedor pro = new Proveedor(
-							(String) model.getValueAt(table.getSelectedRow(), 0),
-							(String) model.getValueAt(table.getSelectedRow(), 1),
-							(String) model.getValueAt(table.getSelectedRow(), 2),
-							(String) model.getValueAt(table.getSelectedRow(), 3)
-						);
+					Proveedor pro = cojerValores();
 					
 					pro.setNombre(txtNombre.getText().toString());
 					pro.setEmail(txtEmail.getText().toString());
@@ -476,7 +470,7 @@ public class ViewProveedor extends JDialog {
 				}
 			}
 		});
-		okButton.setIcon(new ImageIcon("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\detection.png"));
+		okButton.setIcon(new ImageIcon(ViewProveedor.class.getResource("/icon/detection.png")));
 		okButton.setActionCommand("OK");
 		okButton.setBounds(717, 57, 36, 23);
 		contentPanel.add(okButton);
@@ -572,7 +566,7 @@ public class ViewProveedor extends JDialog {
 		contentPanel.add(txtTelf);
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("C:\\Users\\w7\\Desktop\\ortopedias.png"));
+		label.setIcon(new ImageIcon(ViewCliente.class.getResource("/icon/ortopedias(2).png")));
 		label.setBounds(-215, -292, 604, 616);
 		contentPanel.add(label);
 	}
@@ -592,12 +586,7 @@ public class ViewProveedor extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				// Obtenemos el primer dato del registro seleccionado
 				if (table.getSelectedRow() != -1) {
-					Proveedor pro = new Proveedor(
-							(String) model.getValueAt(table.getSelectedRow(), 0),
-							(String) model.getValueAt(table.getSelectedRow(), 1),
-							(String) model.getValueAt(table.getSelectedRow(), 2),
-							(String) model.getValueAt(table.getSelectedRow(), 3)
-							);
+					Proveedor pro = cojerValores();
 					
 					ViewArticulo windowArticulo = new ViewArticulo(pro);
 					windowArticulo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -615,5 +604,19 @@ public class ViewProveedor extends JDialog {
 			cancelButton.setActionCommand("Cancelar");
 			buttonPane.add(cancelButton);
 		}
+	}
+	
+	//--------------------------------------------------------------------------------OBTIENE INFO REGISTRO---------------------------------------------------------------------------	
+
+	private Proveedor cojerValores() {
+
+		Proveedor pro = new Proveedor(
+				(String) model.getValueAt(table.getSelectedRow(), 0),
+				(String) model.getValueAt(table.getSelectedRow(), 1),
+				(String) model.getValueAt(table.getSelectedRow(), 2),
+				(String) model.getValueAt(table.getSelectedRow(), 3)
+				);
+
+		return pro;
 	}
 }

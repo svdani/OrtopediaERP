@@ -10,28 +10,30 @@ public class MovimientoAlmacen{
 	String tipoMovimiento;
 	String ubicacion;
 	String fecha;
+	int cantidad;
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	//---------------------------------------------------------------------------------------------CONSTRUCTOR
 	
-	public MovimientoAlmacen(int idMovimientoAlmacen, String idArticulo, String tipoMovimiento, String ubicacion, String fecha) {
+	public MovimientoAlmacen(int idMovimientoAlmacen, String idArticulo, String tipoMovimiento, String ubicacion, String fecha, int cantidad) {
 
 		this.idMovimientoAlmacen = idMovimientoAlmacen;
 		this.idArticulo = idArticulo;
 		this.tipoMovimiento = tipoMovimiento;
 		this.ubicacion = ubicacion;
 		this.fecha = fecha;
-
+		this.cantidad = cantidad;
 	}
 	
-	public MovimientoAlmacen(String idArticulo, String tipoMovimiento, String ubicacion) {
+	public MovimientoAlmacen(String idArticulo, String tipoMovimiento, String ubicacion, int cantidad) {
 
 
 		this.idArticulo = idArticulo;
 		this.tipoMovimiento = tipoMovimiento;
 		this.ubicacion = ubicacion;
 		this.fecha = sdf.format(new Date());
+		this.cantidad = cantidad;
 	}
 
 	public MovimientoAlmacen(int idMovimientoAlmacen) {
@@ -109,10 +111,25 @@ public class MovimientoAlmacen{
 	 */
 	public void setFecha(String fecha) {
 		this.fecha = fecha;
+	}	
+
+	/**
+	 * @return the cantidad
+	 */
+	public int getCantidad() {
+		return cantidad;
+	}
+
+	/**
+	 * @param cantidad the cantidad to set
+	 */
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
 	}
 	
 	//---------------------------------------------------------------------------------------------TO STRING
 	
+
 	@Override
 	public String toString() {
 		return "MovimientoAlmacen [idMovimientoAlmacen=" + idMovimientoAlmacen + ", idArticulo=" + idArticulo
