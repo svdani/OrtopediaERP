@@ -205,7 +205,7 @@ public class ViewProveedor extends JDialog {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnNewMenu = new JMenu("Menu");
+		JMenu mnNewMenu = new JMenu("Men\u00FA");
 		menuBar.add(mnNewMenu);
 		
 		//-------------------------------------------------------ITEMS MENU
@@ -222,7 +222,7 @@ public class ViewProveedor extends JDialog {
 		});
 		mnNewMenu.add(mntmAdmin);
 		
-		JMenuItem mntmArticulo = new JMenuItem("Articulo");
+		JMenuItem mntmArticulo = new JMenuItem("Art\u00EDculo");
 		mntmArticulo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -581,7 +581,7 @@ public class ViewProveedor extends JDialog {
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
-		JButton btnModificar_4 = new JButton("Ver Articulos");
+		JButton btnModificar_4 = new JButton("Ver Art\u00EDculos");
 		btnModificar_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Obtenemos el primer dato del registro seleccionado

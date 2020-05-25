@@ -214,11 +214,11 @@ public class ViewAdmin extends JDialog {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnNewMenu = new JMenu("Menu");
+		JMenu mnNewMenu = new JMenu("Men\u00FA");
 		menuBar.add(mnNewMenu);
 		
 		//-------------------------------------------------------ITEMS MENU
-		JMenuItem mntmArticulo = new JMenuItem("Articulo");
+		JMenuItem mntmArticulo = new JMenuItem("Art\u00EDculo");
 		mntmArticulo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				

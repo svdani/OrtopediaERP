@@ -329,7 +329,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnNewMenu = new JMenu("Menu");
+		JMenu mnNewMenu = new JMenu("Men\u00FA");
 		menuBar.add(mnNewMenu);
 		
 		//-------------------------------------------------------ITEMS MENU
@@ -346,7 +346,7 @@ public class ViewMovimientoAlmacen extends JDialog {
 				});
 				mnNewMenu.add(mntmAdmin);
 				
-				JMenuItem mntmArticulo = new JMenuItem("Articulo");
+				JMenuItem mntmArticulo = new JMenuItem("Art\u00EDculo");
 				mntmArticulo.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
@@ -768,8 +768,8 @@ public class ViewMovimientoAlmacen extends JDialog {
 				txtIdArticulo.setText("");
 			}
 		});
-		txtIdArticulo.setToolTipText("ID Articulo");
-		txtIdArticulo.setText("ID Articulo");
+		txtIdArticulo.setToolTipText("ID Art\u00EDculo");
+		txtIdArticulo.setText("ID Art\u00EDculo");
 		txtIdArticulo.setForeground(Color.GRAY);
 		txtIdArticulo.setColumns(10);
 		txtIdArticulo.setBounds(132, 377, 86, 23);

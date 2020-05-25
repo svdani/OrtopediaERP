@@ -75,7 +75,7 @@ public class ViewArticulo extends JDialog {
 	 * Crea el dialog.
 	 */
 	public ViewArticulo() {
-		setTitle("ERP Ortopedias - Articulos");
+		setTitle("ERP Ortopedias - Art\u00EDculos");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ViewArticulo.class.getResource("/icon/ortopedias.png")));
 		setBounds(100, 100, 783, 486);
 		getContentPane().setLayout(new BorderLayout());
@@ -265,7 +265,7 @@ public class ViewArticulo extends JDialog {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
-		JMenu mnNewMenu = new JMenu("Menu");
+		JMenu mnNewMenu = new JMenu("Men\u00FA");
 		menuBar.add(mnNewMenu);
 
 		//-------------------------------------------------------ITEMS MENU
@@ -585,7 +585,7 @@ public class ViewArticulo extends JDialog {
 	public void txtPanel() {
 
 		txtIdArticulo = new JTextField();
-		txtIdArticulo.setToolTipText("ID Articulo");
+		txtIdArticulo.setToolTipText("ID Art\u00EDculo");
 		txtIdArticulo.addMouseListener(new MouseAdapter() {
 			//AL HACER CLICK LIMPIA LA CAJA DE TEXTO 
 			@Override
@@ -595,7 +595,7 @@ public class ViewArticulo extends JDialog {
 		});
 		txtIdArticulo.setHorizontalAlignment(SwingConstants.LEFT);
 		txtIdArticulo.setForeground(Color.GRAY);
-		txtIdArticulo.setText("Id Articulo");
+		txtIdArticulo.setText("Id Art\u00EDculo");
 		txtIdArticulo.setColumns(10);
 		txtIdArticulo.setBounds(30, 363, 86, 23);
 		contentPanel.add(txtIdArticulo);
