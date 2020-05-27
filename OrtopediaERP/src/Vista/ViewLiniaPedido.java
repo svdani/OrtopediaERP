@@ -110,7 +110,7 @@ public class ViewLiniaPedido extends JDialog {
 	 * Crea el dialog.
 	 */
 	public ViewLiniaPedido() {
-		setTitle("ERP Ortopedias - Linias Pedido");
+		setTitle("ERP Ortopedias - Lineas Pedido");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ViewLiniaPedido.class.getResource("/icon/ortopedias.png")));
 		setBounds(100, 100, 783, 532);
 		getContentPane().setLayout(new BorderLayout());
@@ -578,15 +578,8 @@ public class ViewLiniaPedido extends JDialog {
 				// Obtenemos el primer dato del registro seleccionado
 				if (table.getSelectedRow() != -1) {
 
-					LiniaPedido lin = new LiniaPedido(//Crea una linia comanda apartir del registro seleccionado 
-							(int) model.getValueAt(table.getSelectedRow(), 0),
-							(int) model.getValueAt(table.getSelectedRow(), 1),
-							(String) model.getValueAt(table.getSelectedRow(), 2),
-							(String) model.getValueAt(table.getSelectedRow(), 3),
-							(String) model.getValueAt(table.getSelectedRow(), 4),
-							(double) model.getValueAt(table.getSelectedRow(), 5),
-							(int) model.getValueAt(table.getSelectedRow(), 6)
-							);			
+					LiniaPedido lin = cojerValores();	
+					
 					if (lin.getEstado().equals(txtEstado.getSelectedItem().toString())) {						
 					} else {
 						cambioEstado = true;
@@ -658,7 +651,7 @@ public class ViewLiniaPedido extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				SQLLiniaPedido conLin = new SQLLiniaPedido();
-
+				SQLPedido conPed = new SQLPedido();
 				//Controla que tengas un registro seleccionado
 				if (table.getSelectedRow() != -1) {
 
@@ -669,9 +662,12 @@ public class ViewLiniaPedido extends JDialog {
 					if(dialogResult == 0){
 
 						// Obtenemos el primer dato del registro seleccionado (El Id Pedido)
-						LiniaPedido lin = new LiniaPedido((int) model.getValueAt(table.getSelectedRow(), 0));
+						LiniaPedido lin = cojerValores();
 						
-						try {//---BORRA DE LA TABLA SQL
+						try {
+							//Cambia el precio pedido
+							conPed.modificaPrecioPedido(new Pedido(lin.getIdPedido(), conPed.precioPedido(lin) - lin.getPrecio()));
+							//---BORRA DE LA TABLA SQL							
 							model.removeRow(table.getSelectedRow());	
 							conLin.deleteLiniaPedidos(lin);
 							
@@ -811,9 +807,9 @@ public class ViewLiniaPedido extends JDialog {
 		contentPanel.add(txtIdPedido);
 		
 		txtIdLiniaPedido = new JTextField();
-		txtIdLiniaPedido.setToolTipText("ID Linia Pedido");
+		txtIdLiniaPedido.setToolTipText("ID Lenia Pedido");
 		
-		txtIdLiniaPedido.setText("ID Linia Pedido");
+		txtIdLiniaPedido.setText("ID Linea Pedido");
 		txtIdLiniaPedido.setForeground(Color.GRAY);
 		txtIdLiniaPedido.setColumns(10);
 		txtIdLiniaPedido.setBounds(30, 377, 86, 23);
@@ -860,6 +856,7 @@ public class ViewLiniaPedido extends JDialog {
 					}else {
 						txtPrecio.setText(String.valueOf(precioLinia) );
 					}
+					//txtCantidad.setValue(1);
 				} catch (SQLException e) {
 					System.out.println("No coje precio articulo");
 					e.printStackTrace();
@@ -916,7 +913,26 @@ public class ViewLiniaPedido extends JDialog {
 			buttonPane.add(cancelButton);
 		}
 	}
+	
+	//--------------------------------------------------------------------------------OBTIENE INFO REGISTRO---------------------------------------------------------------------------	
+	
+	private LiniaPedido cojerValores() {
+		
+		LiniaPedido lin = new LiniaPedido(//Crea una linia comanda apartir del registro seleccionado 
+				(int) model.getValueAt(table.getSelectedRow(), 0),
+				(int) model.getValueAt(table.getSelectedRow(), 1),
+				(String) model.getValueAt(table.getSelectedRow(), 2),
+				(String) model.getValueAt(table.getSelectedRow(), 3),
+				(String) model.getValueAt(table.getSelectedRow(), 4),
+				(double) model.getValueAt(table.getSelectedRow(), 5),
+				(int) model.getValueAt(table.getSelectedRow(), 6)
+				);	
+		
+		return lin;
+	}
 
+	//--------------------------------------------------------------------------------CONTROL ERRORES---------------------------------------------------------------------------	
+	
 	/*
 	 * comprueba si en string enviado se puede pasasr a Integer, ayuda al control de errores
 	 */

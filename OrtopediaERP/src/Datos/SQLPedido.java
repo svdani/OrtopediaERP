@@ -349,7 +349,7 @@ public class SQLPedido {
 		return Pedidos;
 	}
 
-	//Obtiene la ultima comanda registrada
+	//Obtiene el ultimo pedido registrado
 	public int ultimaPedido() throws SQLException {
 		int valor = 0;
 		ResultSet rs;
@@ -372,4 +372,28 @@ public class SQLPedido {
 		return valor;
 	}
 	
+	//Obtiene el precio del pedido seleccioando
+	public double precioPedido(LiniaPedido lin) throws SQLException {
+		double valor = 0;
+		ResultSet rs;
+		try {
+
+			conectar();
+
+			sentencia = c.createStatement();
+			String consultaSql = "SELECT precioTotal FROM Pedido Where idPedido = " + lin.getIdPedido() + ";";
+
+			rs = sentencia.executeQuery(consultaSql);
+			valor = rs.getDouble(1);
+			System.out.println(valor);
+			rs.close();
+			sentencia.close();
+			c.close();
+
+		} catch (Exception e) {
+			System.out.println("CUENTA ARTICULOS" + e.getMessage());
+		}
+		return valor;
+	}
+		
 };
