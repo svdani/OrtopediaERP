@@ -90,11 +90,11 @@ public class ViewLiniaPedido extends JDialog {
 	
 	private double precioLinia = 0;
 	private DecimalFormat df = new DecimalFormat("#.00");
-	 //System.out.println(df.format(number));
+	
 	String[] listaArticulos;
 	
 	/**
-	 * Launch the application.
+	 * inicia la aplicacion 
 	 */
 	public static void main(String[] args) {
 		try {
@@ -107,7 +107,7 @@ public class ViewLiniaPedido extends JDialog {
 	}
 
 	/**
-	 * Crea el dialog.
+	 * Crea el dialog, con la tabla y diversos elementos llamando a las funciones para que estos se muestren
 	 */
 	public ViewLiniaPedido() {
 		setTitle("ERP Ortopedias - Lineas Pedido");
@@ -163,6 +163,10 @@ public class ViewLiniaPedido extends JDialog {
 		medidasTabla();
 	}
 	
+	/**
+	 * Crea el dialog a partir de un Objeto Pedido, con la tabla y diversos elementos llamando a las funciones para que estos se muestren
+	 * @param com
+	 */
 	public ViewLiniaPedido(Pedido com) {
 		setTitle("ERP Ortopedias - Linias Pedido");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\w7\\git\\OrtopediaERP\\OrtopediaERP\\icon\\ortopedias.png"));
@@ -221,6 +225,9 @@ public class ViewLiniaPedido extends JDialog {
 	
 	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
 	
+	/**
+	 * controla la medida de las columas para visualizacion de la tabal
+	 */
 	public void medidasTabla() {
 		TableColumnModel columnModel = table.getColumnModel();
 
@@ -233,8 +240,7 @@ public class ViewLiniaPedido extends JDialog {
 	    columnModel.getColumn(6).setPreferredWidth(100);
 	}
 	
-	
-	/*
+	/**
 	 * muestra todos los registros de la base de datos
 	 */
 	private void updateTable() {
@@ -261,6 +267,9 @@ public class ViewLiniaPedido extends JDialog {
 		}		
 	}	
 	 
+	/**
+	 * llena el vector de String
+	 */
 	private void updateArticulos() {
 		SQLArticulo conArt = new SQLArticulo();
 		
@@ -281,7 +290,7 @@ public class ViewLiniaPedido extends JDialog {
 		}		
 	}	
 	
-	/*
+	/**
 	 * muetra los valores del registro seleccionado en sus respectivas cajas de texto y bloquea el boton insertar
 	 */
 	public void selectRow() {
@@ -342,6 +351,10 @@ public class ViewLiniaPedido extends JDialog {
 		});
 	}
 
+	/**
+	 *  muestra los registros relacionados con una misma linia 
+	 * @param linia
+	 */
 	private void updateBusca(LiniaPedido linia) {
 		//---Actualiza valores que se muestran en la tabla
 		SQLLiniaPedido conLin = new SQLLiniaPedido();
@@ -366,6 +379,11 @@ public class ViewLiniaPedido extends JDialog {
 		}		
 	}	
 	
+	/**
+	 * muestra los registros filtrados de la base de datos en la tabla
+	 * @param registro
+	 * @param columna
+	 */
 	private void updateFiltrar(String registro, String columna) {
 		//---Actualiza valores que se muestran en la tabla
 		SQLLiniaPedido conLin = new SQLLiniaPedido();
@@ -392,7 +410,7 @@ public class ViewLiniaPedido extends JDialog {
 	
 	//--------------------------------------------------------------------------------MENU---------------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea el Menu y sus difernetes items que actuan como boton de reconduccion a otro dialog
 	 */
 	public void menuBar() {
@@ -484,7 +502,7 @@ public class ViewLiniaPedido extends JDialog {
 
 	//--------------------------------------------------------------------------------BOTONES------------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea el boton Nuevo que resetea las cajas de texto y bloquea los botones eliminar y modificar para no causar errores
 	 */
 	public void btnNuevo() {
@@ -513,7 +531,7 @@ public class ViewLiniaPedido extends JDialog {
 		contentPanel.add(btnNuevo);
 	}
 	
-	/*
+	/**
 	 * Crea el boton Insertar que llamando al archivo SQL inserta un nuevo registro y luego limpia las cajas para no causar errores
 	 */
 	public void btnInserta() {
@@ -567,6 +585,9 @@ public class ViewLiniaPedido extends JDialog {
 		contentPanel.add(btnInsertar);
 	}
 
+	/**
+	 * Crea el boton Modificar que llamando al archivo SQL modificar un  registro 
+	 */
 	public void btnModifica() {
 
 		btnModificar = new JButton("Modificar");
@@ -644,6 +665,9 @@ public class ViewLiniaPedido extends JDialog {
 		contentPanel.add(btnModificar);
 	}
 	
+	/**
+	 * Crea el boton Eliminar que al seleccioanr un registro lo elimina
+	 */
 	public void btnElimina() {
 
 		btnEliminar = new JButton("Eliminar");
@@ -687,6 +711,9 @@ public class ViewLiniaPedido extends JDialog {
 
 	}
 
+	/**
+	 * Crea el boton para efectuar el evento de filtrado
+	 */
 	public void btnFiltrar() {
 		JButton btnFiltrar = new JButton("Filtrar");
 		btnFiltrar.addActionListener(new ActionListener() {
@@ -715,6 +742,9 @@ public class ViewLiniaPedido extends JDialog {
 		contentPanel.add(boxTipo);
 	}
 
+	/**
+	 * Crea el boton Mostrar Todos que al usarlo actualiza y muetra todos los registros
+	 */
 	public void btnMostrarTodo() {
 
 		JButton btnMostrarTodos = new JButton("Mostrar Todos");
@@ -728,6 +758,9 @@ public class ViewLiniaPedido extends JDialog {
 		contentPanel.add(btnMostrarTodos);
 	}
 	
+	/**
+	 * Crea el boton Buscar que al usarlo busca los registros 
+	 */
 	public void btnBuscar() {
 
 		//CAJA TEXTO BUSCAR
@@ -764,6 +797,9 @@ public class ViewLiniaPedido extends JDialog {
 		contentPanel.add(okButton);
 	}
 	
+	/**
+	 * Crea los radioButton y los agrupa para inpedir la seleccion de mas de 1
+	 */
 	public void btnGrup() {
 		
 		JLabel lblBuscarPor = new JLabel("Filtrar por:");
@@ -786,7 +822,7 @@ public class ViewLiniaPedido extends JDialog {
 	
 	//--------------------------------------------------------------------------------CAJAS TEXTO--------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea las cajas de texto para insertar y modificar registros
 	 */
 	public void txtPanel() {
@@ -888,7 +924,7 @@ public class ViewLiniaPedido extends JDialog {
 	
 	//--------------------------------------------------------------------------------PANEL INFERIOR BOTONES---------------------------------------------------------------------------	
 
-	/*
+	/**
 	 * Crea el panel inferior de botones con el boton cancelar que cierra el dialog
 	 */
 	public void btnPanel() {
@@ -915,7 +951,11 @@ public class ViewLiniaPedido extends JDialog {
 	}
 	
 	//--------------------------------------------------------------------------------OBTIENE INFO REGISTRO---------------------------------------------------------------------------	
-	
+
+	/**
+	 * Crea un objeto LiniaPedido con la informacion del registro seleccioando
+	 * @return lin
+	 */
 	private LiniaPedido cojerValores() {
 		
 		LiniaPedido lin = new LiniaPedido(//Crea una linia comanda apartir del registro seleccionado 
@@ -933,7 +973,7 @@ public class ViewLiniaPedido extends JDialog {
 
 	//--------------------------------------------------------------------------------CONTROL ERRORES---------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * comprueba si en string enviado se puede pasasr a Integer, ayuda al control de errores
 	 */
 	public static boolean isInteger(String cadena) {

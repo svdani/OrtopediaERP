@@ -75,7 +75,7 @@ public class ViewPedido extends JDialog {
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	/**
-	 * Launch the application.
+	 * inicia la aplicacion.
 	 */
 	public static void main(String[] args) {
 		try {
@@ -88,7 +88,7 @@ public class ViewPedido extends JDialog {
 	}
 
 	/**
-	 * Crea el dialog.
+	 * Crea el dialog, con la tabla y diversos elementos llamando a las funciones para que estos se muestren.
 	 */
 	public ViewPedido() {
 		setTitle("ERP Ortopedias - Pedidos");
@@ -205,6 +205,9 @@ public class ViewPedido extends JDialog {
 
 	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
 	
+	/**
+	 * controla la medida de las columas para visualizacion de la tabal
+	 */
 	public void medidasTabla() {
 		TableColumnModel columnModel = table.getColumnModel();
 
@@ -217,8 +220,7 @@ public class ViewPedido extends JDialog {
 	    columnModel.getColumn(6).setPreferredWidth(100);
 	}
 	
-	
-	/*
+	/**
 	 * muestra todos los registros de la base de datos
 	 */
 	private void updateTable() {
@@ -245,7 +247,7 @@ public class ViewPedido extends JDialog {
 		}		
 	}	
 	
-	/*
+	/**
 	 * muetra los valores del registro seleccionado en sus respectivas cajas de texto y bloquea el boton insertar
 	 */
 	public void selectRow() {
@@ -296,6 +298,9 @@ public class ViewPedido extends JDialog {
 		});
 	}
 
+	/**
+	 *  muestra los registros relacionados con una misma linia 
+	 */
 	private void updateBusca(String cli) {
 		//---Actualiza valores que se muestran en la tabla
 		SQLPedido conCom = new SQLPedido();
@@ -320,6 +325,10 @@ public class ViewPedido extends JDialog {
 		}		
 	}	
 
+	/**
+	 * muestra los registros filtrados de la base de datos en la tabla
+	 * @param estado
+	 */
 	private void updateFiltrar( String estado) {
 		//---Actualiza valores que se muestran en la tabla
 		SQLPedido conCom = new SQLPedido();
@@ -344,6 +353,12 @@ public class ViewPedido extends JDialog {
 		}		
 	}
 	
+	/**
+	 * muestra los registros filtrados a traves de las fechas 
+	 * @param column
+	 * @param desde
+	 * @param hasta
+	 */
 	private void updateFecha(String column, String desde, String hasta) {
 		//---Actualiza valores que se muestran en la tabla
 		SQLPedido conCom = new SQLPedido();
@@ -370,7 +385,7 @@ public class ViewPedido extends JDialog {
 	
 	//--------------------------------------------------------------------------------MENU---------------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea el Menu y sus difernetes items que actuan como boton de reconduccion a otro dialog
 	 */
 	public void menuBar() {
@@ -449,7 +464,7 @@ public class ViewPedido extends JDialog {
 	
 	//--------------------------------------------------------------------------------BOTONES------------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea el boton Nuevo que resetea las cajas de texto y bloquea los botones eliminar y modificar para no causar errores
 	 */
 	public void btnNuevo() {
@@ -480,7 +495,7 @@ public class ViewPedido extends JDialog {
 		contentPanel.add(btnNuevo);
 	}
 	
-	/*
+	/**
 	 * Crea el boton Insertar que llamando al archivo SQL inserta un nuevo registro y luego limpia las cajas para no causar errores
 	 */
 	public void btnInserta() {
@@ -526,6 +541,9 @@ public class ViewPedido extends JDialog {
 		contentPanel.add(btnInsertar);
 	}
 	
+	/**
+	 * Crea el boton Modificar que llamando al archivo SQL modificar un  registro 
+	 */
 	public void btnModifica() {
 
 		btnModificar = new JButton("Modificar");
@@ -577,6 +595,9 @@ public class ViewPedido extends JDialog {
 		contentPanel.add(btnModificar);
 	}
 	
+	/**
+	 *  * Crea el boton Eliminar que al seleccioanr un registro lo elimina
+	 */
 	public void btnElimina() {
 
 		btnEliminar = new JButton("Eliminar");
@@ -618,6 +639,9 @@ public class ViewPedido extends JDialog {
 		contentPanel.add(btnEliminar);
 	}
 	
+	/**
+	 * Crea el boton Buscar que al usarlo busca los registros 
+	 */
 	public void btnBuscar() {
 
 		//CAJA TEXTO BUSCAR
@@ -649,6 +673,9 @@ public class ViewPedido extends JDialog {
 		contentPanel.add(okButton);
 	}
 
+	/**
+	 * Crea el boton Mostrar Todos que al usarlo actualiza y muetra todos los registros
+	 */
 	public void btnMostrarTodo() {
 						
 		JButton btnMostrarTodos = new JButton("Mostrar Todos");
@@ -663,6 +690,9 @@ public class ViewPedido extends JDialog {
 		
 	}
 	
+	/**
+	 * Crea el boton para efectuar el evento de filtrado
+	 */
 	public void btnFiltrar() {
 		
 		JComboBox comboBox = new JComboBox();
@@ -701,6 +731,9 @@ public class ViewPedido extends JDialog {
 		
 	}
 	
+	/**
+	 * Crea los radioButton y los agrupa para inpedir la seleccion de mas de 1
+	 */
 	public void btnGrup() {
 
 		JLabel lblBuscarPor = new JLabel("Filtrar por:");
@@ -728,6 +761,9 @@ public class ViewPedido extends JDialog {
 	
 	//--------------------------------------------------------------------------------CALENDARIOS--------------------------------------------------------------------------------------	
 	
+	/**
+	 * Crea los calendarios para seleccioanr fechas
+	 */
 	public void calendarPanel() {
 		
 		JLabel lblDesde = new JLabel("Desde:");
@@ -761,7 +797,7 @@ public class ViewPedido extends JDialog {
 	
 	//--------------------------------------------------------------------------------CAJAS TEXTO--------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea las cajas de texto para insertar y modificar registros
 	 */
 	public void txtPanel() {
@@ -834,7 +870,7 @@ public class ViewPedido extends JDialog {
 	
 	//--------------------------------------------------------------------------------PANEL INFERIOR BOTONES---------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea el panel inferior de botones con el boton cancelar que cierra el dialog
 	 */
 	public void btnPanel() {
@@ -899,6 +935,10 @@ public class ViewPedido extends JDialog {
 	
 	//--------------------------------------------------------------------------------OBTIENE INFO REGISTRO---------------------------------------------------------------------------	
 	
+	/**
+	 * Crea un objeto Pedido con la informacion del registro seleccioando
+	 * @return com
+	 */
 	private Pedido cojerValores() {
 		
 		Pedido com = new Pedido(
@@ -916,7 +956,7 @@ public class ViewPedido extends JDialog {
 
 	//--------------------------------------------------------------------------------CONTROL ERRORES---------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * comprueba si en string enviado se puede pasasr a double, ayuda al control de errores
 	 */
 	public static boolean isDouble(String cadena) {

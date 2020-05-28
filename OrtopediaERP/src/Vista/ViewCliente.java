@@ -74,7 +74,7 @@ public class ViewCliente extends JDialog {
 	
 	
 	/**
-	 * Launch the application.
+	 * inicia la aplicacion 
 	 */
 	public static void main(String[] args) {
 		try {
@@ -87,7 +87,7 @@ public class ViewCliente extends JDialog {
 	}
 
 	/**
-	 * Crea el dialog.
+	 * Crea el dialog, con la tabla y diversos elementos llamando a las funciones para que estos se muestren
 	 */
 	public ViewCliente() {
 		setTitle("ERP Ortopedias - Clientes");
@@ -142,7 +142,7 @@ public class ViewCliente extends JDialog {
 	
 	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
 
-	/*
+	/**
 	 * muestra todos los registros de la base de datos
 	 */
 	private void updateTable() {
@@ -169,7 +169,7 @@ public class ViewCliente extends JDialog {
 		}		
 	}	
 	
-	/*
+	/**
 	 * muetra los valores del registro seleccionado en sus respectivas cajas de texto y bloquea el boton insertar
 	 */
 	public void selectRow() {
@@ -200,7 +200,10 @@ public class ViewCliente extends JDialog {
 				}
 			});
 		}
-			
+	
+	/**
+	 * muestra los registros filtrados de la base de datos en la tabla
+	 */
 	private void updateTableBuscar(String registro, String filtro) {
 		//---Actualiza valores que se muestran en la tabla
 		
@@ -229,7 +232,7 @@ public class ViewCliente extends JDialog {
 
 	//--------------------------------------------------------------------------------MENU---------------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea el Menu y sus difernetes items que actuan como boton de reconduccion a otro dialog
 	 */
 	public void menuBar() {
@@ -309,7 +312,7 @@ public class ViewCliente extends JDialog {
 
 	//--------------------------------------------------------------------------------BOTONES------------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea el boton Nuevo que resetea las cajas de texto y bloquea los botones eliminar y modificar para no causar errores
 	 */
 	public void btnNuevo() {
@@ -339,7 +342,7 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(btnNuevo);
 	}
 
-	/*
+	/**
 	 * Crea el boton Insertar que llamando al archivo SQL inserta un nuevo registro y luego limpia las cajas para no causar errores
 	 */
 	public void btnInserta() {
@@ -384,6 +387,9 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(btnInsertar);
 	}
 
+	/**
+	 * Crea el boton Modificar que llamando al archivo SQL modificar un  registro 
+	 */
 	public void btnModifica() {
 		
 		btnModificar = new JButton("Modificar");
@@ -430,6 +436,9 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(btnModificar);
 	}
 
+	/**
+	 * Crea el boton Eliminar que al seleccioanr un registro lo elimina
+	 */
 	public void btnElimina() {
 		
 		btnEliminar = new JButton("Eliminar");
@@ -468,6 +477,9 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(btnEliminar);
 	}
 	
+	/**
+	 * Crea el boton Mostrar Todos que al usarlo actualiza y muetra todos los registros
+	 */
 	public void btnMostrarTodo() {
 	
 
@@ -483,6 +495,9 @@ public class ViewCliente extends JDialog {
 		
 	}
 
+	/**
+	 * Crea el boton Buscar que al usarlo busca los registros 
+	 */
 	public void btnBuscar() {
 
 		//CAJA TEXTO BUSCAR
@@ -522,6 +537,9 @@ public class ViewCliente extends JDialog {
 		contentPanel.add(okButton);
 	}
 		
+	/**
+	 * Crea los radioButton y los agrupa para inpedir la seleccion de mas de 1
+	 */
 	public void btnGrup() {
 		JLabel lblBuscarPor = new JLabel("Buscar por:");
 		lblBuscarPor.setBounds(640, 94, 86, 14);
@@ -548,7 +566,7 @@ public class ViewCliente extends JDialog {
 	
 	//--------------------------------------------------------------------------------CAJAS TEXTO--------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea las cajas de texto para insertar y modificar registros
 	 */
 	public void txtPanel() {
@@ -665,7 +683,7 @@ public class ViewCliente extends JDialog {
 	
 	//--------------------------------------------------------------------------------PANEL INFERIOR BOTONES---------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea el panel inferior de botones con el boton cancelar que cierra el dialog
 	 */
 	public void btnPanel() {
@@ -719,6 +737,10 @@ public class ViewCliente extends JDialog {
 	
 	//--------------------------------------------------------------------------------OBTIENE INFO REGISTRO---------------------------------------------------------------------------	
 	
+	/**
+	 * Crea un objeto Cliente con la informacion del registro seleccioando
+	 * @return cli
+	 */
 	private Cliente cojerValores() {
 		
 		Cliente cli = new Cliente(

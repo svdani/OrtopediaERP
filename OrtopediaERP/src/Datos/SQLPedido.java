@@ -14,9 +14,7 @@ public class SQLPedido {
 	Connection c = null;
 
 	Statement sentencia = null;
-
-	//String idClienteTabla;
-
+	
 	int idPedido;
 	String idCliente;
 	double precioTotal;
@@ -27,13 +25,16 @@ public class SQLPedido {
 
 	ArrayList<Pedido> Pedidos = new ArrayList<Pedido>();
 	
-	//Conecta base dades
+	/**
+	 * Conecta base dades
+	 * @return
+	 */ 
 	public Connection conectar() {
 
 		try {
 
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:src/servidor/Ortopedia.db");
+			c = DriverManager.getConnection("jdbc:sqlite:Ortopedia.db");
 			System.out.println("Exito al conectar con base de datos Pedido");
 
 		} catch (Exception e) {
@@ -45,7 +46,11 @@ public class SQLPedido {
 
 	}
 	
-	//Inserta en tabla Pedido
+	/**
+	 * Inserta en tabla Pedido
+	 * @param com
+	 * @throws SQLException
+	 */ 
 	public void insertaPedidos(Pedido com) throws SQLException {
 
 		
@@ -76,7 +81,11 @@ public class SQLPedido {
 		}
 	}
 	
-	//Modifica taula Pedido
+	/**
+	 * Modifica taula Pedido
+	 * @param com
+	 * @throws SQLException
+	 */
 	public void modificaPedidos(Pedido com) throws SQLException {
 
 		try {
@@ -105,7 +114,11 @@ public class SQLPedido {
 		}
 	}
 	
-	//Modifica taula Pedido
+	/**
+	 *  Modifica taula Pedido
+	 * @param com
+	 * @throws SQLException
+	 */
 	public void modificaPrecioPedido(Pedido com) throws SQLException {
 
 		try {
@@ -129,7 +142,12 @@ public class SQLPedido {
 		}
 	}
 	
-	//Modifica taula Pedido
+	/**
+	 * Modifica taula Pedido
+	 * @param com
+	 * @param estado
+	 * @throws SQLException
+	 */
 	public void modificaEstadoPedido(Pedido com, String estado) throws SQLException {
 
 		try {
@@ -152,7 +170,11 @@ public class SQLPedido {
 		}
 	}
 		
-	//Elimina Pedido
+	/**
+	 * Elimina Pedido
+	 * @param com
+	 * @throws SQLException
+	 */
 	public void deletePedidos(Pedido com) throws SQLException {
 
 		try {
@@ -176,7 +198,11 @@ public class SQLPedido {
 
 	}
 	
-	//Muestra Tabla Pedido
+	/**
+	 * Muestra Tabla Pedido
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<Pedido> consultaPedidos() throws SQLException {
 
 		conectar();
@@ -221,7 +247,12 @@ public class SQLPedido {
 		return Pedidos;
 	}
 	
-	//Busca Pedido por Estado
+	/**
+	 * Busca Pedido por Estado
+	 * @param est
+	 * @return
+	 * @throws SQLException
+	 */	
 	public ArrayList<Pedido> filtraPedidosEstado(String est) throws SQLException {
 		conectar();
 
@@ -262,7 +293,12 @@ public class SQLPedido {
 		return Pedidos;
 	}
 			
-	//Busca Pedido	por Estado
+	/**
+	 * Busca Pedido	por Estado
+	 * @param cli
+	 * @return
+	 * @throws SQLException
+	 */ 
 	public ArrayList<Pedido> buscaPedidos(String cli) throws SQLException {
 		conectar();
 
@@ -306,7 +342,14 @@ public class SQLPedido {
 		return Pedidos;
 	}
 	
-	//Busca Pedido	por Estado
+	/**
+	 * Busca Pedido	por Estado
+	 * @param column
+	 * @param desde
+	 * @param hasta
+	 * @return
+	 * @throws SQLException
+	 */	 
 	public ArrayList<Pedido> filtraPedidosFecha(String column, String desde, String hasta) throws SQLException {
 		conectar();
 
@@ -349,7 +392,11 @@ public class SQLPedido {
 		return Pedidos;
 	}
 
-	//Obtiene el ultimo pedido registrado
+	/**
+	 * Obtiene el ultimo pedido registrado
+	 * @return
+	 * @throws SQLException
+	 */
 	public int ultimaPedido() throws SQLException {
 		int valor = 0;
 		ResultSet rs;
@@ -372,7 +419,12 @@ public class SQLPedido {
 		return valor;
 	}
 	
-	//Obtiene el precio del pedido seleccioando
+	/**
+	 * Obtiene el precio del pedido seleccioando
+	 * @param lin
+	 * @return
+	 * @throws SQLException
+	 */
 	public double precioPedido(LiniaPedido lin) throws SQLException {
 		double valor = 0;
 		ResultSet rs;

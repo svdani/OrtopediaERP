@@ -21,13 +21,16 @@ public class SQLProveedor {
 
 	ArrayList<Proveedor> Proveedores = new ArrayList<Proveedor>();
 	
-	//Conecta base dades
+	/**
+	 * Conecta base dades
+	 * @return
+	 */
 	public Connection conectar() {
 
 		try {
 
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:src/servidor/Ortopedia.db");
+			c = DriverManager.getConnection("jdbc:sqlite:Ortopedia.db");
 			System.out.println("Exito al conectar con base de datos Proveedor");
 
 		} catch (Exception e) {
@@ -39,7 +42,11 @@ public class SQLProveedor {
 
 	}
 	
-	//Inserta en tabla Proveedor
+	/**
+	 * Inserta en tabla Proveedor
+	 * @param pro
+	 * @throws SQLException
+	 */
 	public void insertaProveedors(Proveedor pro) throws SQLException {
 
 		
@@ -67,7 +74,11 @@ public class SQLProveedor {
 		}
 	}
 	
-	//Modifica taula Proveedor
+	/**
+	 * Modifica taula Proveedor
+	 * @param pro
+	 * @throws SQLException
+	 */ 
 	public void modificaProveedors(Proveedor pro) throws SQLException {
 
 		try {
@@ -95,7 +106,12 @@ public class SQLProveedor {
 		}
 	}
 		
-	//Elimina Proveedor
+	/**
+	 * Elimina Proveedor
+	 * @param pro
+	 * @throws SQLException
+	 */
+	
 	public void deleteProveedors(Proveedor pro) throws SQLException {
 
 		try {
@@ -119,7 +135,11 @@ public class SQLProveedor {
 
 	}
 	
-	//Muestra Tabla Proveedor
+	/**
+	 * Muestra Tabla Proveedor
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<Proveedor> consultaProveedors() throws SQLException {
 
 		conectar();
@@ -158,7 +178,13 @@ public class SQLProveedor {
 		return Proveedores;
 	}
 	
-	//Busca Proveedores por Dni, Nombre, Apellidos pero por letras
+	/**
+	 * Busca Proveedores por Dni, Nombre, Apellidos pero por letras
+	 * @param registro
+	 * @param filtro
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<Proveedor> buscaProveedores(String registro, String filtro) throws SQLException {
 
 		conectar();

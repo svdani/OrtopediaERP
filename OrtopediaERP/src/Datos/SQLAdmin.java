@@ -14,8 +14,6 @@ public class SQLAdmin {
 
 	Statement sentencia = null;
 
-	//String nombreTabla;
-
 	String dni;
 	String password;
 	String nombre;
@@ -25,25 +23,31 @@ public class SQLAdmin {
 
 	ArrayList<Admin> Admins = new ArrayList<Admin>();
 	
-	//Conecta base dades
+	/**
+	 * Conecta base dades
+	 * @return
+	 */
 	public Connection conectar() {
 
 		try {
 
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:src/servidor/Ortopedia.db");
+			c = DriverManager.getConnection("jdbc:sqlite:Ortopedia.db");
 			System.out.println("Exito al conectar con base de datos Admin");
 
 		} catch (Exception e) {
 
 			System.out.println("Error al conectar con base de datos Admin");
-
 		}
 		return c;
 
 	}
 	
-	//Inserta en tabla Admin
+	/**
+	 * Inserta en tabla Admin
+	 * @param adm
+	 * @throws SQLException
+	 */ 
 	public void insertaAdmins(Admin adm) throws SQLException {
 
 		
@@ -72,7 +76,11 @@ public class SQLAdmin {
 		}
 	}
 	
-	//Modifica taula Admin
+	/**
+	 *  Modifica taula Admin
+	 * @param adm
+	 * @throws SQLException
+	 */
 	public void modificaAdmins(Admin adm) throws SQLException {
 
 		try {
@@ -101,7 +109,11 @@ public class SQLAdmin {
 		}
 	}
 		
-	//Elimina Admin
+	/**
+	 * Elimina Admin
+	 * @param adm
+	 * @throws SQLException
+	 */ 
 	public void deleteAdmins(Admin adm) throws SQLException {
 
 		try {
@@ -125,7 +137,11 @@ public class SQLAdmin {
 
 	}
 	
-	//Muestra Tabla Admin
+	/**
+	 * Muestra Tabla Admin
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<Admin> consultaAdmins() throws SQLException {
 
 		conectar();
@@ -168,7 +184,12 @@ public class SQLAdmin {
 		return Admins;
 	}
 	
-	//Busca Admin por Dni
+	/**
+	 *  Busca Admin por Dni
+	 * @param adm
+	 * @return
+	 * @throws SQLException
+	 */
 	public Admin buscaDniAdmins(Admin adm) throws SQLException {
 
 		conectar();
@@ -213,13 +234,19 @@ public class SQLAdmin {
 		return Admin;
 	}
 		
-	//Busca Admin por Dni, Nombre, Apellidos pero por letras
+	/**
+	 * Busca Admin por Dni, Nombre, Apellidos pero por letras
+	 * @param registro
+	 * @param filtro
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<Admin> buscaAdmins(String registro, String filtro) throws SQLException {
 		conectar();
 
 		sentencia = c.createStatement();
 		String consultaSql = "SELECT * FROM Admin WHERE "+ filtro +" LIKE '%" + registro + "%';";
-		//Admin Admin = new Admin(adm.getDni(),adm.getPassword());	
+		
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
@@ -231,9 +258,7 @@ public class SQLAdmin {
 				nombre = rs.getString("nombre");
 				apellidos = rs.getString("apellidos");
 				telf = rs.getString("Telf");
-				
-
-					
+							
 				//GUARDA EN ARRAY LIST Admin
 				Admins.add(new Admin(
 						dni,
@@ -241,7 +266,6 @@ public class SQLAdmin {
 						nombre, 
 						apellidos,
 						telf));
-
 			}
 
 			rs.close();

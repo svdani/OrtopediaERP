@@ -25,13 +25,16 @@ public class SQLLiniaPedido {
 
 	ArrayList<LiniaPedido> LiniaPedidos = new ArrayList<LiniaPedido>();
 	
-	//Conecta base dades
+	/**
+	 * Conecta base dades
+	 * @return
+	 */
 	public Connection conectar() {
 
 		try {
 
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:src/servidor/Ortopedia.db");
+			c = DriverManager.getConnection("jdbc:sqlite:Ortopedia.db");
 			System.out.println("Exito al conectar con base de datos LiniaPedido");
 
 		} catch (Exception e) {
@@ -43,7 +46,11 @@ public class SQLLiniaPedido {
 
 	}
 	
-	//Inserta en tabla LiniaPedido
+	/**
+	 * Inserta en tabla LiniaPedido
+	 * @param lin
+	 * @throws SQLException
+	 */
 	public void insertaLiniaPedidos(LiniaPedido lin) throws SQLException {
 
 		
@@ -74,7 +81,11 @@ public class SQLLiniaPedido {
 		}
 	}
 	
-	//Modifica taula LiniaPedido
+	/**
+	 * Modifica taula LiniaPedido
+	 * @param lin
+	 * @throws SQLException
+	 */
 	public void modificaLiniaPedidos(LiniaPedido lin) throws SQLException {
 
 		try {
@@ -105,7 +116,11 @@ public class SQLLiniaPedido {
 		}
 	}
 		
-	//Elimina LiniaPedido
+	/**
+	 * Elimina LiniaPedido
+	 * @param lin
+	 * @throws SQLException
+	 */
 	public void deleteLiniaPedidos(LiniaPedido lin) throws SQLException {
 
 		try {
@@ -129,7 +144,11 @@ public class SQLLiniaPedido {
 
 	}
 
-	//Elimina LiniaPedido
+	/**
+	 * Elimina LiniaPedido
+	 * @param lin
+	 * @throws SQLException
+	 */
 	public void deletePedidos(LiniaPedido lin) throws SQLException {
 
 		try {
@@ -151,7 +170,11 @@ public class SQLLiniaPedido {
 		}
 	}
 
-	//Muestra Tabla LiniaPedido
+	/**
+	 * Muestra Tabla LiniaPedido
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<LiniaPedido> consultaLiniaPedidos() throws SQLException {
 
 		conectar();
@@ -196,7 +219,12 @@ public class SQLLiniaPedido {
 		return LiniaPedidos;
 	}
 	
-	//Busca LiniaPedido por pedido
+	/**
+	 * Busca LiniaPedido por pedido
+	 * @param lin
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<LiniaPedido> buscaLiniasPedidos(LiniaPedido lin) throws SQLException {
 
 		conectar();
@@ -240,7 +268,13 @@ public class SQLLiniaPedido {
 		return LiniaPedidos;
 	}
 	
-	//Filtra LiniaPedido por estado o tipo
+	/**
+	 * Filtra LiniaPedido por estado o tipo
+	 * @param registro
+	 * @param columna
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<LiniaPedido> filtraLiniasPedidos(String registro, String columna) throws SQLException {
 
 		conectar();
@@ -284,7 +318,12 @@ public class SQLLiniaPedido {
 		return LiniaPedidos;
 	}
 
-	//Suma precios linias
+	/**
+	 * Suma precios linias
+	 * @param lin
+	 * @return
+	 * @throws SQLException
+	 */
 	public double precioLinias(LiniaPedido lin) throws SQLException {
 		double valor = 0;
 		ResultSet rs;
@@ -307,7 +346,12 @@ public class SQLLiniaPedido {
 		return valor;
 	}	
 
-	//Cuenta linias de un pedido
+	/**
+	 * Cuenta linias de un pedido
+	 * @param lin
+	 * @return
+	 * @throws SQLException
+	 */
 	public int numLinias(LiniaPedido lin) throws SQLException {
 		int valor = 0;
 		ResultSet rs;
@@ -330,7 +374,12 @@ public class SQLLiniaPedido {
 		return valor;
 	}
 	
-	//Cuenta linias FINALIZADAS de un pedido 
+	/**
+	 * Cuenta linias FINALIZADAS de un pedido 
+	 * @param lin
+	 * @return
+	 * @throws SQLException
+	 */
 	public int numLiniasFinalizadas(LiniaPedido lin) throws SQLException {
 		int valor = 0;
 		ResultSet rs;

@@ -23,13 +23,17 @@ public class SQLArticulo {
 
 	ArrayList<Articulo> Articulos = new ArrayList<Articulo>();
 	
-	//Conecta base dades
+	/**
+	 * Conecta base dades
+	 * @return
+	 */
+	 
 	public Connection conectar() {
 
 		try {
 
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:src/servidor/Ortopedia.db");
+			c = DriverManager.getConnection("jdbc:sqlite:Ortopedia.db");
 			System.out.println("Exito al conectar con base de datos Articulo");
 
 		} catch (Exception e) {
@@ -38,7 +42,11 @@ public class SQLArticulo {
 		return c;
 	}
 	
-	//Inserta en tabla Articulo
+	/**
+	 * Inserta en tabla Articulo
+	 * @param art
+	 * @throws SQLException
+	 */
 	public void insertaArticulos(Articulo art) throws SQLException {
 
 		try {
@@ -64,7 +72,11 @@ public class SQLArticulo {
 		}
 	}
 	
-	//Modifica taula Articulo
+	/**
+	 * Modifica taula Articulo
+	 * @param art
+	 * @throws SQLException
+	 */
 	public void modificaArticulos(Articulo art) throws SQLException {
 
 		try {
@@ -88,30 +100,39 @@ public class SQLArticulo {
 				System.out.println("Error al actualizar datos en la tabla Articulo");
 		}
 	}
-	
-	//Modifica taula Articulo
-		public void modificaStockArticulos(Articulo art) throws SQLException {
 
-			try {
-				conectar();
-				String sqlUpdate ="UPDATE Articulo "
-								+ "SET"
-								+ " stock=" + art.getStock()						
-								+ " WHERE idArticulo='" + art.getIdArticulo() + "';";
-				
-				sentencia = c.createStatement();
-				sentencia.executeUpdate(sqlUpdate);
-				sentencia.close();
-				c.close();
-		
-				System.out.println("Datos actualizados");
+	/**
+	 * Modifica taula Articulo
+	 * @param art
+	 * @throws SQLException
+	 */
 
-			} catch (Exception e) {
-					System.out.println("Error al actualizar datos en la tabla Articulo");
-			}
+	public void modificaStockArticulos(Articulo art) throws SQLException {
+
+		try {
+			conectar();
+			String sqlUpdate ="UPDATE Articulo "
+					+ "SET"
+					+ " stock=" + art.getStock()						
+					+ " WHERE idArticulo='" + art.getIdArticulo() + "';";
+
+			sentencia = c.createStatement();
+			sentencia.executeUpdate(sqlUpdate);
+			sentencia.close();
+			c.close();
+
+			System.out.println("Datos actualizados");
+
+		} catch (Exception e) {
+			System.out.println("Error al actualizar datos en la tabla Articulo");
 		}
-		
-	//Elimina Articulo
+	}
+
+	/**
+	 * Elimina Articulo
+	 * @param art
+	 * @throws SQLException
+	 */
 	public void deleteArticulos(Articulo art) throws SQLException {
 
 		try {
@@ -132,7 +153,11 @@ public class SQLArticulo {
 		}
 	}
 	
-	//Muestra Tabla Articulo
+	/**
+	 *  Muestra Tabla Articulo
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<Articulo> consultaArticulos() throws SQLException {
 
 		conectar();
@@ -172,7 +197,13 @@ public class SQLArticulo {
 		return Articulos;
 	}
 	
-	//Busca Articulos por idArticulo, idProveedor y Nombre pero por letras
+	/**
+	 * Busca Articulos por idArticulo, idProveedor y Nombre pero por letras
+	 * @param registro
+	 * @param filtro
+	 * @return
+	 * @throws SQLException
+	 */ 
 	public ArrayList<Articulo> buscaArticulos(String registro, String filtro) throws SQLException {
 
 		conectar();
@@ -211,7 +242,11 @@ public class SQLArticulo {
 		return Articulos;
 	}
 	
-	//Cuenta Articulos
+	/**
+	 *  Cuenta Articulos
+	 * @return
+	 * @throws SQLException
+	 */
 	public String numArticulos() throws SQLException {
 		String valor = "P";
 		ResultSet rs;
@@ -234,7 +269,12 @@ public class SQLArticulo {
 		return valor;
 	}
 
-	//Descubre precio Articulos
+	/**
+	 * Descubre precio Articulos
+	 * @param art
+	 * @return
+	 * @throws SQLException
+	 */
 	public double precioArticulos(Articulo art) throws SQLException {
 		double valor = 0;
 		ResultSet rs;
@@ -257,7 +297,12 @@ public class SQLArticulo {
 		return valor;
 	}
 	
-	//Descubre precio Articulos
+	/**
+	 * Descubre precio Articulos
+	 * @param art
+	 * @return
+	 * @throws SQLException
+	 */
 	public int stockArticulos(Articulo art) throws SQLException {
 		int valor = 0;
 		ResultSet rs;

@@ -59,7 +59,7 @@ public class ViewArticulo extends JDialog {
 	private JRadioButton rdbtnProveedor;
 	
 	/**
-	 * Launch the application.
+	 * inicia la aplicacion
 	 */
 	public static void main(String[] args) {
 		try {
@@ -72,7 +72,7 @@ public class ViewArticulo extends JDialog {
 	}
 
 	/**
-	 * Crea el dialog.
+	 * Crea el dialog, con la tabla y diversos elementos llamando a las funciones para que estos se muestren
 	 */
 	public ViewArticulo() {
 		setTitle("ERP Ortopedias - Art\u00EDculos");
@@ -177,15 +177,15 @@ public class ViewArticulo extends JDialog {
 	
 	//--------------------------------------------------------------------------------FUNCIONES TABLA----------------------------------------------------------------------------------	
 
-	/*
+	/**
 	 * muestra todos los registros de la base de datos
 	 */
 	private void updateTable() {
-	
+
 		//---Actualiza valores que se muestran en la tabla
 		SQLArticulo conArt = new SQLArticulo();
 		try {			
-			
+
 			model.setRowCount(0);	
 
 			//----RELLENA TABLA
@@ -202,43 +202,46 @@ public class ViewArticulo extends JDialog {
 			System.out.println("Error al actualizar la tabla Articulo");
 		}		
 	}	
-	
-	/*
+
+	/**
 	 * muetra los valores del registro seleccionado en sus respectivas cajas de texto y bloquea el boton insertar
 	 */
 	public void selectRow() {
 		//----FUNCION AL SELECCIONAR CAMPO
 
-			table.addMouseListener(new MouseAdapter() {
+		table.addMouseListener(new MouseAdapter() {
 
-				@Override
-				public void mousePressed(MouseEvent e) {
+			@Override
+			public void mousePressed(MouseEvent e) {
 
-					btnModificar.setEnabled(true);// DESBLOQUEA BTN EDITAR
-					btnEliminar.setEnabled(true);// DESBLOQUEA BTN ELIMINAR
-					btnInsertar.setEnabled(false);// BLOQUEA BTN INSERTAR
-					btnNuevo.setEnabled(true);// DESBLOQUEA BTN NUEVO
+				btnModificar.setEnabled(true);// DESBLOQUEA BTN EDITAR
+				btnEliminar.setEnabled(true);// DESBLOQUEA BTN ELIMINAR
+				btnInsertar.setEnabled(false);// BLOQUEA BTN INSERTAR
+				btnNuevo.setEnabled(true);// DESBLOQUEA BTN NUEVO
 
-					txtIdArticulo.setEnabled(false);// BLOQUEA CAJA DE TEXTO CIF
+				txtIdArticulo.setEnabled(false);// BLOQUEA CAJA DE TEXTO CIF
 
-					//------CAMBIA VALOR CAJAS TEXTO SEGUN EL REGISTRO SELECCIONADO
-					txtIdArticulo.setText(table.getValueAt(table.getSelectedRow(), 0).toString());				
-					txtIdProveedor.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
-					txtNombre.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
-					txtPrecio.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
-					txtStock.setText(table.getValueAt(table.getSelectedRow(), 4).toString());
-					
-				}
-			});
-		}
-	
+				//------CAMBIA VALOR CAJAS TEXTO SEGUN EL REGISTRO SELECCIONADO
+				txtIdArticulo.setText(table.getValueAt(table.getSelectedRow(), 0).toString());				
+				txtIdProveedor.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+				txtNombre.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
+				txtPrecio.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
+				txtStock.setText(table.getValueAt(table.getSelectedRow(), 4).toString());
+
+			}
+		});
+	}
+
+	/**
+	 * muestra los registros filtrados de la base de datos en la tabla
+	 */
 	private void updateTableBuscar(String registro, String filtro) {
 		//---Actualiza valores que se muestran en la tabla
-	
+
 		SQLArticulo conArt = new SQLArticulo();
-		
+
 		try {			
-			
+
 			model.setRowCount(0);	
 
 			//----RELLENA TABLA
@@ -258,7 +261,7 @@ public class ViewArticulo extends JDialog {
 
 	//--------------------------------------------------------------------------------MENU---------------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea el Menu y sus difernetes items que actuan como boton de reconduccion a otro dialog
 	 */
 	public void menuBar() {
@@ -338,7 +341,7 @@ public class ViewArticulo extends JDialog {
 
 	//--------------------------------------------------------------------------------BOTONES------------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea el boton Nuevo que resetea las cajas de texto y bloquea los botones eliminar y modificar para no causar errores
 	 */
 	public void btnNuevo() {
@@ -366,7 +369,7 @@ public class ViewArticulo extends JDialog {
 		contentPanel.add(btnNuevo);
 	}
 	
-	/*
+	/**
 	 * Crea el boton Insertar que llamando al archivo SQL inserta un nuevo registro y luego limpia las cajas para no causar errores
 	 */
 	public void btnInserta() {
@@ -410,6 +413,9 @@ public class ViewArticulo extends JDialog {
 		contentPanel.add(btnInsertar);
 	}
 
+	/**
+	 * Crea el boton Modificar que llamando al archivo SQL modificar un  registro 
+	 */
 	public void btnModifica() {
 		
 		btnModificar = new JButton("Modificar");
@@ -460,6 +466,9 @@ public class ViewArticulo extends JDialog {
 		contentPanel.add(btnModificar);
 	}
 
+	/**
+	 * Crea el boton Eliminar que al seleccioanr un registro lo elimina
+	 */
 	public void btnElimina() {
 		
 		btnEliminar = new JButton("Eliminar");
@@ -498,6 +507,9 @@ public class ViewArticulo extends JDialog {
 		contentPanel.add(btnEliminar);
 	}
 	
+	/**
+	 * Crea el boton Mostrar Todos que al usarlo actualiza y muetra todos los registros
+	 */
 	public void btnMostrarTodo() {
 	
 
@@ -513,6 +525,9 @@ public class ViewArticulo extends JDialog {
 		
 	}
 
+	/**
+	 * Crea el boton Buscar que al usarlo busca los registros 
+	 */
 	public void btnBuscar() {
 
 		//CAJA TEXTO BUSCAR
@@ -552,6 +567,9 @@ public class ViewArticulo extends JDialog {
 		contentPanel.add(okButton);
 	}
 	
+	/**
+	 * Crea los radioButton y los agrupa para inpedir la seleccion de mas de 1
+	 */
 	public void btnGrup() {
 
 		JLabel lblBuscarPor = new JLabel("Buscar por:");
@@ -579,7 +597,7 @@ public class ViewArticulo extends JDialog {
 	
 	//--------------------------------------------------------------------------------CAJAS TEXTO--------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea las cajas de texto para insertar y modificar registros
 	 */
 	public void txtPanel() {
@@ -668,7 +686,7 @@ public class ViewArticulo extends JDialog {
 
 	//--------------------------------------------------------------------------------PANEL INFERIOR BOTONES---------------------------------------------------------------------------	
 
-	/*
+	/**
 	 * Crea el panel inferior de botones con el boton cancelar que cierra el dialog
 	 */
 	public void btnPanel() {
@@ -713,6 +731,10 @@ public class ViewArticulo extends JDialog {
 
 	//--------------------------------------------------------------------------------OBTIENE INFO REGISTRO---------------------------------------------------------------------------	
 	
+	/**
+	 * Crea un objeto Articulo con la informacion del registro seleccioando
+	 * @return art
+	 */
 	private Articulo cojerValores() {		
 		Articulo art = new Articulo(
 				(String) model.getValueAt(table.getSelectedRow(), 0),
@@ -726,6 +748,9 @@ public class ViewArticulo extends JDialog {
 	
 	//--------------------------------------------------------------------------------CONTROL ERRORES---------------------------------------------------------------------------	
 	
+	/**
+	 * comprueba si el @param cadena se puede convertir en Integer 
+	 */
 	public static boolean isInteger(String cadena) {
 
 		boolean resultado;
@@ -740,6 +765,9 @@ public class ViewArticulo extends JDialog {
 		return resultado;
 	}
 	
+	/**
+	 * comprueba si el @param cadena se puede convertir en Double 
+	 */
 	public static boolean isDouble(String cadena) {
 
 		boolean resultado;

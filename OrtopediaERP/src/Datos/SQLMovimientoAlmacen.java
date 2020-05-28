@@ -15,8 +15,6 @@ public class SQLMovimientoAlmacen {
 
 	Statement sentencia = null;
 
-	//String idArticuloTabla;
-
 	int idMovimientoAlmacen;
 	String idArticulo;
 	String tipoMovimiento;
@@ -25,14 +23,17 @@ public class SQLMovimientoAlmacen {
 	int cantidad;
 
 	ArrayList<MovimientoAlmacen> MovimientoAlmacenes = new ArrayList<MovimientoAlmacen>();
-	
-	//Conecta base dades
+
+	/** 
+	 * Conecta base dades
+	 * @return
+	 */
 	public Connection conectar() {
 
 		try {
 
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:src/servidor/Ortopedia.db");
+			c = DriverManager.getConnection("jdbc:sqlite:Ortopedia.db");
 			System.out.println("Exito al conectar con base de datos MovimientoAlmacen");
 
 		} catch (Exception e) {
@@ -43,11 +44,15 @@ public class SQLMovimientoAlmacen {
 		return c;
 
 	}
-	
-	//Inserta en tabla MovimientoAlmacen
+
+	/**
+	 * Inserta en tabla MovimientoAlmacen
+	 * @param mov
+	 * @throws SQLException
+	 */ 
 	public void insertaMovimientoAlmacenes(MovimientoAlmacen mov) throws SQLException {
 
-		
+
 		try {
 			conectar();
 
@@ -59,7 +64,7 @@ public class SQLMovimientoAlmacen {
 		            	 + "'" + mov.getUbicacion() + "',"
 		            	 + "'" + mov.getFecha() + "',"
 		            	 + "'" + mov.getCantidad() + "');";
-			
+
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlInsert);
 			sentencia.close();
@@ -73,38 +78,46 @@ public class SQLMovimientoAlmacen {
 
 		}
 	}
-	
-	//Modifica taula MovimientoAlmacen
+
+	/**
+	 * Modifica taula MovimientoAlmacen
+	 * @param mov
+	 * @throws SQLException
+	 */
 	public void modificaMovimientoAlmacenes(MovimientoAlmacen mov) throws SQLException {
 
 		try {
 
 			conectar();
-	
+
 			String sqlUpdate ="UPDATE MovimientoAlmacen "
-							+ "SET"
-							+ " idArticulo='" + mov.getIdArticulo()
-							+ "', tipoMovimiento='" + mov.getTipoMovimiento()
-							+ "', ubicacion='" + mov.getUbicacion()
-							+ "', fecha='" + mov.getFecha()
-							+ "', cantidad='" + mov.getCantidad()
-							+ "' WHERE idMovimientoAlmacen='" + mov.getIdMovimientoAlmacen() + "';";
-					
+					+ "SET"
+					+ " idArticulo='" + mov.getIdArticulo()
+					+ "', tipoMovimiento='" + mov.getTipoMovimiento()
+					+ "', ubicacion='" + mov.getUbicacion()
+					+ "', fecha='" + mov.getFecha()
+					+ "', cantidad='" + mov.getCantidad()
+					+ "' WHERE idMovimientoAlmacen='" + mov.getIdMovimientoAlmacen() + "';";
+
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlUpdate);
 			sentencia.close();
 			c.close();
-	
+
 			System.out.println("Datos actualizados");
 
 		} catch (Exception e) {
 
-				System.out.println("Error al actualizar datos en la tabla MovimientoAlmacen");
+			System.out.println("Error al actualizar datos en la tabla MovimientoAlmacen");
 
 		}
 	}
-		
-	//Elimina MovimientoAlmacen
+
+	/**
+	 *  Elimina MovimientoAlmacen
+	 * @param mov
+	 * @throws SQLException
+	 */ 
 	public void deleteMovimientoAlmacenes(MovimientoAlmacen mov) throws SQLException {
 
 		try {
@@ -112,7 +125,7 @@ public class SQLMovimientoAlmacen {
 			conectar();
 
 			String sqlDelete = "DELETE FROM MovimientoAlmacen WHERE idMovimientoAlmacen='"	+ mov.getIdMovimientoAlmacen() + "';";
-			
+
 			sentencia = c.createStatement();
 			sentencia.executeUpdate(sqlDelete);
 			sentencia.close();
@@ -127,20 +140,24 @@ public class SQLMovimientoAlmacen {
 		}
 
 	}
-	
-	//Muestra Tabla MovimientoAlmacen
+
+	/**
+	 * Muestra Tabla MovimientoAlmacen
+	 * @return
+	 * @throws SQLException
+	 */ 
 	public ArrayList<MovimientoAlmacen> consultaMovimientoAlmacenes() throws SQLException {
 
 		conectar();
 
 		sentencia = c.createStatement();
 		String consultaSql = "SELECT * FROM MovimientoAlmacen;";
-		
+
 		try {
 
 			ResultSet rs = sentencia.executeQuery(consultaSql);
 			while (rs.next()) {
-					
+
 				idMovimientoAlmacen = rs.getInt("idMovimientoAlmacen");
 				idArticulo = rs.getString("idArticulo");
 				tipoMovimiento = rs.getString("tipoMovimiento");
@@ -148,7 +165,7 @@ public class SQLMovimientoAlmacen {
 				fecha = rs.getString("fecha");
 				cantidad = rs.getInt("cantidad");
 
-					
+
 				//GUARDA EN ARRAY LIST MovimientoAlmacen
 				MovimientoAlmacenes.add(new MovimientoAlmacen(
 						idMovimientoAlmacen, 
@@ -171,84 +188,96 @@ public class SQLMovimientoAlmacen {
 		}
 		return MovimientoAlmacenes;
 	}
-	
-	//Busca MovimientoAlmacen por Estado
-		public ArrayList<MovimientoAlmacen> filtraMovimientoAlmacen(String registro, String filtro) throws SQLException {
-			conectar();
 
-			sentencia = c.createStatement();
-			String consultaSql = "SELECT * FROM MovimientoAlmacen WHERE " + filtro + " = '" + registro + "';";
-		
-			try {
+	/**
+	 *  Busca MovimientoAlmacen por Estado
+	 * @param registro
+	 * @param filtro
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<MovimientoAlmacen> filtraMovimientoAlmacen(String registro, String filtro) throws SQLException {
+		conectar();
 
-				ResultSet rs = sentencia.executeQuery(consultaSql);
-				while (rs.next()) {
-					
-					idMovimientoAlmacen = rs.getInt("idMovimientoAlmacen");
-					idArticulo = rs.getString("idArticulo");
-					tipoMovimiento = rs.getString("tipoMovimiento");
-					ubicacion = rs.getString("ubicacion");
-					fecha = rs.getString("fecha");
-					cantidad = rs.getInt("cantidad");
+		sentencia = c.createStatement();
+		String consultaSql = "SELECT * FROM MovimientoAlmacen WHERE " + filtro + " = '" + registro + "';";
 
-						
-					//GUARDA EN ARRAY LIST MovimientoAlmacen
-					MovimientoAlmacenes.add(new MovimientoAlmacen(
-							idMovimientoAlmacen, 
-							idArticulo, 
-							tipoMovimiento, 
-							ubicacion, 
-							fecha,
-							cantidad));
+		try {
 
-				}
+			ResultSet rs = sentencia.executeQuery(consultaSql);
+			while (rs.next()) {
 
-				rs.close();
-				sentencia.close();
-				c.close();
-			} catch (Exception e) {
-				System.out.println("impossible");
-				Talal: 	System.out.println(e.getMessage());
+				idMovimientoAlmacen = rs.getInt("idMovimientoAlmacen");
+				idArticulo = rs.getString("idArticulo");
+				tipoMovimiento = rs.getString("tipoMovimiento");
+				ubicacion = rs.getString("ubicacion");
+				fecha = rs.getString("fecha");
+				cantidad = rs.getInt("cantidad");
+
+
+				//GUARDA EN ARRAY LIST MovimientoAlmacen
+				MovimientoAlmacenes.add(new MovimientoAlmacen(
+						idMovimientoAlmacen, 
+						idArticulo, 
+						tipoMovimiento, 
+						ubicacion, 
+						fecha,
+						cantidad));
+
 			}
-			return MovimientoAlmacenes;
+
+			rs.close();
+			sentencia.close();
+			c.close();
+		} catch (Exception e) {
+			System.out.println("impossible");
+			Talal: 	System.out.println(e.getMessage());
 		}
-		
-		//Busca MovimientoAlmacen por Estado
-		public ArrayList<MovimientoAlmacen> filtraMovimientoAlmacenFecha(String desde, String hasta) throws SQLException {
-			conectar();
+		return MovimientoAlmacenes;
+	}
 
-			sentencia = c.createStatement();
-			String consultaSql = "SELECT * FROM MovimientoAlmacen WHERE fecha BETWEEN '" + desde + "' AND '" + hasta + "';";
-			System.out.println(consultaSql);
-			try {
+	/**
+	 * Busca MovimientoAlmacen por Estado
+	 * @param desde
+	 * @param hasta
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<MovimientoAlmacen> filtraMovimientoAlmacenFecha(String desde, String hasta) throws SQLException {
+		conectar();
 
-				ResultSet rs = sentencia.executeQuery(consultaSql);
-				while (rs.next()) {
-					
-					idMovimientoAlmacen = rs.getInt("idMovimientoAlmacen");
-					idArticulo = rs.getString("idArticulo");
-					tipoMovimiento = rs.getString("tipoMovimiento");
-					ubicacion = rs.getString("ubicacion");
-					fecha = rs.getString("fecha");
-					cantidad = rs.getInt("cantidad");
-	
-					//GUARDA EN ARRAY LIST MovimientoAlmacen
-					MovimientoAlmacenes.add(new MovimientoAlmacen(
-							idMovimientoAlmacen, 
-							idArticulo, 
-							tipoMovimiento, 
-							ubicacion, 
-							fecha,
-							cantidad));
-				}
+		sentencia = c.createStatement();
+		String consultaSql = "SELECT * FROM MovimientoAlmacen WHERE fecha BETWEEN '" + desde + "' AND '" + hasta + "';";
+		System.out.println(consultaSql);
+		try {
 
-				rs.close();
-				sentencia.close();
-				c.close();
-			} catch (Exception e) {
-				System.out.println("impossible");
-				Talal: 	System.out.println(e.getMessage());
+			ResultSet rs = sentencia.executeQuery(consultaSql);
+			while (rs.next()) {
+
+				idMovimientoAlmacen = rs.getInt("idMovimientoAlmacen");
+				idArticulo = rs.getString("idArticulo");
+				tipoMovimiento = rs.getString("tipoMovimiento");
+				ubicacion = rs.getString("ubicacion");
+				fecha = rs.getString("fecha");
+				cantidad = rs.getInt("cantidad");
+
+				//GUARDA EN ARRAY LIST MovimientoAlmacen
+				MovimientoAlmacenes.add(new MovimientoAlmacen(
+						idMovimientoAlmacen, 
+						idArticulo, 
+						tipoMovimiento, 
+						ubicacion, 
+						fecha,
+						cantidad));
 			}
-			return MovimientoAlmacenes;
+
+			rs.close();
+			sentencia.close();
+			c.close();
+		} catch (Exception e) {
+			System.out.println("impossible");
+			Talal: 	System.out.println(e.getMessage());
 		}
+		return MovimientoAlmacenes;
+	}
 };

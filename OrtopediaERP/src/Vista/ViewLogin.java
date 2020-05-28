@@ -33,7 +33,7 @@ public class ViewLogin extends JDialog {
 	SQLAdmin conector = new SQLAdmin();
 
 	/**
-	 * Launch the application.
+	 * inicia la aplicacion 
 	 */
 	public static void main(String[] args) {
 		try {
@@ -63,7 +63,7 @@ public class ViewLogin extends JDialog {
 	
 	//--------------------------------------------------------------------------------CAJAS TEXTO--------------------------------------------------------------------------------------	
 	
-	/*
+	/**
 	 * Crea las cajas de texto para insertar y modificar registros
 	 */
 	public void txtPanel() {
@@ -80,6 +80,9 @@ public class ViewLogin extends JDialog {
 		contentPanel.add(comboBox);
 	}
 	
+	/**
+	 * Crea los titulos de las cajas de texto
+	 */
 	private void titel() {
 		JLabel lblUsuario = new JLabel("usuario:");
 		lblUsuario.setBounds(24, 31, 74, 14);
@@ -93,7 +96,7 @@ public class ViewLogin extends JDialog {
 		contentPanel.add(passwordField);
 	}
 	
-	/*
+	/**
 	 * Crea el panel inferior de botones con el boton cancelar que cierra el dialog
 	 */
 	public void btnPanel() {
@@ -191,6 +194,5 @@ public class ViewLogin extends JDialog {
 		buttonPane.add(cancelButton);
 
 	}
-	
-	
+		
 }

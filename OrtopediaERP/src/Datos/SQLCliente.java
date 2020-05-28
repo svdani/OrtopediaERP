@@ -15,8 +15,6 @@ public class SQLCliente {
 
 	Statement sentencia = null;
 
-	//String nombreTabla;
-
 	String dni;
 	String nombre;
 	String apellidos;
@@ -27,13 +25,16 @@ public class SQLCliente {
 
 	ArrayList<Cliente> Clientes = new ArrayList<Cliente>();
 	
-	//Conecta base dades
+	/**
+	 * Conecta base dades
+	 * @return
+	 */
 	public Connection conectar() {
 
 		try {
 
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:src/servidor/Ortopedia.db");
+			c = DriverManager.getConnection("jdbc:sqlite:Ortopedia.db");
 			System.out.println("Exito al conectar con base de datos Cliente");
 
 		} catch (Exception e) {
@@ -45,7 +46,11 @@ public class SQLCliente {
 
 	}
 	
-	//Inserta en tabla Cliente
+	/**
+	 * Inserta en tabla Cliente
+	 * @param cli
+	 * @throws SQLException
+	 */
 	public void insertaClientes(Cliente cli) throws SQLException {
 
 		
@@ -76,7 +81,11 @@ public class SQLCliente {
 		}
 	}
 	
-	//Modifica taula Cliente
+	/**
+	 * Modifica taula Cliente
+	 * @param cli
+	 * @throws SQLException
+	 */
 	public void modificaClientes(Cliente cli) throws SQLException {
 
 		try {
@@ -107,7 +116,11 @@ public class SQLCliente {
 		}
 	}
 		
-	//Elimina Cliente
+	/**
+	 * Elimina Cliente
+	 * @param cli
+	 * @throws SQLException
+	 */
 	public void deleteClientes(Cliente cli) throws SQLException {
 
 		try {
@@ -131,7 +144,11 @@ public class SQLCliente {
 
 	}
 	
-	//Muestra Tabla Cliente
+	/**
+	 * Muestra Tabla Cliente
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<Cliente> consultaClientes() throws SQLException {
 
 		conectar();
@@ -177,7 +194,13 @@ public class SQLCliente {
 		return Clientes;
 	}
 	
-	//Busca Clientes por Dni, Nombre, Apellidos pero por letras
+	/**
+	 * Busca Clientes por Dni, Nombre, Apellidos pero por letras
+	 * @param registro
+	 * @param filtro
+	 * @return
+	 * @throws SQLException
+	 */
 	public  ArrayList<Cliente> buscaClientes(String registro, String filtro) throws SQLException {
 		conectar();
 
