@@ -72,7 +72,8 @@ public class ViewAdmin extends JDialog {
 	}
 
 	/**
-	 * Crea el dialog.
+	 * Crea el dialog, con la tabla y diversos elementos llamando a las funciones para que estos se muestren
+	 * 
 	 */
 	public ViewAdmin() {
 		setTitle("ERP Ortopedias - Admins");
@@ -355,6 +356,9 @@ public class ViewAdmin extends JDialog {
 		contentPanel.add(btnInsertar);
 	}
 
+	/*
+	 * Crea el boton Modificar que llamando al archivo SQL modificar un  registro 
+	 */
 	public void btnModifica() {
 		
 		btnModificar = new JButton("Modificar");

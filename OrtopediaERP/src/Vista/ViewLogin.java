@@ -75,7 +75,7 @@ public class ViewLogin extends JDialog {
 		textUser.setColumns(10);
 			
 		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Art\u00EDculos", "Admin", "Clientes", "Comandas", "Movimientos Almacen", "Proveedores"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Articulos", "Admin", "Clientes", "Comandas", "Movimientos Almacen", "Proveedores"}));
 		comboBox.setBounds(208, 28, 105, 20);
 		contentPanel.add(comboBox);
 	}

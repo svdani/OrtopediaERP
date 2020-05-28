@@ -12,8 +12,7 @@ public class Cliente{
 	
 	//---------------------------------------------------------------------------------------------CONSTRUCTOR
 	
-	public Cliente (String dni, String nombre, String apellidos, String direccion, String email, String telf, String notas	) {
-		
+	public Cliente (String dni, String nombre, String apellidos, String direccion, String email, String telf, String notas	) {		
 		this.dni = dni;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
@@ -21,13 +20,11 @@ public class Cliente{
 		this.email = email;
 		this.telf = telf;
 		this.notas = notas;
-	
 	}
 	
 	public Cliente (String dni) {
 		
 		this.dni = dni;
-	
 	}
 	
 	//---------------------------------------------------------------------------------------------GETTER AND SETTER

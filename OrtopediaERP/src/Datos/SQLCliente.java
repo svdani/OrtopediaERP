@@ -33,7 +33,7 @@ public class SQLCliente {
 		try {
 
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:servidor/Ortopedia.db");
+			c = DriverManager.getConnection("jdbc:sqlite:src/servidor/Ortopedia.db");
 			System.out.println("Exito al conectar con base de datos Cliente");
 
 		} catch (Exception e) {

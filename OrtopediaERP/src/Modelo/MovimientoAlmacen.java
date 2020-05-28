@@ -41,101 +41,71 @@ public class MovimientoAlmacen{
 		this.idMovimientoAlmacen = idMovimientoAlmacen;
 
 	}
+	
 	//---------------------------------------------------------------------------------------------GETTER AND SETTER
 	
-	/**
-	 * @return the idMovimientoAlmacen
-	 */
 	public int getIdMovimientoAlmacen() {
 		return idMovimientoAlmacen;
 	}
 
-	/**
-	 * @param idMovimientoAlmacen the idMovimientoAlmacen to set
-	 */
 	public void setIdMovimientoAlmacen(int idMovimientoAlmacen) {
 		this.idMovimientoAlmacen = idMovimientoAlmacen;
 	}
 
-	/**
-	 * @return the idArticulo
-	 */
 	public String getIdArticulo() {
 		return idArticulo;
 	}
 
-	/**
-	 * @param idArticulo the idArticulo to set
-	 */
 	public void setIdArticulo(String idArticulo) {
 		this.idArticulo = idArticulo;
 	}
 
-	/**
-	 * @return the tipoMovimiento
-	 */
 	public String getTipoMovimiento() {
 		return tipoMovimiento;
 	}
 
-	/**
-	 * @param tipoMovimiento the tipoMovimiento to set
-	 */
 	public void setTipoMovimiento(String tipoMovimiento) {
 		this.tipoMovimiento = tipoMovimiento;
 	}
 
-	/**
-	 * @return the ubicacion
-	 */
 	public String getUbicacion() {
 		return ubicacion;
 	}
 
-	/**
-	 * @param ubicacion the ubicacion to set
-	 */
 	public void setUbicacion(String ubicacion) {
 		this.ubicacion = ubicacion;
 	}
 
-	/**
-	 * @return the fecha
-	 */
 	public String getFecha() {
 		return fecha;
 	}
 
-	/**
-	 * @param fecha the fecha to set
-	 */
 	public void setFecha(String fecha) {
 		this.fecha = fecha;
-	}	
+	}
 
-	/**
-	 * @return the cantidad
-	 */
 	public int getCantidad() {
 		return cantidad;
 	}
 
-	/**
-	 * @param cantidad the cantidad to set
-	 */
 	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
 	}
+
+	public SimpleDateFormat getSdf() {
+		return sdf;
+	}
+
+	public void setSdf(SimpleDateFormat sdf) {
+		this.sdf = sdf;
+	}
 	
-	//---------------------------------------------------------------------------------------------TO STRING
-	
+	//---------------------------------------------------------------------------------------------TO STRING	
 
 	@Override
 	public String toString() {
 		return "MovimientoAlmacen [idMovimientoAlmacen=" + idMovimientoAlmacen + ", idArticulo=" + idArticulo
 				+ ", tipoMovimiento=" + tipoMovimiento + ", ubicacion=" + ubicacion + ", fecha=" + fecha +  "]\n";
 	}
-	
-
 	
 }

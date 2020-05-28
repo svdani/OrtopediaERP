@@ -13,7 +13,6 @@ public class LiniaPedido{
 	//---------------------------------------------------------------------------------------------CONSTRUCTOR
 	
 	public LiniaPedido(int idLiniaPedido, int idPedido, String idArticulo, String estado, String tipo, double precio, int cantidad) {
-
 		this.idLiniaPedido = idLiniaPedido;
 		this.idPedido = idPedido;
 		this.idArticulo = idArticulo;
@@ -101,8 +100,7 @@ public class LiniaPedido{
 		this.cantidad = cantidad;
 	}
 
-	//---------------------------------------------------------------------------------------------TO STRING
-	
+	//---------------------------------------------------------------------------------------------TO STRING	
 	
 	@Override
 	public String toString() {

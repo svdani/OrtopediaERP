@@ -31,7 +31,7 @@ public class SQLAdmin {
 		try {
 
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:servidor/Ortopedia.db");
+			c = DriverManager.getConnection("jdbc:sqlite:src/servidor/Ortopedia.db");
 			System.out.println("Exito al conectar con base de datos Admin");
 
 		} catch (Exception e) {
