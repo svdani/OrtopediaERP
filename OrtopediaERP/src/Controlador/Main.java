@@ -11,7 +11,7 @@ import Vista.*;
 public class Main {
 	public static void main(String[] args) throws SQLException {
 		
-		
+		System.out.println("hola");
 		ViewLogin window = new ViewLogin();
 		window.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		window.setVisible(true);
